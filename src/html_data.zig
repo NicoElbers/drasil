@@ -2060,6 +2060,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-col-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/col
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -2252,6 +2253,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/input.html#the-input-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -2331,6 +2333,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#the-source-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/source
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -2410,6 +2413,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-meta-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/meta
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -2473,6 +2477,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/media.html#the-track-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/track
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -2494,6 +2499,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-base-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/base
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -2504,6 +2510,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-embed-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/embed
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -2828,6 +2835,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-br-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/br
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -2883,6 +2891,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/img
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -3115,6 +3124,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/image-maps.html#the-area-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/area
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -3188,6 +3198,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-wbr-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/wbr
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -3206,6 +3217,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-link-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/link
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes
@@ -3330,6 +3342,7 @@ pub const ElementTag = enum {
     /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-hr-element
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/hr
     /// status: standard
+    /// is a void element
     ///
     /// Allowed attributes:
     ///   Global attributes

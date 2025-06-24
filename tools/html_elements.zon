@@ -130,7 +130,7 @@
     .{
         .tag = "col",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "align",
             "char",
@@ -401,7 +401,7 @@
     .{
         .tag = "input",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "accept",
             "align",
@@ -498,7 +498,7 @@
     .{
         .tag = "source",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "height",
             "media",
@@ -603,7 +603,7 @@
     .{
         .tag = "meta",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "charset",
             "content",
@@ -692,7 +692,7 @@
     .{
         .tag = "track",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "default",
             "kind",
@@ -722,7 +722,7 @@
     .{
         .tag = "base",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{ "href", "target" },
         .meta = .{
             .origin = "base",
@@ -734,7 +734,7 @@
     .{
         .tag = "embed",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "align",
             "height",
@@ -1181,7 +1181,7 @@
     .{
         .tag = "br",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{"clear"},
         .meta = .{
             .origin = "br",
@@ -1251,7 +1251,7 @@
     .{
         .tag = "img",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "align",
             "alt",
@@ -1573,7 +1573,7 @@
     .{
         .tag = "area",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "alt",
             "attributionsrc",
@@ -1672,7 +1672,7 @@
     .{
         .tag = "wbr",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{},
         .meta = .{
             .origin = "wbr",
@@ -1696,7 +1696,7 @@
     .{
         .tag = "link",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "as",
             "blocking",
@@ -1861,7 +1861,7 @@
     .{
         .tag = "hr",
         .value = .string,
-        .void_element = false,
+        .void_element = true,
         .attributes = .{
             "align",
             "color",

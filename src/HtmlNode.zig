@@ -161,11 +161,11 @@ pub fn slot(attributes: []const Attribute, children: []const HtmlNode) HtmlNode 
 ///   span
 ///   valign
 ///   width
-pub fn col(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn col(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .col,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -502,11 +502,11 @@ pub fn center(attributes: []const Attribute, children: []const HtmlNode) HtmlNod
 ///   step
 ///   usemap
 ///   webkitdirectory
-pub fn input(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn input(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .input,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -577,11 +577,11 @@ pub fn th(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
 ///   srcset
 ///   type
 ///   width
-pub fn source(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn source(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .source,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -690,11 +690,11 @@ pub fn @"var"(attributes: []const Attribute, children: []const HtmlNode) HtmlNod
 ///   http-equiv
 ///   name
 ///   scheme
-pub fn meta(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn meta(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .meta,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -789,11 +789,11 @@ pub fn menu(attributes: []const Attribute, children: []const HtmlNode) HtmlNode 
 ///   label
 ///   src
 ///   srclang
-pub fn track(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn track(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .track,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -819,11 +819,11 @@ pub fn dfn(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
 ///   Global attributes
 ///   href
 ///   target
-pub fn base(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn base(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .base,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -839,11 +839,11 @@ pub fn base(attributes: []const Attribute, children: []const HtmlNode) HtmlNode 
 ///   src
 ///   type
 ///   width
-pub fn embed(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn embed(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .embed,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -1332,11 +1332,11 @@ pub fn fieldset(attributes: []const Attribute, children: []const HtmlNode) HtmlN
 /// Allowed attributes:
 ///   Global attributes
 ///   clear
-pub fn br(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn br(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .br,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -1437,11 +1437,11 @@ pub fn ins(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
 ///   usemap
 ///   vspace
 ///   width
-pub fn img(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn img(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .img,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -1798,11 +1798,11 @@ pub fn title(attributes: []const Attribute, children: []const HtmlNode) HtmlNode
 ///   rel
 ///   shape
 ///   target
-pub fn area(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn area(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .area,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -1895,11 +1895,11 @@ pub fn form(attributes: []const Attribute, children: []const HtmlNode) HtmlNode 
 ///
 /// Allowed attributes:
 ///   Global attributes
-pub fn wbr(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn wbr(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .wbr,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -1943,11 +1943,11 @@ pub fn del(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
 ///   sizes
 ///   target
 ///   type
-pub fn link(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn link(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .link,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
@@ -2121,11 +2121,11 @@ pub fn b(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
 ///   noshade
 ///   size
 ///   width
-pub fn hr(attributes: []const Attribute, children: []const HtmlNode) HtmlNode {
+pub fn hr(attributes: []const Attribute) HtmlNode {
     return .{
         .tag = .hr,
         .attributes = attributes,
-        .children = children,
+        .children = &.{},
     };
 }
 
