@@ -38,11 +38,11 @@ fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {
 
     const run = b.addRunArtifact(exe);
 
-    // assert(args.len == 5); // {self} {elements zon} {attributes zon} {html_data file} {htmlNode file}
+    // assert(args.len == 5); // {self} {elements zon} {attributes zon} {html_data file} {Tree file}
     run.addFileArg(b.path("tools/html_elements.zon"));
     run.addFileArg(b.path("tools/html_attributes.zon"));
     run.addFileArg(b.path("src/html_data.zig"));
-    run.addFileArg(b.path("src/HtmlNode.zig"));
+    run.addFileArg(b.path("src/Tree.zig"));
 
     step.dependOn(&run.step);
 }

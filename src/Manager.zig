@@ -1,4 +1,6 @@
-const HtmlTree = @This();
+//! Manages multiple `Tree`s, allowing for dynamic content
+
+const Manager = @This();
 
 gpa: Allocator,
 trees: MultiArrayList(SubTree),
@@ -8,13 +10,13 @@ pub const Generator = *const fn (
     /// User provided data, owned by `HtmlTree`.
     ctx: *anyopaque,
     /// Reference to the parent `HtmlTree` for rendering subtrees.
-    tree: *HtmlTree,
+    tree: *Manager,
     /// Allocator for persistent data, memory fully managed by generator.
     gpa: Allocator,
     /// Arena for temporary data, particularly useful for formatted strings.
     /// This arena is reset before every call to generator.
     arena: Allocator,
-) anyerror!HtmlNode;
+) anyerror!Tree;
 
 pub const SubTree = struct {
     arena: ArenaAllocator,
@@ -24,7 +26,7 @@ pub const SubTree = struct {
 
 pub const SubTreeIndex = enum(u32) { _ };
 
-pub fn init(gpa: Allocator) HtmlTree {
+pub fn init(gpa: Allocator) Manager {
     return .{
         .gpa = gpa,
         .trees = .{},
@@ -32,11 +34,11 @@ pub fn init(gpa: Allocator) HtmlTree {
     };
 }
 
-pub fn deinit(self: *HtmlTree) void {
+pub fn deinit(self: *Manager) void {
     defer self.* = undefined;
 }
 
-pub fn register(self: *HtmlTree, context: anytype, generator: Generator) !SubTreeIndex {
+pub fn register(self: *Manager, context: anytype, generator: Generator) !SubTreeIndex {
     const ctx = try self.gpa.create(@TypeOf(context));
     ctx.* = context;
 
@@ -51,19 +53,19 @@ pub fn register(self: *HtmlTree, context: anytype, generator: Generator) !SubTre
     return index;
 }
 
-pub fn render(self: *HtmlTree, idx: SubTreeIndex) ![]const u8 {
-    // var arr: ArrayListUnmanaged(u8) = .empty;
-    // const w = arr.writer(self.gpa);
-
-    const tree = self.trees.get(@intFromEnum(idx));
-    defer _ = tree.arena.reset(.{ .retain_with_limit = 1 << 12 });
-
-    const node = try tree.generator(tree.ctx, self, self.gpa, tree.arena);
-}
+// pub fn render(self: *Manager, idx: SubTreeIndex) ![]const u8 {
+//     // var arr: ArrayListUnmanaged(u8) = .empty;
+//     // const w = arr.writer(self.gpa);
+//
+//     const tree = self.trees.get(@intFromEnum(idx));
+//     defer _ = tree.arena.reset(.{ .retain_with_limit = 1 << 12 });
+//
+//     const node = try tree.generator(tree.ctx, self, self.gpa, tree.arena);
+// }
 
 const std = @import("std");
 
-const HtmlNode = @import("HtmlNode.zig");
+const Tree = @import("Tree.zig");
 const ArenaAllocator = std.heap.ArenaAllocator;
 const Allocator = std.mem.Allocator;
 const MultiArrayList = std.MultiArrayList;

@@ -11,7 +11,7 @@ pub fn main() !void {
     const args = try std.process.argsAlloc(arena);
     defer std.process.argsFree(arena, args);
 
-    assert(args.len == 5); // {self} {elements zon} {attributes zon} {html_data file} {htmlNode file}
+    assert(args.len == 5); // {self} {elements zon} {attributes zon} {html_data file} {Tree file}
 
     const elements, const attributes = try parseZon(arena, args[1], args[2]);
 
@@ -54,27 +54,47 @@ fn writeNodeFunctions(arena: Allocator, html_node_path: []const u8, elements: []
             try writer.print("///   {s}\n", .{attr});
         }
 
-        // Signature
-        try writer.print("pub fn {}(attributes: []const Attribute", .{std.zig.fmtId(elem.tag)});
-        if (!elem.void_element)
-            try writer.writeAll(", children: []const HtmlNode");
+        if (elem.void_element) {
+            try writer.print("pub fn {}(attributes: []const Attribute) Tree {{\n", .{std.zig.fmtId(elem.tag)});
+            try writer.writeAll(
+                \\    return .{ .node = .{ .void = .{
+                \\
+            );
 
-        try writer.writeAll(") HtmlNode {\n");
+            try writer.print(
+                \\        .tag = .{p},
+                \\
+            , .{std.zig.fmtId(elem.tag)});
 
-        // Body
-        try writer.print(
-            \\    return .{{
-            \\        .tag = .{p},
-            \\        .attributes = attributes,
-            \\        .children = {s},
-            \\    }};
-            \\}}
-            \\
-            \\
-        , .{
-            std.zig.fmtId(elem.tag),
-            if (elem.void_element) "&.{}" else "children",
-        });
+            try writer.writeAll(
+                \\        .attributes = attributes,
+                \\    } } };
+                \\}
+                \\
+            );
+        } else {
+            try writer.print(
+                "pub fn {}(attributes: []const Attribute, sub_trees: []const Tree) Tree {{\n",
+                .{std.zig.fmtId(elem.tag)},
+            );
+            try writer.writeAll(
+                \\    return .{ .node = .{ .element = .{
+                \\
+            );
+
+            try writer.print(
+                \\        .tag = .{p},
+                \\
+            , .{std.zig.fmtId(elem.tag)});
+
+            try writer.writeAll(
+                \\        .attributes = attributes,
+                \\        .sub_trees = sub_trees,
+                \\    } } };
+                \\}
+                \\
+            );
+        }
     }
 
     try writer.writeAll(end_marker);

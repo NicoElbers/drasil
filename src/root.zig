@@ -1,1 +1,2 @@
-pub const HtmlNode = @import("HtmlNode.zig");
+pub const Tree = @import("Tree.zig");
+pub const Manager = @import("Manager.zig");
