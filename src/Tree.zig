@@ -18,6 +18,25 @@ const Node = union(enum) {
 
 node: Node,
 
+pub fn format(
+    self: @This(),
+    comptime fmt: []const u8,
+    options: std.fmt.FormatOptions,
+    writer: anytype,
+) !void {
+    _ = options;
+    if (fmt.len > 1)
+        @compileError("Invalid fmt for Tree");
+
+    if (fmt.len == 1)
+        if (fmt[0] == 'p')
+            try self.prettyRender(writer)
+        else
+            @compileError("Invalid fmt for Tree")
+    else
+        self.render(writer);
+}
+
 pub fn render(tree: Tree, writer: anytype) !void {
     try tree.innerRender(false, {}, writer);
 }
