@@ -3,7 +3,7 @@
 
 const Tree = @This();
 
-const Node = union(enum) {
+pub const Node = union(enum) {
     element: struct {
         tag: ElementTag,
         attributes: []const Attribute,
@@ -14,55 +14,53 @@ const Node = union(enum) {
         attributes: []const Attribute,
     },
     text: []const u8,
+    dynamic: SubTree.Index,
+    static: *const Tree,
 };
 
 node: Node,
 
-pub fn format(
-    self: @This(),
-    comptime fmt: []const u8,
-    options: std.fmt.FormatOptions,
-    writer: anytype,
-) !void {
-    _ = options;
-    if (fmt.len > 1)
-        @compileError("Invalid fmt for Tree");
-
-    if (fmt.len == 1)
-        if (fmt[0] == 'p')
-            try self.prettyRender(writer)
-        else
-            @compileError("Invalid fmt for Tree")
-    else
-        self.render(writer);
+pub fn render(tree: Tree, manager: *Manager, writer: anytype) !void {
+    try tree.innerRender(manager, false, {}, writer);
 }
 
-pub fn render(tree: Tree, writer: anytype) !void {
-    try tree.innerRender(false, {}, writer);
-}
-
-pub fn prettyRender(tree: Tree, writer: anytype) !void {
-    try tree.innerRender(true, 0, writer);
+pub fn prettyRender(tree: Tree, manager: *Manager, writer: anytype) !void {
+    try tree.innerRender(manager, true, 0, writer);
 }
 
 fn innerRender(
     tree: Tree,
+    manager: *Manager,
     comptime pretty: bool,
     indent: if (pretty) u16 else void,
     writer: anytype,
 ) !void {
-    if (pretty)
-        try writer.writeByteNTimes(' ', indent);
-
     switch (tree.node) {
-        .text => |v| try writer.writeAll(v),
+        .text => |v| {
+            if (pretty)
+                try writer.writeByteNTimes(' ', indent);
+
+            try writer.writeAll(v);
+
+            if (pretty)
+                try writer.writeAll("\n");
+        },
         .void => |v| {
+            if (pretty)
+                try writer.writeByteNTimes(' ', indent);
+
             try writer.print("<{s}", .{@tagName(v.tag)});
             try renderAttributes(v.attributes, writer);
             try writer.writeAll(">");
+
+            if (pretty)
+                try writer.writeAll("\n");
         },
         .element => |v| {
             // start
+            if (pretty)
+                try writer.writeByteNTimes(' ', indent);
+
             try writer.print("<{s}", .{@tagName(v.tag)});
             try renderAttributes(v.attributes, writer);
             try writer.writeAll(">");
@@ -74,18 +72,27 @@ fn innerRender(
             const new_indent = if (pretty) indent + 1 else {};
 
             for (v.sub_trees) |sub_tree| {
-                try sub_tree.innerRender(pretty, new_indent, writer);
+                try sub_tree.innerRender(manager, pretty, new_indent, writer);
             }
 
             // end
             if (pretty)
                 try writer.writeByteNTimes(' ', indent);
-            try writer.print("</{s}>", .{@tagName(v.tag)});
-        },
-    }
 
-    if (pretty)
-        try writer.writeAll("\n");
+            try writer.print("</{s}>", .{@tagName(v.tag)});
+
+            if (pretty)
+                try writer.writeAll("\n");
+        },
+        .static => |ptr| try innerRender(ptr.*, manager, pretty, indent, writer),
+        .dynamic => |idx| try innerRender(
+            try manager.generate(idx),
+            manager,
+            pretty,
+            indent,
+            writer,
+        ),
+    }
 }
 
 fn renderAttributes(attributes: []const Attribute, writer: anytype) !void {
@@ -96,14 +103,14 @@ fn renderAttributes(attributes: []const Attribute, writer: anytype) !void {
             inline else => |v| {
                 switch (@TypeOf(v)) {
                     // TODO: Escape
-                    []const u8 => try writer.print("\"{s}\"", .{v}),
-                    bool => try writer.print("\"{s}\"", .{v}),
+                    []const u8 => try writer.print("=\"{s}\"", .{v}),
+                    bool => try writer.print("=\"{s}\"", .{v}),
                     void => {},
                     else => {
                         if (@typeInfo(@TypeOf(v)) != .@"enum")
                             @compileError("Invalid attribute type");
 
-                        try writer.print("\"{s}\"", .{@tagName(v)});
+                        try writer.print("=\"{s}\"", .{@tagName(v)});
                     },
                 }
             },
@@ -118,6 +125,10 @@ fn renderAttributes(attributes: []const Attribute, writer: anytype) !void {
 /// ---------------
 pub fn raw(text: []const u8) Tree {
     return .{ .node = .{ .text = text } };
+}
+
+pub fn dyn(sub_tree_index: SubTree.Index) Tree {
+    return .{ .node = .{ .dynamic = sub_tree_index } };
 }
 
 // @GENERATED SECTION START
@@ -2244,31 +2255,11 @@ pub fn tbody(attributes: []const Attribute, sub_trees: []const Tree) Tree {
 }
 // @GENERATED SECTION END
 
-test "sanity" {
-    const tree: Tree = .body(&.{}, &.{
-        .h1(&.{ .{ .id = "foo" }, .{ .class = "bar" } }, &.{.raw("HELLO WORLD!")}),
-        .p(&.{}, &.{
-            .raw("Welcome to my first nicely generated HTML with Template!"),
-        }),
-    });
-
-    const writer = std.io.getStdOut().writer();
-    try tree.prettyRender(writer);
-    try tree.render(writer);
-
-    // const gpa = std.testing.allocator;
-    //
-    // var arr: std.ArrayList(u8) = .init(gpa);
-    // defer arr.deinit();
-    //
-    // try tree.render(&arr);
-    //
-    // std.debug.print("{s}\n", .{arr.items});
-}
-
 const std = @import("std");
 const html_data = @import("html_data.zig");
 
 const Attribute = html_data.Attribute;
 const ElementTag = html_data.ElementTag;
 const Allocator = std.mem.Allocator;
+const Manager = @import("Manager.zig");
+const SubTree = Manager.SubTree;
