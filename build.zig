@@ -5,21 +5,21 @@ pub fn build(b: *Build) void {
     updateHtmlDataZonStep(b, target, optimize) orelse return;
     updateHtmlDataStep(b, target, optimize);
 
-    const template_mod = b.addModule("template", .{
+    const drasil_mod = b.addModule("drasil", .{
         .root_source_file = b.path("src/root.zig"),
         .optimize = optimize,
         .target = target,
     });
 
     const filters = b.option([]const []const u8, "test-filter", "Skip tests that do not match any filter") orelse &.{};
-    const tempate_tests = b.addTest(.{
-        .root_module = template_mod,
+    const drasil_tests = b.addTest(.{
+        .root_module = drasil_mod,
         .filters = filters,
     });
-    const run_template_tests = b.addRunArtifact(tempate_tests);
+    const run_drasil_tests = b.addRunArtifact(drasil_tests);
 
     const test_step = b.step("test", "Run unit tests");
-    test_step.dependOn(&run_template_tests.step);
+    test_step.dependOn(&run_drasil_tests.step);
 }
 
 fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {

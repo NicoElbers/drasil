@@ -300,12 +300,12 @@ test "callbacks" {
 }
 
 const std = @import("std");
-const template = @import("root.zig");
+const drasil = @import("root.zig");
 
 const assert = std.debug.assert;
 
-const Tree = template.Tree;
-const Manager = template.Manager;
+const Tree = drasil.Tree;
+const Manager = drasil.Manager;
 const SubTree = Manager.SubTree;
 const Allocator = std.mem.Allocator;
 const Callback = Manager.Callback;
