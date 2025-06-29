@@ -80,7 +80,9 @@ test "sanity" {
                     arena,
                     .div(&.{}, &.{
                         .h1(&.{.{ .id = "id" }}, &.{.raw("Hello world!")}),
-                        .p(&.{.{ .class = "class" }}, &.{}),
+                        .p(&.{.{ .class = "class" }}, &.{
+                            .br(&.{.{ .clear = "" }}),
+                        }),
                     }),
                 );
             }
@@ -93,7 +95,7 @@ test "sanity" {
         try casePure(
             &manager,
             case,
-            "<div><h1 id=\"id\">Hello world!</h1><p class=\"class\"></p></div>",
+            "<div><h1 id=\"id\">Hello world!</h1><p class=\"class\"><br clear=\"\"></p></div>",
         );
     }
 }
