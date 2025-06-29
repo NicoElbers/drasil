@@ -1,4 +1,22 @@
 .{
+    // ---- Manually added events ----
+
+    // TODO: Parse browser-compat-data/api/Element.json for *_event thingies
+    .{
+        .tag = "onclick",
+        .global = false,
+        .value = .callback,
+        .meta = .{.{
+            .origin = "Event",
+            .spec_url = .{"https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers-on-elements,-document-objects,-and-window-objects"},
+            .mdn_url = .{"https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/accesskey"},
+            .state = .standard,
+        }},
+    },
+
+    // ---- Manually added events ----
+
+    // ---- Globals ----
     .{
         .tag = "accesskey",
         .global = true,
@@ -318,6 +336,9 @@
             .state = .standard,
         }},
     },
+
+    // ---- Globals ----
+
     .{
         .tag = "abbr",
         .global = false,
@@ -3740,3 +3761,4 @@
         }},
     },
 }
+

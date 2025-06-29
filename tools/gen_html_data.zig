@@ -170,6 +170,7 @@ fn writeAttributes(arena: Allocator, html_data: File, attributes: []const Attrib
                 break :blk try str.toOwnedSlice(arena);
             },
             .boolean => ": bool,\n\n",
+            .callback => ": Callback.Index,\n\n",
             .void => ",\n\n",
         });
     }

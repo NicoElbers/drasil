@@ -5,24 +5,39 @@ const Manager = @This();
 gpa: Allocator,
 context_arena: ArenaAllocator,
 sub_trees: std.ArrayListUnmanaged(SubTree),
+callbacks: std.ArrayListUnmanaged(Callback.Fn),
 
-pub const Generator = *const fn (
-    /// User provided data, owned by `HtmlTree`.
-    ctx: *anyopaque,
-    /// Reference to the parent `Manager` for rendering subtrees.
-    manager: *Manager,
-    /// Allocator for persistent data, memory fully managed by generator.
-    gpa: Allocator,
-    /// Arena for temporary data, particularly useful for formatted strings.
-    /// This arena is reset before every call to generator.
-    arena: Allocator,
-) anyerror!SubTree.Managed;
+pub const Callback = struct {
+    pub const Fn = *const fn (
+        sub_tree: *SubTree,
+        gpa: Allocator,
+        data: Callback.Data,
+    ) anyerror!void;
+    pub const Data = union(enum) {
+        empty,
+        string: []const u8,
+        time_ns: u64,
+    };
+    pub const Index = enum(u32) { _ };
+};
 
 pub const SubTree = struct {
     arena: ArenaAllocator,
     generator: Generator,
     ctx: *anyopaque,
     cache: ?Managed,
+
+    pub const Generator = *const fn (
+        /// User provided data, owned by `HtmlTree`.
+        ctx: *anyopaque,
+        /// Reference to the parent `Manager` for rendering subtrees.
+        manager: *Manager,
+        /// Allocator for persistent data, memory fully managed by generator.
+        gpa: Allocator,
+        /// Arena for temporary data, particularly useful for formatted strings.
+        /// This arena is reset before every call to generator.
+        arena: Allocator,
+    ) anyerror!SubTree.Managed;
 
     /// Wrapper around tree to distinguish managed variants
     pub const Managed = struct { tree: Tree };
@@ -83,6 +98,7 @@ pub fn init(gpa: Allocator) Manager {
         .gpa = gpa,
         .context_arena = .init(gpa),
         .sub_trees = .empty,
+        .callbacks = .empty,
     };
 }
 
@@ -94,10 +110,12 @@ pub fn deinit(self: *Manager) void {
     }
     self.sub_trees.deinit(self.gpa);
 
+    self.callbacks.deinit(self.gpa);
+
     self.context_arena.deinit();
 }
 
-pub fn register(self: *Manager, context: anytype, generator: Generator) !SubTree.Index {
+pub fn register(self: *Manager, context: anytype, generator: SubTree.Generator) !SubTree.Index {
     const ctx = try self.context_arena.allocator().create(@TypeOf(context));
     ctx.* = context;
 
@@ -112,30 +130,64 @@ pub fn register(self: *Manager, context: anytype, generator: Generator) !SubTree
     return index;
 }
 
-pub fn manage(self: *Manager, arena: Allocator, tree: Tree) !SubTree.Managed {
-    const alloc = arena;
-    switch (tree.node) {
-        .text => |v| {
-            const managed: *Tree = try alloc.create(Tree);
-            managed.* = .{ .node = .{ .text = try alloc.dupe(u8, v) } };
-            return .{ .tree = .{ .node = .{ .static = managed } } };
-        },
-        .void => |v| {
-            const managed: *Tree = try alloc.create(Tree);
-            const attributes: []Attibute = try alloc.alloc(Attibute, v.attributes.len);
+pub fn registerCallback(self: *Manager, func: Callback.Fn) !Callback.Index {
+    // TODO: some bookkeeping to register a callback to a specific subtree
 
-            for (v.attributes, attributes) |src, *sink| {
+    const index: Callback.Index = @enumFromInt(self.callbacks.items.len);
+
+    try self.callbacks.append(self.gpa, func);
+
+    return index;
+}
+
+pub fn fireCallback(
+    self: *Manager,
+    subtree_index: SubTree.Index,
+    callback_index: Callback.Index,
+    data: Callback.Data,
+) !void {
+    // TODO: validate callback_index
+    // TODO: validate subtree_index
+    // TODO: validate that subtree indeed registered this callback
+
+    const cb = self.callbacks.items[@intFromEnum(callback_index)];
+    const subtree = self.subTree(subtree_index);
+
+    // TODO: Error handling, do not crash please
+    try cb(subtree, self.gpa, data);
+}
+
+pub fn manage(self: *Manager, arena: Allocator, tree: Tree) !SubTree.Managed {
+    const dupeAttributes = struct {
+        fn dupeAttributes(a: Allocator, attributes: []const Attribute) ![]const Attribute {
+            const res: []Attribute = try a.alloc(Attribute, attributes.len);
+
+            for (attributes, res) |src, *sink| {
                 switch (src) {
                     inline else => |val, t| {
                         const value: @TypeOf(val) = switch (@TypeOf(val)) {
-                            []const u8 => try alloc.dupe(u8, val),
+                            []const u8 => try a.dupe(u8, val),
                             else => val,
                         };
 
-                        sink.* = @unionInit(Attibute, @tagName(t), value);
+                        sink.* = @unionInit(Attribute, @tagName(t), value);
                     },
                 }
             }
+
+            return res;
+        }
+    }.dupeAttributes;
+
+    switch (tree.node) {
+        .text => |v| {
+            const managed: *Tree = try arena.create(Tree);
+            managed.* = .{ .node = .{ .text = try arena.dupe(u8, v) } };
+            return .{ .tree = .{ .node = .{ .static = managed } } };
+        },
+        .void => |v| {
+            const managed: *Tree = try arena.create(Tree);
+            const attributes = try dupeAttributes(arena, v.attributes);
 
             managed.* = .{ .node = .{ .void = .{
                 .tag = v.tag,
@@ -145,23 +197,10 @@ pub fn manage(self: *Manager, arena: Allocator, tree: Tree) !SubTree.Managed {
             return .{ .tree = .{ .node = .{ .static = managed } } };
         },
         .element => |v| {
-            const managed: *Tree = try alloc.create(Tree);
-            const attributes: []Attibute = try alloc.alloc(Attibute, v.attributes.len);
+            const managed: *Tree = try arena.create(Tree);
+            const attributes = try dupeAttributes(arena, v.attributes);
 
-            for (v.attributes, attributes) |src, *sink| {
-                switch (src) {
-                    inline else => |val, t| {
-                        const value: @TypeOf(val) = switch (@TypeOf(val)) {
-                            []const u8 => try alloc.dupe(u8, val),
-                            else => val,
-                        };
-
-                        sink.* = @unionInit(Attibute, @tagName(t), value);
-                    },
-                }
-            }
-
-            const sub_trees = try alloc.alloc(Tree, v.sub_trees.len);
+            const sub_trees = try arena.alloc(Tree, v.sub_trees.len);
             for (v.sub_trees, sub_trees) |src, *sink| {
                 sink.* = (try self.manage(arena, src)).tree;
             }
@@ -192,9 +231,135 @@ pub fn render(self: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
 
     var arr: std.ArrayList(u8) = .init(self.gpa);
 
+    try self.innerRender(
+        tree,
+        sub_tree_index,
+        false,
+        {},
+        arr.writer(),
+    );
+
+    return try arr.toOwnedSlice();
+}
+
+pub fn renderPretty(self: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
+    const sub_tree = self.subTree(sub_tree_index);
+    const tree = try sub_tree.generate(self);
+
+    var arr: std.ArrayList(u8) = .init(self.gpa);
+
+    try self.innerRender(
+        tree,
+        sub_tree_index,
+        true,
+        0,
+        arr.writer(),
+    );
+
     try tree.render(self, arr.writer());
 
     return try arr.toOwnedSlice();
+}
+
+fn innerRender(
+    manager: *Manager,
+    tree: Tree,
+    sub_tree_index: SubTree.Index,
+    comptime pretty: bool,
+    indent: if (pretty) u16 else void,
+    writer: anytype,
+) !void {
+    const renderAttributes = struct {
+        fn renderAttributes(
+            attributes: []const Attribute,
+            sti: SubTree.Index,
+            w: @TypeOf(writer),
+        ) !void {
+            for (attributes) |attr| {
+                try w.print(" {s}", .{@tagName(attr)});
+
+                switch (attr) {
+                    inline else => |v| {
+                        switch (@TypeOf(v)) {
+                            // TODO: Escape
+                            []const u8 => try w.print("=\"{s}\"", .{v}),
+                            bool => try w.print("=\"{s}\"", .{v}),
+                            void => {},
+                            Callback.Index => try w.print(
+                                "=\"callback({d}, {d})\"",
+                                .{ @intFromEnum(sti), @intFromEnum(v) },
+                            ),
+                            else => {
+                                if (@typeInfo(@TypeOf(v)) != .@"enum")
+                                    @compileError("Invalid attribute type");
+
+                                try w.print("=\"{s}\"", .{@tagName(v)});
+                            },
+                        }
+                    },
+                }
+            }
+        }
+    }.renderAttributes;
+
+    switch (tree.node) {
+        .text => |v| {
+            if (pretty)
+                try writer.writeByteNTimes(' ', indent);
+
+            try writer.writeAll(v);
+
+            if (pretty)
+                try writer.writeAll("\n");
+        },
+        .void => |v| {
+            if (pretty)
+                try writer.writeByteNTimes(' ', indent);
+
+            try writer.print("<{s}", .{@tagName(v.tag)});
+            try renderAttributes(v.attributes, sub_tree_index, writer);
+            try writer.writeAll(">");
+
+            if (pretty)
+                try writer.writeAll("\n");
+        },
+        .element => |v| {
+            // start
+            if (pretty)
+                try writer.writeByteNTimes(' ', indent);
+
+            try writer.print("<{s}", .{@tagName(v.tag)});
+            try renderAttributes(v.attributes, sub_tree_index, writer);
+            try writer.writeAll(">");
+
+            if (pretty)
+                try writer.writeAll("\n");
+
+            // subtrees
+            const new_indent = if (pretty) indent + 1 else {};
+
+            for (v.sub_trees) |child| {
+                try manager.innerRender(child, sub_tree_index, pretty, new_indent, writer);
+            }
+
+            // end
+            if (pretty)
+                try writer.writeByteNTimes(' ', indent);
+
+            try writer.print("</{s}>", .{@tagName(v.tag)});
+
+            if (pretty)
+                try writer.writeAll("\n");
+        },
+        .static => |ptr| try manager.innerRender(ptr.*, sub_tree_index, pretty, indent, writer),
+        .dynamic => |idx| try manager.innerRender(
+            try manager.generate(idx),
+            sub_tree_index,
+            pretty,
+            indent,
+            writer,
+        ),
+    }
 }
 
 const std = @import("std");
@@ -205,5 +370,5 @@ const ArenaAllocator = std.heap.ArenaAllocator;
 const Allocator = std.mem.Allocator;
 const MultiArrayList = std.MultiArrayList;
 const ArrayListUnmanaged = std.ArrayListUnmanaged;
-const Attibute = html_data.Attribute;
+const Attribute = html_data.Attribute;
 const ElementTag = html_data.ElementTag;

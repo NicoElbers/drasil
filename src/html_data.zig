@@ -1,8 +1,17 @@
+const Manager = @import("Manager.zig");
+const Callback = Manager.Callback;
+
 // @GENERATED SECTION START
 
 // generated - *DO NOT EDIT MANUALLY*
 
 pub const Attribute = union(enum) {
+    /// Event:
+    /// spec: https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers-on-elements,-document-objects,-and-window-objects
+    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/accesskey
+    /// status: standard
+    onclick: Callback.Index,
+
     /// Global attribute:
     /// spec: https://html.spec.whatwg.org/multipage/interaction.html#the-accesskey-attribute
     /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/accesskey

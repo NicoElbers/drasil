@@ -240,6 +240,65 @@ test "nested" {
     }
 }
 
+test "callbacks" {
+    {
+        const Case = struct {
+            fired: bool = false,
+            event: Callback.Index,
+
+            pub fn init(manager: *Manager) !struct { SubTree.Index, Callback.Index } {
+                const cb = try manager.registerCallback(callback);
+
+                return .{
+                    try manager.register(@This(){ .event = cb }, generate),
+                    cb,
+                };
+            }
+
+            fn callback(st: *SubTree, gpa: Allocator, data: Callback.Data) !void {
+                const case: *@This() = @alignCast(@ptrCast(st.ctx));
+                st.dirty();
+                _ = gpa;
+                _ = data;
+
+                case.fired = true;
+            }
+
+            fn generate(
+                ctx: *anyopaque,
+                manager: *Manager,
+                gpa: Allocator,
+                arena: Allocator,
+            ) !SubTree.Managed {
+                const case: *@This() = @alignCast(@ptrCast(ctx));
+                _ = gpa;
+
+                return manager.manage(
+                    arena,
+                    .raw(try std.fmt.allocPrint(arena, "{}", .{case.fired})),
+                );
+            }
+        };
+
+        var manager: Manager = .init(alloc);
+        defer manager.deinit();
+
+        const case, const cb = try Case.init(&manager);
+
+        {
+            const render = try manager.render(case);
+            defer alloc.free(render);
+            try std.testing.expectEqualStrings("false", render);
+        }
+        try manager.fireCallback(case, cb, .empty);
+        {
+            const render = try manager.render(case);
+            defer alloc.free(render);
+            try std.testing.expectEqualStrings("true", render);
+        }
+    }
+}
+
 const std = @import("std");
 const template = @import("root.zig");
 
@@ -249,3 +308,4 @@ const Tree = template.Tree;
 const Manager = template.Manager;
 const SubTree = Manager.SubTree;
 const Allocator = std.mem.Allocator;
+const Callback = Manager.Callback;

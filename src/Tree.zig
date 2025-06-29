@@ -20,104 +20,6 @@ pub const Node = union(enum) {
 
 node: Node,
 
-pub fn render(tree: Tree, manager: *Manager, writer: anytype) !void {
-    try tree.innerRender(manager, false, {}, writer);
-}
-
-pub fn prettyRender(tree: Tree, manager: *Manager, writer: anytype) !void {
-    try tree.innerRender(manager, true, 0, writer);
-}
-
-fn innerRender(
-    tree: Tree,
-    manager: *Manager,
-    comptime pretty: bool,
-    indent: if (pretty) u16 else void,
-    writer: anytype,
-) !void {
-    switch (tree.node) {
-        .text => |v| {
-            if (pretty)
-                try writer.writeByteNTimes(' ', indent);
-
-            try writer.writeAll(v);
-
-            if (pretty)
-                try writer.writeAll("\n");
-        },
-        .void => |v| {
-            if (pretty)
-                try writer.writeByteNTimes(' ', indent);
-
-            try writer.print("<{s}", .{@tagName(v.tag)});
-            try renderAttributes(v.attributes, writer);
-            try writer.writeAll(">");
-
-            if (pretty)
-                try writer.writeAll("\n");
-        },
-        .element => |v| {
-            // start
-            if (pretty)
-                try writer.writeByteNTimes(' ', indent);
-
-            try writer.print("<{s}", .{@tagName(v.tag)});
-            try renderAttributes(v.attributes, writer);
-            try writer.writeAll(">");
-
-            if (pretty)
-                try writer.writeAll("\n");
-
-            // subtrees
-            const new_indent = if (pretty) indent + 1 else {};
-
-            for (v.sub_trees) |sub_tree| {
-                try sub_tree.innerRender(manager, pretty, new_indent, writer);
-            }
-
-            // end
-            if (pretty)
-                try writer.writeByteNTimes(' ', indent);
-
-            try writer.print("</{s}>", .{@tagName(v.tag)});
-
-            if (pretty)
-                try writer.writeAll("\n");
-        },
-        .static => |ptr| try innerRender(ptr.*, manager, pretty, indent, writer),
-        .dynamic => |idx| try innerRender(
-            try manager.generate(idx),
-            manager,
-            pretty,
-            indent,
-            writer,
-        ),
-    }
-}
-
-fn renderAttributes(attributes: []const Attribute, writer: anytype) !void {
-    for (attributes) |attr| {
-        try writer.print(" {s}", .{@tagName(attr)});
-
-        switch (attr) {
-            inline else => |v| {
-                switch (@TypeOf(v)) {
-                    // TODO: Escape
-                    []const u8 => try writer.print("=\"{s}\"", .{v}),
-                    bool => try writer.print("=\"{s}\"", .{v}),
-                    void => {},
-                    else => {
-                        if (@typeInfo(@TypeOf(v)) != .@"enum")
-                            @compileError("Invalid attribute type");
-
-                        try writer.print("=\"{s}\"", .{@tagName(v)});
-                    },
-                }
-            },
-        }
-    }
-}
-
 /// ---------------
 /// WARNING:
 /// This function injects unescaped bytes into the tree, be wary
@@ -2263,3 +2165,4 @@ const ElementTag = html_data.ElementTag;
 const Allocator = std.mem.Allocator;
 const Manager = @import("Manager.zig");
 const SubTree = Manager.SubTree;
+const Callback = Manager.Callback;

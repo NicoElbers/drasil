@@ -4,6 +4,7 @@ pub const AttributeTag = []const u8;
 pub const Value = union(enum) {
     string,
     items: []const []const u8,
+    callback,
     boolean,
     void,
 };

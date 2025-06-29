@@ -163,3 +163,27 @@ pub fn main() !void {
     try tree.mount("#app", app);
 }
 ```
+
+## Callbacks
+
+Currently, there is quite a problem I found with callbacks. When you have
+multiple instances of a `SubTree`, a callback applies to all those instances
+indescrimiately. This is not the behavior I want. If I have 2 counter, they
+should count individually. I think the correct solution to this problem is to
+not have multiple instances of the same subtree if they are not supposed to
+show the same data.
+
+To that end, I feel like the struct in the code (as shown by the usage above)
+would be the 'template' so to say, and then a registry would be an instance. I
+might need to rename `register` then. I also feel that with this change
+deregistering becomes a more sane usecase? I think for now deregistering will
+be a TODO.
+
+I should also move html rendering to the `SubTree` namespace. There I can more
+easily justify passing in a `SubTree.Index` so I can generate proper code for
+callbacks. Maybe just move it to manager, that might make most sense.
+
+Finally, consider moving most callback related logic to `SubTree` and making
+callbacks local to the current subtree. That way I would get 'automatic'
+deregistering of callbacks with a potential future deregister impl. Maybe leave
+this until that happens
