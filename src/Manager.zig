@@ -354,7 +354,7 @@ fn innerRender(
         .static => |ptr| try manager.innerRender(ptr.*, sub_tree_index, pretty, indent, writer),
         .dynamic => |idx| try manager.innerRender(
             try manager.generate(idx),
-            sub_tree_index,
+            idx,
             pretty,
             indent,
             writer,

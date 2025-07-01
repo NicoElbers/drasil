@@ -299,6 +299,85 @@ test "callbacks" {
     }
 }
 
+test "nested callback" {
+    { // NOTE: This is god awful code, do not copy this
+        const NestedCallback = struct {
+            cb: Callback.Index,
+
+            pub fn init(manager: *Manager, cb: Callback.Index) !SubTree.Index {
+                return manager.register(@This(){
+                    .cb = cb,
+                }, generate);
+            }
+
+            fn callback(st: *SubTree, gpa: Allocator, data: Callback.Data) !void {
+                _ = st;
+                _ = gpa;
+                _ = data;
+            }
+
+            fn generate(
+                ctx: *anyopaque,
+                manager: *Manager,
+                gpa: Allocator,
+                arena: Allocator,
+            ) !SubTree.Managed {
+                const data: *@This() = @alignCast(@ptrCast(ctx));
+                _ = gpa;
+
+                return manager.manage(
+                    arena,
+                    .button(&.{.{ .onclick = data.cb }}, &.{}),
+                );
+            }
+        };
+
+        const Case = struct {
+            index: SubTree.Index,
+
+            pub fn init(manager: *Manager, index: SubTree.Index) !SubTree.Index {
+                return manager.register(@This(){
+                    .index = index,
+                }, generate);
+            }
+
+            fn generate(
+                ctx: *anyopaque,
+                manager: *Manager,
+                gpa: Allocator,
+                arena: Allocator,
+            ) !SubTree.Managed {
+                const case: *@This() = @alignCast(@ptrCast(ctx));
+                _ = gpa;
+
+                return manager.manage(
+                    arena,
+                    .dyn(case.index),
+                );
+            }
+        };
+
+        var manager: Manager = .init(alloc);
+        defer manager.deinit();
+
+        const cb: Callback.Index = try manager.registerCallback(NestedCallback.callback);
+        assert(@intFromEnum(cb) == 0);
+        const nested = try NestedCallback.init(&manager, cb);
+        assert(@intFromEnum(nested) == 0);
+        const case = try Case.init(&manager, nested);
+        assert(@intFromEnum(case) == 1);
+
+        {
+            const content = try manager.render(case);
+            defer alloc.free(content);
+            try std.testing.expectEqualStrings(
+                "<button onclick=\"callback(0, 0)\"></button>",
+                content,
+            );
+        }
+    }
+}
+
 const std = @import("std");
 const drasil = @import("root.zig");
 
