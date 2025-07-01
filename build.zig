@@ -11,6 +11,8 @@ pub fn build(b: *Build) void {
         .target = target,
     });
 
+    exampleStep(b, drasil_mod, target, optimize);
+
     const filters = b.option([]const []const u8, "test-filter", "Skip tests that do not match any filter") orelse &.{};
     const drasil_tests = b.addTest(.{
         .root_module = drasil_mod,
@@ -73,8 +75,62 @@ fn updateHtmlDataZonStep(b: *Build, target: Target, optimize: Optimize) ?void {
     step.dependOn(&run.step);
 }
 
+fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) void {
+    const wasm_target = b.resolveTargetQuery(.{
+        .cpu_arch = .wasm32,
+        .os_tag = .freestanding,
+        .cpu_features_add = std.Target.wasm.featureSet(&.{ .bulk_memory, .atomics }),
+    });
+
+    const counter_mod = b.createModule(.{
+        .root_source_file = b.path("example/counter/client.zig"),
+        .target = wasm_target,
+        .optimize = switch (optimize) {
+            .Debug, .ReleaseSafe => optimize,
+            .ReleaseFast, .ReleaseSmall => .ReleaseSmall,
+        },
+        .strip = true,
+    });
+    counter_mod.addImport("drasil", drasil);
+
+    const counter_exe = b.addExecutable(.{
+        .name = "example_counter",
+        .root_module = counter_mod,
+    });
+    // TODO: Experiment which options I can take away
+    counter_exe.lto = .full;
+    counter_exe.link_gc_sections = true;
+    counter_exe.initial_memory = (1 << 20) + (1 << 16);
+    counter_exe.max_memory = 1 << 24;
+    counter_exe.import_memory = true;
+    counter_exe.rdynamic = true;
+    counter_exe.entry = .disabled;
+
+    const server_mod = b.createModule(.{
+        .root_source_file = b.path("example/example_server.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const server_exe = b.addExecutable(.{
+        .name = "example_server",
+        .root_module = server_mod,
+    });
+
+    {
+        const run_server = b.addRunArtifact(server_exe);
+        run_server.addFileArg(counter_exe.getEmittedBin()); // wasm path
+        run_server.addFileArg(b.path("example/index.html")); // html path
+        run_server.addFileArg(b.path("js/init.js")); // js path
+
+        const step = b.step("counter", "Hosts an example counter on localhost:8080");
+        step.dependOn(&run_server.step);
+    }
+}
+
 const std = @import("std");
 
 const Build = std.Build;
+const Module = Build.Module;
 const Target = Build.ResolvedTarget;
 const Optimize = std.builtin.Mode;
