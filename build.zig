@@ -97,11 +97,6 @@ fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) v
         .name = "example_counter",
         .root_module = counter_mod,
     });
-    // TODO: Experiment which options I can take away
-    counter_exe.lto = .full;
-    counter_exe.link_gc_sections = true;
-    counter_exe.initial_memory = (1 << 20) + (1 << 16);
-    counter_exe.max_memory = 1 << 24;
     counter_exe.import_memory = true;
     counter_exe.rdynamic = true;
     counter_exe.entry = .disabled;
