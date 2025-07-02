@@ -1,0 +1,1175 @@
+[
+  {
+    "name": "a",
+    "description": "Hyperlink",
+    "attributes": [
+      "globals",
+      "href",
+      "target",
+      "download",
+      "ping",
+      "rel",
+      "hreflang",
+      "type",
+      "referrerpolicy"
+    ],
+    "interface": "HTMLAnchorElement"
+  },
+  {
+    "name": "abbr",
+    "description": "Abbreviation",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "address",
+    "description": "Contact information for a page or article element",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "area",
+    "description": "Hyperlink or dead area on an image map",
+    "attributes": [
+      "globals",
+      "alt",
+      "coords",
+      "shape",
+      "href",
+      "target",
+      "download",
+      "ping",
+      "rel",
+      "referrerpolicy"
+    ],
+    "interface": "HTMLAreaElement"
+  },
+  {
+    "name": "article",
+    "description": "Self-contained syndicatable or reusable composition",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "aside",
+    "description": "Sidebar for tangentially related content",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "audio",
+    "description": "Audio player",
+    "attributes": [
+      "globals",
+      "src",
+      "crossorigin",
+      "preload",
+      "autoplay",
+      "loop",
+      "muted",
+      "controls"
+    ],
+    "interface": "HTMLAudioElement"
+  },
+  {
+    "name": "b",
+    "description": "Keywords",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "base",
+    "description": "Base URL and default target navigable for hyperlinks and forms",
+    "attributes": [
+      "globals",
+      "href",
+      "target"
+    ],
+    "interface": "HTMLBaseElement"
+  },
+  {
+    "name": "bdi",
+    "description": "Text directionality isolation",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "bdo",
+    "description": "Text directionality formatting",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "blockquote",
+    "description": "A section quoted from another source",
+    "attributes": [
+      "globals",
+      "cite"
+    ],
+    "interface": "HTMLQuoteElement"
+  },
+  {
+    "name": "body",
+    "description": "Document body",
+    "attributes": [
+      "globals",
+      "onafterprint",
+      "onbeforeprint",
+      "onbeforeunload",
+      "onhashchange",
+      "onlanguagechange",
+      "onmessage",
+      "onmessageerror",
+      "onoffline",
+      "ononline",
+      "onpageswap",
+      "onpagehide",
+      "onpagereveal",
+      "onpageshow",
+      "onpopstate",
+      "onrejectionhandled",
+      "onstorage",
+      "onunhandledrejection",
+      "onunload"
+    ],
+    "interface": "HTMLBodyElement"
+  },
+  {
+    "name": "br",
+    "description": "Line break, e.g. in poem or postal address",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLBRElement"
+  },
+  {
+    "name": "button",
+    "description": "Button control",
+    "attributes": [
+      "globals",
+      "command",
+      "commandfor",
+      "disabled",
+      "form",
+      "formaction",
+      "formenctype",
+      "formmethod",
+      "formnovalidate",
+      "formtarget",
+      "name",
+      "popovertarget",
+      "popovertargetaction",
+      "type",
+      "value"
+    ],
+    "interface": "HTMLButtonElement"
+  },
+  {
+    "name": "canvas",
+    "description": "Scriptable bitmap canvas",
+    "attributes": [
+      "globals",
+      "width",
+      "height"
+    ],
+    "interface": "HTMLCanvasElement"
+  },
+  {
+    "name": "caption",
+    "description": "Table caption",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLTableCaptionElement"
+  },
+  {
+    "name": "cite",
+    "description": "Title of a work",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "code",
+    "description": "Computer code",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "col",
+    "description": "Table column",
+    "attributes": [
+      "globals",
+      "span"
+    ],
+    "interface": "HTMLTableColElement"
+  },
+  {
+    "name": "colgroup",
+    "description": "Group of columns in a table",
+    "attributes": [
+      "globals",
+      "span"
+    ],
+    "interface": "HTMLTableColElement"
+  },
+  {
+    "name": "data",
+    "description": "Machine-readable equivalent",
+    "attributes": [
+      "globals",
+      "value"
+    ],
+    "interface": "HTMLDataElement"
+  },
+  {
+    "name": "datalist",
+    "description": "Container for options for combo box control",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLDataListElement"
+  },
+  {
+    "name": "dd",
+    "description": "Content for corresponding dt element(s)",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "del",
+    "description": "A removal from the document",
+    "attributes": [
+      "globals",
+      "cite",
+      "datetime"
+    ],
+    "interface": "HTMLModElement"
+  },
+  {
+    "name": "details",
+    "description": "Disclosure control for hiding details",
+    "attributes": [
+      "globals",
+      "name",
+      "open"
+    ],
+    "interface": "HTMLDetailsElement"
+  },
+  {
+    "name": "dfn",
+    "description": "Defining instance",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "dialog",
+    "description": "Dialog box or window",
+    "attributes": [
+      "globals",
+      "open"
+    ],
+    "interface": "HTMLDialogElement"
+  },
+  {
+    "name": "div",
+    "description": "Generic flow container, or container for name-value groups in dl elements",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLDivElement"
+  },
+  {
+    "name": "dl",
+    "description": "Association list consisting of zero or more name-value groups",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLDListElement"
+  },
+  {
+    "name": "dt",
+    "description": "Legend for corresponding dd element(s)",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "em",
+    "description": "Stress emphasis",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "embed",
+    "description": "Plugin",
+    "attributes": [
+      "globals",
+      "src",
+      "type",
+      "width",
+      "height"
+    ],
+    "interface": "HTMLEmbedElement"
+  },
+  {
+    "name": "fieldset",
+    "description": "Group of form controls",
+    "attributes": [
+      "globals",
+      "disabled",
+      "form",
+      "name"
+    ],
+    "interface": "HTMLFieldSetElement"
+  },
+  {
+    "name": "figcaption",
+    "description": "Caption for figure",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "figure",
+    "description": "Figure with optional caption",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "footer",
+    "description": "Footer for a page or section",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "form",
+    "description": "User-submittable form",
+    "attributes": [
+      "globals",
+      "accept-charset",
+      "action",
+      "autocomplete",
+      "enctype",
+      "method",
+      "name",
+      "novalidate",
+      "rel",
+      "target"
+    ],
+    "interface": "HTMLFormElement"
+  },
+  {
+    "name": "h1",
+    "description": "Heading",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLHeadingElement"
+  },
+  {
+    "name": "h2",
+    "description": "Heading",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLHeadingElement"
+  },
+  {
+    "name": "h3",
+    "description": "Heading",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLHeadingElement"
+  },
+  {
+    "name": "h4",
+    "description": "Heading",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLHeadingElement"
+  },
+  {
+    "name": "h5",
+    "description": "Heading",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLHeadingElement"
+  },
+  {
+    "name": "h6",
+    "description": "Heading",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLHeadingElement"
+  },
+  {
+    "name": "head",
+    "description": "Container for document metadata",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLHeadElement"
+  },
+  {
+    "name": "header",
+    "description": "Introductory or navigational aids for a page or section",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "hgroup",
+    "description": "Heading container",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "hr",
+    "description": "Thematic break",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLHRElement"
+  },
+  {
+    "name": "html",
+    "description": "Root element",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLHtmlElement"
+  },
+  {
+    "name": "i",
+    "description": "Alternate voice",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "iframe",
+    "description": "Child navigable",
+    "attributes": [
+      "globals",
+      "src",
+      "srcdoc",
+      "name",
+      "sandbox",
+      "allow",
+      "allowfullscreen",
+      "width",
+      "height",
+      "referrerpolicy",
+      "loading"
+    ],
+    "interface": "HTMLIFrameElement"
+  },
+  {
+    "name": "img",
+    "description": "Image",
+    "attributes": [
+      "globals",
+      "alt",
+      "src",
+      "srcset",
+      "sizes",
+      "crossorigin",
+      "usemap",
+      "ismap",
+      "width",
+      "height",
+      "referrerpolicy",
+      "decoding",
+      "loading",
+      "fetchpriority"
+    ],
+    "interface": "HTMLImageElement"
+  },
+  {
+    "name": "input",
+    "description": "Form control",
+    "attributes": [
+      "globals",
+      "accept",
+      "alpha",
+      "alt",
+      "autocomplete",
+      "checked",
+      "colorspace",
+      "dirname",
+      "disabled",
+      "form",
+      "formaction",
+      "formenctype",
+      "formmethod",
+      "formnovalidate",
+      "formtarget",
+      "height",
+      "list",
+      "max",
+      "maxlength",
+      "min",
+      "minlength",
+      "multiple",
+      "name",
+      "pattern",
+      "placeholder",
+      "popovertarget",
+      "popovertargetaction",
+      "readonly",
+      "required",
+      "size",
+      "src",
+      "step",
+      "type",
+      "value",
+      "width"
+    ],
+    "interface": "HTMLInputElement"
+  },
+  {
+    "name": "ins",
+    "description": "An addition to the document",
+    "attributes": [
+      "globals",
+      "cite",
+      "datetime"
+    ],
+    "interface": "HTMLModElement"
+  },
+  {
+    "name": "kbd",
+    "description": "User input",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "label",
+    "description": "Caption for a form control",
+    "attributes": [
+      "globals",
+      "for"
+    ],
+    "interface": "HTMLLabelElement"
+  },
+  {
+    "name": "legend",
+    "description": "Caption for fieldset",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLLegendElement"
+  },
+  {
+    "name": "li",
+    "description": "List item",
+    "attributes": [
+      "globals",
+      "value"
+    ],
+    "interface": "HTMLLIElement"
+  },
+  {
+    "name": "link",
+    "description": "Link metadata",
+    "attributes": [
+      "globals",
+      "href",
+      "crossorigin",
+      "rel",
+      "as",
+      "media",
+      "hreflang",
+      "type",
+      "sizes",
+      "imagesrcset",
+      "imagesizes",
+      "referrerpolicy",
+      "integrity",
+      "blocking",
+      "color",
+      "disabled",
+      "fetchpriority"
+    ],
+    "interface": "HTMLLinkElement"
+  },
+  {
+    "name": "main",
+    "description": "Container for the dominant contents of the document",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "map",
+    "description": "Image map",
+    "attributes": [
+      "globals",
+      "name"
+    ],
+    "interface": "HTMLMapElement"
+  },
+  {
+    "name": "mark",
+    "description": "Highlight",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "math",
+    "description": "MathML root",
+    "attributes": [],
+    "interface": "Element"
+  },
+  {
+    "name": "menu",
+    "description": "Menu of commands",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLMenuElement"
+  },
+  {
+    "name": "meta",
+    "description": "Text metadata",
+    "attributes": [
+      "globals",
+      "name",
+      "http-equiv",
+      "content",
+      "charset",
+      "media"
+    ],
+    "interface": "HTMLMetaElement"
+  },
+  {
+    "name": "meter",
+    "description": "Gauge",
+    "attributes": [
+      "globals",
+      "value",
+      "min",
+      "max",
+      "low",
+      "high",
+      "optimum"
+    ],
+    "interface": "HTMLMeterElement"
+  },
+  {
+    "name": "nav",
+    "description": "Section with navigational links",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "noscript",
+    "description": "Fallback content for script",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "object",
+    "description": "Image, child navigable, or plugin",
+    "attributes": [
+      "globals",
+      "data",
+      "type",
+      "name",
+      "form",
+      "width",
+      "height"
+    ],
+    "interface": "HTMLObjectElement"
+  },
+  {
+    "name": "ol",
+    "description": "Ordered list",
+    "attributes": [
+      "globals",
+      "reversed",
+      "start",
+      "type"
+    ],
+    "interface": "HTMLOListElement"
+  },
+  {
+    "name": "optgroup",
+    "description": "Group of options in a list box",
+    "attributes": [
+      "globals",
+      "disabled",
+      "label"
+    ],
+    "interface": "HTMLOptGroupElement"
+  },
+  {
+    "name": "option",
+    "description": "Option in a list box or combo box control",
+    "attributes": [
+      "globals",
+      "disabled",
+      "label",
+      "selected",
+      "value"
+    ],
+    "interface": "HTMLOptionElement"
+  },
+  {
+    "name": "output",
+    "description": "Calculated output value",
+    "attributes": [
+      "globals",
+      "for",
+      "form",
+      "name"
+    ],
+    "interface": "HTMLOutputElement"
+  },
+  {
+    "name": "p",
+    "description": "Paragraph",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLParagraphElement"
+  },
+  {
+    "name": "picture",
+    "description": "Image",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLPictureElement"
+  },
+  {
+    "name": "pre",
+    "description": "Block of preformatted text",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLPreElement"
+  },
+  {
+    "name": "progress",
+    "description": "Progress bar",
+    "attributes": [
+      "globals",
+      "value",
+      "max"
+    ],
+    "interface": "HTMLProgressElement"
+  },
+  {
+    "name": "q",
+    "description": "Quotation",
+    "attributes": [
+      "globals",
+      "cite"
+    ],
+    "interface": "HTMLQuoteElement"
+  },
+  {
+    "name": "rp",
+    "description": "Parenthesis for ruby annotation text",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "rt",
+    "description": "Ruby annotation text",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "ruby",
+    "description": "Ruby annotation(s)",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "s",
+    "description": "Inaccurate text",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "samp",
+    "description": "Computer output",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "script",
+    "description": "Embedded script",
+    "attributes": [
+      "globals",
+      "src",
+      "type",
+      "nomodule",
+      "async",
+      "defer",
+      "crossorigin",
+      "integrity",
+      "referrerpolicy",
+      "blocking",
+      "fetchpriority"
+    ],
+    "interface": "HTMLScriptElement"
+  },
+  {
+    "name": "search",
+    "description": "Container for search controls",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "section",
+    "description": "Generic document or application section",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "select",
+    "description": "List box control",
+    "attributes": [
+      "globals",
+      "autocomplete",
+      "disabled",
+      "form",
+      "multiple",
+      "name",
+      "required",
+      "size"
+    ],
+    "interface": "HTMLSelectElement"
+  },
+  {
+    "name": "slot",
+    "description": "Shadow tree slot",
+    "attributes": [
+      "globals",
+      "name"
+    ],
+    "interface": "HTMLSlotElement"
+  },
+  {
+    "name": "small",
+    "description": "Side comment",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "source",
+    "description": "Image source for img or media source for video or audio",
+    "attributes": [
+      "globals",
+      "type",
+      "media",
+      "src",
+      "srcset",
+      "sizes",
+      "width",
+      "height"
+    ],
+    "interface": "HTMLSourceElement"
+  },
+  {
+    "name": "span",
+    "description": "Generic phrasing container",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLSpanElement"
+  },
+  {
+    "name": "strong",
+    "description": "Importance",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "style",
+    "description": "Embedded styling information",
+    "attributes": [
+      "globals",
+      "media",
+      "blocking"
+    ],
+    "interface": "HTMLStyleElement"
+  },
+  {
+    "name": "sub",
+    "description": "Subscript",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "summary",
+    "description": "Caption for details",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "sup",
+    "description": "Superscript",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "svg",
+    "description": "SVG root",
+    "attributes": [],
+    "interface": "SVGSVGElement"
+  },
+  {
+    "name": "table",
+    "description": "Table",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLTableElement"
+  },
+  {
+    "name": "tbody",
+    "description": "Group of rows in a table",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLTableSectionElement"
+  },
+  {
+    "name": "td",
+    "description": "Table cell",
+    "attributes": [
+      "globals",
+      "colspan",
+      "rowspan",
+      "headers"
+    ],
+    "interface": "HTMLTableCellElement"
+  },
+  {
+    "name": "template",
+    "description": "Template",
+    "attributes": [
+      "globals",
+      "shadowrootmode",
+      "shadowrootdelegatesfocus",
+      "shadowrootclonable",
+      "shadowrootserializable",
+      "shadowrootcustomelementregistry"
+    ],
+    "interface": "HTMLTemplateElement"
+  },
+  {
+    "name": "textarea",
+    "description": "Multiline text controls",
+    "attributes": [
+      "globals",
+      "autocomplete",
+      "cols",
+      "dirname",
+      "disabled",
+      "form",
+      "maxlength",
+      "minlength",
+      "name",
+      "placeholder",
+      "readonly",
+      "required",
+      "rows",
+      "wrap"
+    ],
+    "interface": "HTMLTextAreaElement"
+  },
+  {
+    "name": "tfoot",
+    "description": "Group of footer rows in a table",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLTableSectionElement"
+  },
+  {
+    "name": "th",
+    "description": "Table header cell",
+    "attributes": [
+      "globals",
+      "colspan",
+      "rowspan",
+      "headers",
+      "scope",
+      "abbr"
+    ],
+    "interface": "HTMLTableCellElement"
+  },
+  {
+    "name": "thead",
+    "description": "Group of heading rows in a table",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLTableSectionElement"
+  },
+  {
+    "name": "time",
+    "description": "Machine-readable equivalent of date- or time-related data",
+    "attributes": [
+      "globals",
+      "datetime"
+    ],
+    "interface": "HTMLTimeElement"
+  },
+  {
+    "name": "title",
+    "description": "Document title",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLTitleElement"
+  },
+  {
+    "name": "tr",
+    "description": "Table row",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLTableRowElement"
+  },
+  {
+    "name": "track",
+    "description": "Timed text track",
+    "attributes": [
+      "globals",
+      "default",
+      "kind",
+      "label",
+      "src",
+      "srclang"
+    ],
+    "interface": "HTMLTrackElement"
+  },
+  {
+    "name": "u",
+    "description": "Unarticulated annotation",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "ul",
+    "description": "List",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLUListElement"
+  },
+  {
+    "name": "var",
+    "description": "Variable",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  },
+  {
+    "name": "video",
+    "description": "Video player",
+    "attributes": [
+      "globals",
+      "src",
+      "crossorigin",
+      "poster",
+      "preload",
+      "autoplay",
+      "playsinline",
+      "loop",
+      "muted",
+      "controls",
+      "width",
+      "height"
+    ],
+    "interface": "HTMLVideoElement"
+  },
+  {
+    "name": "wbr",
+    "description": "Line breaking opportunity",
+    "attributes": [
+      "globals"
+    ],
+    "interface": "HTMLElement"
+  }
+]

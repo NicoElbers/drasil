@@ -6,3452 +6,3380 @@ const Callback = Manager.Callback;
 // generated - *DO NOT EDIT MANUALLY*
 
 pub const Attribute = union(enum) {
-    /// Event:
-    /// spec: https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers-on-elements,-document-objects,-and-window-objects
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/accesskey
-    /// status: standard
+    // Events
+
+    /// Event with interface Event
+    onDOMContentLoaded: Callback.Index,
+
+    /// Event with interface Event
+    onafterprint: Callback.Index,
+
+    /// Event with interface Event
+    onbeforematch: Callback.Index,
+
+    /// Event with interface Event
+    onbeforeprint: Callback.Index,
+
+    /// Event with interface ToggleEvent
+    onbeforetoggle: Callback.Index,
+
+    /// Event with interface BeforeUnloadEvent
+    onbeforeunload: Callback.Index,
+
+    /// Event with interface Event
+    onblur: Callback.Index,
+
+    /// Event with interface Event
+    oncancel: Callback.Index,
+
+    /// Event with interface Event
+    onchange: Callback.Index,
+
+    /// Event with interface PointerEvent
     onclick: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#the-accesskey-attribute
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/accesskey
-    /// status: standard
-    accesskey: []const u8,
+    /// Event with interface Event
+    onclose: Callback.Index,
 
-    /// Global attribute:
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/anchor
-    /// status: experimental
-    anchor: []const u8,
+    /// Event with interface CommandEvent
+    oncommand: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-autocapitalize
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/autocapitalize
-    /// status: standard
-    autocapitalize: []const u8,
+    /// Event with interface MessageEvent
+    onconnect: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-autocorrect
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/autocorrect
-    /// status: standard
-    autocorrect: []const u8,
+    /// Event with interface Event
+    oncontextlost: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#dom-fe-autofocus
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/autofocus
-    /// status: standard
-    autofocus: []const u8,
+    /// Event with interface Event
+    oncontextrestored: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dom.html#global-attributes:classes-2
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/class
-    /// status: standard
-    class: []const u8,
+    /// Event with interface NavigationCurrentEntryChangeEvent
+    oncurrententrychange: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-contenteditable
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/contenteditable
-    /// status: standard
-    contenteditable: []const u8,
+    /// Event with interface Event
+    ondispose: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dom.html#attr-data-*
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/data-*
-    /// status: standard
-    data_attributes: []const u8,
+    /// Event with interface Event
+    onerror: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/dir
-    /// status: standard
-    dir: []const u8,
+    /// Event with interface Event
+    onfocus: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dnd.html#the-draggable-attribute
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/draggable
-    /// status: standard
-    draggable: []const u8,
+    /// Event with interface FormDataEvent
+    onformdata: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-enterkeyhint
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/enterkeyhint
-    /// status: standard
-    enterkeyhint: []const u8,
+    /// Event with interface HashChangeEvent
+    onhashchange: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://drafts.csswg.org/css-shadow-parts/#element-attrdef-html-global-exportparts
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/exportparts
-    /// status: standard
-    exportparts: []const u8,
+    /// Event with interface Event
+    oninput: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#the-hidden-attribute
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/hidden
-    /// status: standard
-    hidden: []const u8,
+    /// Event with interface Event
+    oninvalid: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dom.html#global-attributes:the-id-attribute-2
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/id
-    /// status: standard
-    id: []const u8,
+    /// Event with interface Event
+    onlanguagechange: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#the-inert-attribute
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/inert
-    /// status: standard
-    inert: []const u8,
+    /// Event with interface Event
+    onload: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-inputmode
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/inputmode
-    /// status: standard
-    inputmode: []const u8,
+    /// Event with interface MessageEvent
+    onmessage: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/custom-elements.html#attr-is
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/is
-    /// status: standard
-    is: []const u8,
+    /// Event with interface MessageEvent
+    onmessageerror: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dom.html#attr-lang
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/lang
-    /// status: standard
-    lang: []const u8,
+    /// Event with interface NavigateEvent
+    onnavigate: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/urls-and-fetching.html#attr-nonce
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/nonce
-    /// status: standard
-    nonce: []const u8,
+    /// Event with interface ErrorEvent
+    onnavigateerror: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://drafts.csswg.org/css-shadow-parts/#part-attr
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/part
-    /// status: standard
-    part: []const u8,
+    /// Event with interface Event
+    onnavigatesuccess: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/popover
-    /// status: standard
-    popover: []const u8,
+    /// Event with interface Event
+    onoffline: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dom.html#attr-slot
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/slot
-    /// status: standard
-    slot: []const u8,
+    /// Event with interface Event
+    ononline: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-spellcheck
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/spellcheck
-    /// status: standard
-    spellcheck: []const u8,
+    /// Event with interface Event
+    onopen: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dom.html#the-style-attribute
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/style
-    /// status: standard
-    style: []const u8,
+    /// Event with interface PageTransitionEvent
+    onpagehide: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-tabindex
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/tabindex
-    /// status: standard
-    tabindex: []const u8,
+    /// Event with interface PageRevealEvent
+    onpagereveal: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dom.html#the-title-attribute
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/title
-    /// status: standard
-    title: []const u8,
+    /// Event with interface PageTransitionEvent
+    onpageshow: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/dom.html#attr-translate
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/translate
-    /// status: standard
-    translate: []const u8,
+    /// Event with interface PageSwapEvent
+    onpageswap: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://w3c.github.io/virtual-keyboard/#dom-elementcontenteditable-virtualkeyboardpolicy
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/virtualkeyboardpolicy
-    /// status: experimental
-    virtualkeyboardpolicy: []const u8,
+    /// Event with interface PointerEvent
+    onpointercancel: Callback.Index,
 
-    /// Global attribute:
-    /// spec: https://html.spec.whatwg.org/multipage/interaction.html#writing-suggestions
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/writingsuggestions
-    /// status: standard
-    writingsuggestions: []const u8,
+    /// Event with interface PopStateEvent
+    onpopstate: Callback.Index,
 
-    /// td:
-    /// status: deprecated
+    /// Event with interface Event
+    onreadystatechange: Callback.Index,
+
+    /// Event with interface PromiseRejectionEvent
+    onrejectionhandled: Callback.Index,
+
+    /// Event with interface Event
+    onreset: Callback.Index,
+
+    /// Event with interface Event
+    onselect: Callback.Index,
+
+    /// Event with interface StorageEvent
+    onstorage: Callback.Index,
+
+    /// Event with interface SubmitEvent
+    onsubmit: Callback.Index,
+
+    /// Event with interface ToggleEvent
+    ontoggle: Callback.Index,
+
+    /// Event with interface PromiseRejectionEvent
+    onunhandledrejection: Callback.Index,
+
+    /// Event with interface Event
+    onunload: Callback.Index,
+
+    /// Event with interface Event
+    onvisibilitychange: Callback.Index,
+
+    /// Event with interface Event
+    onabort: Callback.Index,
+
+    /// Event with interface Event
+    oncanplay: Callback.Index,
+
+    /// Event with interface Event
+    oncanplaythrough: Callback.Index,
+
+    /// Event with interface Event
+    ondurationchange: Callback.Index,
+
+    /// Event with interface Event
+    onemptied: Callback.Index,
+
+    /// Event with interface Event
+    onended: Callback.Index,
+
+    /// Event with interface Event
+    onloadeddata: Callback.Index,
+
+    /// Event with interface Event
+    onloadedmetadata: Callback.Index,
+
+    /// Event with interface Event
+    onloadstart: Callback.Index,
+
+    /// Event with interface Event
+    onpause: Callback.Index,
+
+    /// Event with interface Event
+    onplay: Callback.Index,
+
+    /// Event with interface Event
+    onplaying: Callback.Index,
+
+    /// Event with interface Event
+    onprogress: Callback.Index,
+
+    /// Event with interface Event
+    onratechange: Callback.Index,
+
+    /// Event with interface Event
+    onresize: Callback.Index,
+
+    /// Event with interface Event
+    onseeked: Callback.Index,
+
+    /// Event with interface Event
+    onseeking: Callback.Index,
+
+    /// Event with interface Event
+    onstalled: Callback.Index,
+
+    /// Event with interface Event
+    onsuspend: Callback.Index,
+
+    /// Event with interface Event
+    ontimeupdate: Callback.Index,
+
+    /// Event with interface Event
+    onvolumechange: Callback.Index,
+
+    /// Event with interface Event
+    onwaiting: Callback.Index,
+
+    /// Event with interface DragEvent
+    ondrag: Callback.Index,
+
+    /// Event with interface DragEvent
+    ondragend: Callback.Index,
+
+    /// Event with interface DragEvent
+    ondragenter: Callback.Index,
+
+    /// Event with interface DragEvent
+    ondragleave: Callback.Index,
+
+    /// Event with interface DragEvent
+    ondragover: Callback.Index,
+
+    /// Event with interface DragEvent
+    ondragstart: Callback.Index,
+
+    /// Event with interface DragEvent
+    ondrop: Callback.Index,
+
+    // Attributes
+
+    /// For .th:
     ///
-    /// th:
+    /// Alternative label to use for the header cell when referencing the cell in other contexts
+    ///
     /// status: standard
     abbr: []const u8,
 
-    /// td:
-    /// status: deprecated
+    /// For .input:
     ///
-    /// col:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-align
-    /// status: deprecated
+    /// Hint for expected file type in file upload controls
     ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-input-align
-    /// status: deprecated
-    ///
-    /// th:
-    /// status: deprecated
-    ///
-    /// legend:
-    /// status: deprecated
-    ///
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-iframe-align
-    /// status: deprecated
-    ///
-    /// tr:
-    /// status: deprecated
-    ///
-    /// embed:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-embed-align
-    /// status: deprecated
-    ///
-    /// thead:
-    /// status: deprecated
-    ///
-    /// table:
-    /// status: deprecated
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-img-align
-    /// status: deprecated
-    ///
-    /// tfoot:
-    /// status: deprecated
-    ///
-    /// colgroup:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-align
-    /// status: deprecated
-    ///
-    /// caption:
-    /// status: deprecated
-    ///
-    /// div:
-    /// status: deprecated
-    ///
-    /// hr:
-    /// status: deprecated
-    ///
-    /// tbody:
-    /// status: deprecated
-    @"align": []const u8,
-
-    /// td:
-    /// status: deprecated
-    ///
-    /// th:
-    /// status: deprecated
-    axis: []const u8,
-
-    /// td:
-    /// status: deprecated
-    ///
-    /// th:
-    /// status: deprecated
-    ///
-    /// tr:
-    /// status: deprecated
-    ///
-    /// thead:
-    /// status: deprecated
-    ///
-    /// marquee:
-    /// status: deprecated
-    ///
-    /// table:
-    /// status: deprecated
-    ///
-    /// tfoot:
-    /// status: deprecated
-    ///
-    /// body:
-    /// status: deprecated
-    ///
-    /// tbody:
-    /// status: deprecated
-    bgcolor: []const u8,
-
-    /// td:
-    /// status: deprecated
-    ///
-    /// col:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-char
-    /// status: deprecated
-    ///
-    /// th:
-    /// status: deprecated
-    ///
-    /// tr:
-    /// status: deprecated
-    ///
-    /// thead:
-    /// status: deprecated
-    ///
-    /// tfoot:
-    /// status: deprecated
-    ///
-    /// colgroup:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-char
-    /// status: deprecated
-    ///
-    /// tbody:
-    /// status: deprecated
-    char: []const u8,
-
-    /// td:
-    /// status: deprecated
-    ///
-    /// col:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-charoff
-    /// status: deprecated
-    ///
-    /// th:
-    /// status: deprecated
-    ///
-    /// tr:
-    /// status: deprecated
-    ///
-    /// thead:
-    /// status: deprecated
-    ///
-    /// tfoot:
-    /// status: deprecated
-    ///
-    /// colgroup:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-charoff
-    /// status: deprecated
-    ///
-    /// tbody:
-    /// status: deprecated
-    charoff: []const u8,
-
-    /// td:
-    /// status: standard
-    ///
-    /// th:
-    /// status: standard
-    colspan: []const u8,
-
-    /// td:
-    /// status: standard
-    ///
-    /// th:
-    /// status: standard
-    headers: []const u8,
-
-    /// td:
-    /// status: standard
-    ///
-    /// th:
-    /// status: standard
-    rowspan: []const u8,
-
-    /// td:
-    /// status: deprecated
-    ///
-    /// th:
-    /// status: standard
-    scope: []const u8,
-
-    /// td:
-    /// status: deprecated
-    ///
-    /// col:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-valign
-    /// status: deprecated
-    ///
-    /// th:
-    /// status: deprecated
-    ///
-    /// tr:
-    /// status: deprecated
-    ///
-    /// thead:
-    /// status: deprecated
-    ///
-    /// tfoot:
-    /// status: deprecated
-    ///
-    /// colgroup:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-valign
-    /// status: deprecated
-    ///
-    /// tbody:
-    /// status: deprecated
-    valign: []const u8,
-
-    /// td:
-    /// status: deprecated
-    ///
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-width
-    /// status: standard
-    ///
-    /// col:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-width
-    /// status: deprecated
-    ///
-    /// fencedframe:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-width
-    /// status: experimental
-    ///
-    /// th:
-    /// status: deprecated
-    ///
-    /// source:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-width
-    /// status: standard
-    ///
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-width
-    /// status: standard
-    ///
-    /// embed:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-width
-    /// status: standard
-    ///
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-width
-    /// status: standard
-    ///
-    /// canvas:
-    /// spec: https://html.spec.whatwg.org/multipage/canvas.html#attr-canvas-width
-    /// status: standard
-    ///
-    /// marquee:
-    /// status: deprecated
-    ///
-    /// table:
-    /// status: deprecated
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-width
-    /// status: standard
-    ///
-    /// colgroup:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-col-width
-    /// status: deprecated
-    ///
-    /// pre:
-    /// status: deprecated
-    ///
-    /// hr:
-    /// status: deprecated
-    width: []const u8,
-
-    /// meter:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-meter-high
-    /// status: standard
-    high: []const u8,
-
-    /// meter:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-meter-low
-    /// status: standard
-    low: []const u8,
-
-    /// meter:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-meter-max
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/max
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-max
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/max
-    /// status: standard
-    ///
-    /// progress:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-progress-max
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/max
-    /// status: standard
-    max: []const u8,
-
-    /// meter:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-meter-max
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/min
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-min
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/min
-    /// status: standard
-    min: []const u8,
-
-    /// meter:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-meter-optimum
-    /// status: standard
-    optimum: []const u8,
-
-    /// meter:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-meter-value
-    /// status: standard
-    ///
-    /// data:
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#attr-data-value
-    /// status: standard
-    ///
-    /// option:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-option-value
-    /// status: standard
-    ///
-    /// button:
-    /// status: standard
-    ///
-    /// param:
-    /// status: deprecated
-    ///
-    /// progress:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-progress-value
-    /// status: standard
-    ///
-    /// li:
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#attr-li-value
-    /// status: standard
-    value: []const u8,
-
-    /// select:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-autocomplete
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/select#autocomplete
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-autocomplete
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/autocomplete
-    /// status: standard
-    ///
-    /// form:
-    /// spec: https://html.spec.whatwg.org/multipage/forms.html#attr-form-autocomplete
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/autocomplete
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-autocomplete
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/autocomplete
-    /// status: standard
-    autocomplete: []const u8,
-
-    /// select:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-disabled
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/disabled
-    /// status: standard
-    ///
-    /// option:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-option-disabled
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/disabled
-    /// status: standard
-    ///
-    /// button:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-disabled
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/disabled
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-disabled
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/disabled
-    /// status: standard
-    ///
-    /// optgroup:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-optgroup-disabled
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/disabled
-    /// status: standard
-    ///
-    /// fieldset:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-disabled
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/disabled
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-disabled
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-disabled
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/disabled
-    /// status: standard
-    disabled: []const u8,
-
-    /// select:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fae-form
-    /// status: standard
-    ///
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fae-form
-    /// status: standard
-    ///
-    /// button:
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fae-form
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#form
-    /// status: standard
-    ///
-    /// output:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fae-form
-    /// status: standard
-    ///
-    /// fieldset:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fae-form
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fae-form
-    /// status: standard
-    form: []const u8,
-
-    /// select:
-    /// status: standard
-    ///
-    /// hr:
-    /// status: standard
-    hr_in_select: []const u8,
-
-    /// select:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-multiple
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/multiple
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-multiple
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/multiple
-    /// status: standard
-    multiple: []const u8,
-
-    /// select:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-name
-    /// status: standard
-    ///
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-object-name
-    /// status: standard
-    ///
-    /// slot:
-    /// status: standard
-    ///
-    /// map:
-    /// status: standard
-    ///
-    /// button:
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-name
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#name
-    /// status: standard
-    ///
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-name
-    /// status: standard
-    ///
-    /// output:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-name
-    /// status: standard
-    ///
-    /// meta:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/meta/name
-    /// status: standard
-    ///
-    /// param:
-    /// status: deprecated
-    ///
-    /// embed:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-embed-name
-    /// status: deprecated
-    ///
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-a-name
-    /// status: deprecated
-    ///
-    /// fieldset:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-name
-    /// status: standard
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-img-name
-    /// status: deprecated
-    ///
-    /// details:
-    /// status: standard
-    ///
-    /// form:
-    /// spec: https://html.spec.whatwg.org/multipage/forms.html#attr-form-name
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-name
-    /// status: standard
-    ///
-    /// frame:
-    /// status: deprecated
-    name: []const u8,
-
-    /// select:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-required
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/required
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-required
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#required
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-required
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/required
-    /// status: standard
-    required: []const u8,
-
-    /// select:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-select-size
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/size
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-size
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/size
-    /// status: standard
-    ///
-    /// font:
-    /// status: deprecated
-    ///
-    /// hr:
-    /// status: deprecated
-    size: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-object-archive
-    /// status: deprecated
-    archive: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-object-border
-    /// status: deprecated
-    ///
-    /// table:
-    /// status: deprecated
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-img-border
-    /// status: deprecated
-    border: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-object-classid
-    /// status: deprecated
-    classid: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-object-codebase
-    /// status: deprecated
-    codebase: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-object-codetype
-    /// status: deprecated
-    codetype: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-object-data
-    /// status: standard
-    data: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-object-declare
-    /// status: deprecated
-    declare: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-height
-    /// status: standard
-    ///
-    /// fencedframe:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-height
-    /// status: experimental
-    ///
-    /// source:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-height
-    /// status: standard
-    ///
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-height
-    /// status: standard
-    ///
-    /// embed:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-height
-    /// status: standard
-    ///
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-height
-    /// status: standard
-    ///
-    /// canvas:
-    /// spec: https://html.spec.whatwg.org/multipage/canvas.html#attr-canvas-height
-    /// status: standard
-    ///
-    /// marquee:
-    /// status: deprecated
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-height
-    /// status: standard
-    height: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-object-standby
-    /// status: deprecated
-    standby: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-object-type
-    /// status: standard
-    ///
-    /// button:
-    /// status: standard
-    ///
-    /// ul:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-ul-type
-    /// status: deprecated
-    ///
-    /// source:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-source-type
-    /// status: standard
-    ///
-    /// param:
-    /// status: deprecated
-    ///
-    /// embed:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-embed-type
-    /// status: standard
-    ///
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-type
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/script/type
-    /// status: standard
-    ///
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-type
-    /// status: standard
-    ///
-    /// style:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-style-type
-    /// status: deprecated
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-type
-    /// status: standard
-    ///
-    /// ol:
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#attr-ol-type
-    /// status: standard
-    ///
-    /// li:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-li-type
-    /// status: deprecated
-    type: []const u8,
-
-    /// object:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-object-usemap
-    /// status: deprecated
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-input-usemap
-    /// status: deprecated
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/image-maps.html#attr-hyperlink-usemap
-    /// status: standard
-    usemap: []const u8,
-
-    /// col:
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#attr-col-span
-    /// status: standard
-    ///
-    /// colgroup:
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#attr-colgroup-span
-    /// status: standard
-    span: []const u8,
-
-    /// h1:
-    /// spec: https://html.spec.whatwg.org/multipage/rendering.html#sections-and-headings
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements#specifying_a_uniform_font_size_for_h1
-    /// status: standard
-    no_ua_styles_in_article_aside_nav_section: []const u8,
-
-    /// option:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-option-label
-    /// status: standard
-    ///
-    /// track:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-track-label
-    /// status: standard
-    ///
-    /// optgroup:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-optgroup-label
-    /// status: standard
-    label: []const u8,
-
-    /// option:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-option-selected
-    /// status: standard
-    selected: []const u8,
-
-    /// fencedframe:
-    /// spec: https://wicg.github.io/fenced-frame/#element-attrdef-fencedframe-allow
-    /// status: experimental
-    ///
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-allow
-    /// status: standard
-    allow: []const u8,
-
-    /// button:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-button-command
-    /// status: standard
-    command: []const u8,
-
-    /// button:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-button-commandfor
-    /// status: standard
-    commandfor: []const u8,
-
-    /// button:
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formaction
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formaction
-    /// status: standard
-    formaction: []const u8,
-
-    /// button:
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formenctype
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formenctype
-    /// status: standard
-    formenctype: []const u8,
-
-    /// button:
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formmethod
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formmethod
-    /// status: standard
-    formmethod: []const u8,
-
-    /// button:
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formnovalidate
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formnovalidate
-    /// status: standard
-    formnovalidate: []const u8,
-
-    /// button:
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formtarget
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formtarget
-    /// status: standard
-    formtarget: []const u8,
-
-    /// button:
-    /// spec: https://html.spec.whatwg.org/multipage/popover.html#attr-popovertarget
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/button#popovertarget
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/popover.html#attr-popovertarget
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#popovertarget
-    /// status: standard
-    popovertarget: []const u8,
-
-    /// button:
-    /// spec: https://html.spec.whatwg.org/multipage/popover.html#attr-popovertargetaction
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/button#popovertargetaction
-    /// status: standard
-    ///
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/popover.html#attr-popovertargetaction
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#popovertargetaction
-    /// status: standard
-    popovertargetaction: []const u8,
-
-    /// ul:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-ul-compact
-    /// status: deprecated
-    ///
-    /// dir:
-    /// status: deprecated
-    ///
-    /// ol:
-    /// status: deprecated
-    compact: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-accept
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/accept
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-accept
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/accept
     /// status: standard
     accept: []const u8,
 
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-alpha
-    /// status: experimental
-    alpha: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-alt
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#alt
-    /// status: standard
+    /// For .form:
     ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-alt
-    /// status: standard
+    /// Character encodings to use for form submission
     ///
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/image-maps.html#attr-area-alt
-    /// status: standard
-    alt: []const u8,
-
-    /// input:
-    /// spec: https://w3c.github.io/html-media-capture/#dfn-capture
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/capture
-    /// status: standard
-    capture: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-checked
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#checked
-    /// status: standard
-    checked: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-colorspace
-    /// status: experimental
-    colorspace: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-dirname
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#dirname
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-dirname
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/dirname
-    /// status: standard
-    dirname: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-list
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#list
-    /// status: standard
-    list: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-maxlength
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/maxlength
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-maxlength
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/maxlength
-    /// status: standard
-    maxlength: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-minlength
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/minlength
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-minlength
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/minlength
-    /// status: standard
-    minlength: []const u8,
-
-    /// input:
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#non-standard_attributes
-    /// status: deprecated
-    mozactionhint: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-pattern
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/pattern
-    /// status: standard
-    pattern: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-placeholder
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#placeholder
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-placeholder
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/placeholder
-    /// status: standard
-    placeholder: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-readonly
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/readonly
-    /// status: standard
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-readonly
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/readonly
-    /// status: standard
-    readonly: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-src
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#src
-    /// status: standard
-    ///
-    /// source:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-source-src
-    /// status: standard
-    ///
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-src
-    /// status: standard
-    ///
-    /// track:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-track-src
-    /// status: standard
-    ///
-    /// embed:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-embed-src
-    /// status: standard
-    ///
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-src
-    /// status: standard
-    ///
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-src
-    /// status: standard
-    ///
-    /// audio:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-src
-    /// status: standard
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-src
-    /// status: standard
-    ///
-    /// frame:
-    /// status: deprecated
-    src: []const u8,
-
-    /// input:
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-step
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/step
-    /// status: standard
-    step: []const u8,
-
-    /// input:
-    /// status: unknown
-    webkitdirectory: []const u8,
-
-    /// source:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-source-media
-    /// status: standard
-    ///
-    /// style:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-style-media
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-media
-    /// status: standard
-    media: []const u8,
-
-    /// source:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-source-sizes
-    /// status: standard
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-sizes
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-sizes
-    /// status: standard
-    sizes: []const u8,
-
-    /// source:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-source-srcset
-    /// status: standard
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-srcset
-    /// status: standard
-    srcset: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-allowfullscreen
-    /// status: standard
-    allowfullscreen: []const u8,
-
-    /// iframe:
-    /// status: deprecated
-    allowpaymentrequest: []const u8,
-
-    /// iframe:
-    /// status: experimental
-    browsingtopics: []const u8,
-
-    /// iframe:
-    /// spec: https://wicg.github.io/anonymous-iframe/#attr-iframe-credentialless
-    /// mdn: https://developer.mozilla.org/docs/Web/Security/IFrame_credentialless
-    /// status: experimental
-    credentialless: []const u8,
-
-    /// iframe:
-    /// spec: https://w3c.github.io/webappsec-cspee/#element-attrdef-iframe-csp
-    /// status: experimental
-    csp: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-iframe-frameborder
-    /// status: deprecated
-    ///
-    /// frame:
-    /// status: deprecated
-    frameborder: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-loading
-    /// status: standard
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-loading
-    /// status: standard
-    loading: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-iframe-longdesc
-    /// status: deprecated
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-img-longdesc
-    /// status: deprecated
-    longdesc: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-iframe-marginheight
-    /// status: deprecated
-    ///
-    /// frame:
-    /// status: deprecated
-    marginheight: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-iframe-marginwidth
-    /// status: deprecated
-    ///
-    /// frame:
-    /// status: deprecated
-    marginwidth: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-referrerpolicy
-    /// status: standard
-    ///
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-referrerpolicy
-    /// status: standard
-    ///
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-referrerpolicy
-    /// status: standard
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-referrerpolicy
-    /// status: standard
-    ///
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-referrerpolicy
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-referrerpolicy
-    /// status: standard
-    referrerpolicy: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-sandbox
-    /// status: standard
-    sandbox: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-iframe-scrolling
-    /// status: deprecated
-    ///
-    /// frame:
-    /// status: deprecated
-    scrolling: []const u8,
-
-    /// iframe:
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-srcdoc
-    /// status: standard
-    srcdoc: []const u8,
-
-    /// output:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-output-for
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/for
-    /// status: standard
-    ///
-    /// label:
-    /// spec: https://html.spec.whatwg.org/multipage/forms.html#attr-label-for
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/for
-    /// status: standard
-    @"for": []const u8,
-
-    /// meta:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-meta-charset
-    /// status: standard
-    ///
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-a-charset
-    /// status: deprecated
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-link-charset
-    /// status: deprecated
-    charset: []const u8,
-
-    /// meta:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-meta-content
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/content
-    /// status: standard
-    content: []const u8,
-
-    /// meta:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-meta-http-equiv
-    /// status: standard
-    @"http-equiv": []const u8,
-
-    /// meta:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-meta-scheme
-    /// status: deprecated
-    scheme: []const u8,
-
-    /// param:
-    /// status: deprecated
-    valuetype: []const u8,
-
-    /// track:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-track-default
-    /// status: standard
-    default: []const u8,
-
-    /// track:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-track-kind
-    /// status: standard
-    kind: []const u8,
-
-    /// track:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-track-srclang
-    /// status: standard
-    srclang: []const u8,
-
-    /// base:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-base-href
-    /// status: standard
-    ///
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-href
-    /// status: standard
-    ///
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-href
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-href
-    /// status: standard
-    href: []const u8,
-
-    /// base:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-base-target
-    /// status: standard
-    ///
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-target
-    /// status: standard
-    ///
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-target
-    /// status: standard
-    ///
-    /// form:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-target
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-link-target
-    /// status: deprecated
-    target: []const u8,
-
-    /// html:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-html-version
-    /// status: deprecated
-    version: []const u8,
-
-    /// html:
-    /// status: standard
-    xmlns: []const u8,
-
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-async
-    /// status: standard
-    @"async": []const u8,
-
-    /// script:
-    /// spec: https://wicg.github.io/attribution-reporting-api/#element-attrdef-script-attributionsrc
-    /// status: experimental
-    ///
-    /// a:
-    /// spec: https://wicg.github.io/attribution-reporting-api/#element-attrdef-a-attributionsrc
-    /// status: experimental
-    ///
-    /// img:
-    /// spec: https://wicg.github.io/attribution-reporting-api/#element-attrdef-img-attributionsrc
-    /// status: experimental
-    ///
-    /// area:
-    /// spec: https://wicg.github.io/attribution-reporting-api/#element-attrdef-area-attributionsrc
-    /// status: experimental
-    attributionsrc: []const u8,
-
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-blocking
-    /// status: standard
-    ///
-    /// style:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-style-blocking
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-blocking
-    /// status: standard
-    blocking: []const u8,
-
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-crossorigin
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/crossorigin
-    /// status: standard
-    ///
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-crossorigin
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/crossorigin
-    /// status: standard
-    ///
-    /// audio:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-crossorigin
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/crossorigin
-    /// status: standard
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-crossorigin
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/crossorigin
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-crossorigin
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/crossorigin
-    /// status: standard
-    crossorigin: []const u8,
-
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-defer
-    /// status: standard
-    @"defer": []const u8,
-
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-fetchpriority
-    /// status: standard
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-fetchpriority
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-fetchpriority
-    /// status: standard
-    fetchpriority: []const u8,
-
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-integrity
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-integrity
-    /// mdn: https://developer.mozilla.org/docs/Web/Security/Subresource_Integrity
-    /// status: standard
-    integrity: []const u8,
-
-    /// script:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-nomodule
-    /// status: standard
-    nomodule: []const u8,
-
-    /// a:
-    /// spec: https://privacycg.github.io/private-click-measurement/#dom-htmlanchorelement-attributionsourceid
-    /// status: experimental
-    attributionsourceid: []const u8,
-
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-a-coords
-    /// status: deprecated
-    ///
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/image-maps.html#attr-area-coords
-    /// status: standard
-    coords: []const u8,
-
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-download
-    /// status: standard
-    ///
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-download
-    /// status: standard
-    download: []const u8,
-
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-hreflang
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-hreflang
-    /// status: standard
-    hreflang: []const u8,
-
-    /// a:
-    /// status: experimental
-    hreftranslate: []const u8,
-
-    /// a:
-    /// status: standard
-    ///
-    /// area:
-    /// status: standard
-    implicit_noopener: []const u8,
-
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#ping
-    /// status: standard
-    ///
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#ping
-    /// status: standard
-    ping: []const u8,
-
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-rel
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/rel
-    /// status: standard
-    ///
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-rel
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/rel
-    /// status: standard
-    ///
-    /// form:
-    /// spec: https://html.spec.whatwg.org/multipage/forms.html#attr-form-rel
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/rel
-    /// status: standard
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/links.html#linkTypes
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/rel
-    /// status: standard
-    rel: []const u8,
-
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-a-rev
-    /// status: deprecated
-    ///
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-link-rev
-    /// status: deprecated
-    rev: []const u8,
-
-    /// a:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-a-shape
-    /// status: deprecated
-    ///
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/image-maps.html#attr-area-shape
-    /// status: standard
-    shape: []const u8,
-
-    /// a:
-    /// status: standard
-    text_fragments: []const u8,
-
-    /// template:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-template-shadowrootclonable
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template#shadowrootclonable
-    /// status: standard
-    shadowrootclonable: []const u8,
-
-    /// template:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-template-shadowrootdelegatesfocus
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template#shadowrootdelegatesfocus
-    /// status: standard
-    shadowrootdelegatesfocus: []const u8,
-
-    /// template:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-template-shadowrootmode
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template#shadowrootmode
-    /// status: standard
-    shadowrootmode: []const u8,
-
-    /// template:
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-template-shadowrootserializable
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template#shadowrootserializable
-    /// status: experimental
-    shadowrootserializable: []const u8,
-
-    /// font:
-    /// status: deprecated
-    ///
-    /// hr:
-    /// status: deprecated
-    color: []const u8,
-
-    /// font:
-    /// status: deprecated
-    face: []const u8,
-
-    /// video:
-    /// status: standard
-    ///
-    /// img:
-    /// status: standard
-    aspect_ratio_computed_from_attributes: []const u8,
-
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-autoplay
-    /// status: standard
-    ///
-    /// audio:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-autoplay
-    /// status: standard
-    autoplay: []const u8,
-
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-controls
-    /// status: standard
-    ///
-    /// audio:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-controls
-    /// status: standard
-    controls: []const u8,
-
-    /// video:
-    /// spec: https://wicg.github.io/controls-list/#solution-outline
-    /// status: standard
-    ///
-    /// audio:
-    /// spec: https://wicg.github.io/controls-list/#solution-outline
-    /// status: standard
-    controlslist: []const u8,
-
-    /// video:
-    /// spec: https://w3c.github.io/picture-in-picture/#dom-htmlvideoelement-disablepictureinpicture
-    /// status: standard
-    disablepictureinpicture: []const u8,
-
-    /// video:
-    /// spec: https://w3c.github.io/remote-playback/#the-disableremoteplayback-attribute
-    /// status: standard
-    ///
-    /// audio:
-    /// spec: https://w3c.github.io/remote-playback/#the-disableremoteplayback-attribute
-    /// status: standard
-    disableremoteplayback: []const u8,
-
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-loop
-    /// status: standard
-    ///
-    /// marquee:
-    /// status: deprecated
-    ///
-    /// audio:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-loop
-    /// status: standard
-    loop: []const u8,
-
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-muted
-    /// status: standard
-    ///
-    /// audio:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-muted
-    /// status: standard
-    muted: []const u8,
-
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-video-playsinline
-    /// status: standard
-    playsinline: []const u8,
-
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-video-poster
-    /// status: standard
-    poster: []const u8,
-
-    /// video:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-preload
-    /// status: standard
-    ///
-    /// audio:
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-preload
-    /// status: standard
-    preload: []const u8,
-
-    /// canvas:
-    /// status: deprecated
-    @"moz-opaque": []const u8,
-
-    /// marquee:
-    /// status: deprecated
-    behavior: []const u8,
-
-    /// marquee:
-    /// status: deprecated
-    direction: []const u8,
-
-    /// marquee:
-    /// status: deprecated
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-img-hspace
-    /// status: deprecated
-    hspace: []const u8,
-
-    /// marquee:
-    /// status: deprecated
-    scrollamount: []const u8,
-
-    /// marquee:
-    /// status: deprecated
-    scrolldelay: []const u8,
-
-    /// marquee:
-    /// status: deprecated
-    truespeed: []const u8,
-
-    /// marquee:
-    /// status: deprecated
-    ///
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-img-vspace
-    /// status: deprecated
-    vspace: []const u8,
-
-    /// time:
-    /// status: standard
-    ///
-    /// ins:
-    /// status: standard
-    ///
-    /// del:
-    /// status: standard
-    datetime: []const u8,
-
-    /// br:
-    /// status: deprecated
-    clear: []const u8,
-
-    /// frameset:
-    /// status: deprecated
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-cols
-    /// status: standard
-    cols: []const u8,
-
-    /// frameset:
-    /// status: deprecated
-    ///
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-rows
-    /// status: standard
-    rows: []const u8,
-
-    /// table:
-    /// status: deprecated
-    cellpadding: []const u8,
-
-    /// table:
-    /// status: deprecated
-    cellspacing: []const u8,
-
-    /// table:
-    /// status: deprecated
-    frame: []const u8,
-
-    /// table:
-    /// status: deprecated
-    rules: []const u8,
-
-    /// table:
-    /// status: deprecated
-    summary: []const u8,
-
-    /// ins:
-    /// status: standard
-    ///
-    /// del:
-    /// status: standard
-    ///
-    /// blockquote:
-    /// status: standard
-    ///
-    /// q:
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#attr-q-cite
-    /// status: standard
-    cite: []const u8,
-
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-decoding
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/img#decoding
-    /// status: standard
-    decoding: []const u8,
-
-    /// img:
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-ismap
-    /// status: standard
-    ismap: []const u8,
-
-    /// details:
-    /// status: standard
-    ///
-    /// dialog:
-    /// status: standard
-    open: []const u8,
-
-    /// dialog:
-    /// spec: https://html.spec.whatwg.org/multipage/interactive-elements.html#attr-dialog-closedby
-    /// status: standard
-    closedby: []const u8,
-
-    /// body:
-    /// status: deprecated
-    alink: []const u8,
-
-    /// body:
-    /// status: deprecated
-    background: []const u8,
-
-    /// body:
-    /// status: deprecated
-    bottommargin: []const u8,
-
-    /// body:
-    /// status: deprecated
-    leftmargin: []const u8,
-
-    /// body:
-    /// status: deprecated
-    link: []const u8,
-
-    /// body:
-    /// status: deprecated
-    rightmargin: []const u8,
-
-    /// body:
-    /// status: deprecated
-    text: []const u8,
-
-    /// body:
-    /// status: deprecated
-    topmargin: []const u8,
-
-    /// body:
-    /// status: deprecated
-    vlink: []const u8,
-
-    /// area:
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-area-nohref
-    /// status: deprecated
-    nohref: []const u8,
-
-    /// form:
-    /// spec: https://html.spec.whatwg.org/multipage/forms.html#attr-form-accept-charset
+    /// Spec: https://html.spec.whatwg.org/multipage/forms.html#attr-form-accept-charset
     /// status: standard
     @"accept-charset": []const u8,
 
-    /// form:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-action
+    /// Keyboard shortcut to activate or focus element
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#the-accesskey-attribute
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/accesskey
+    /// status: standard
+    accesskey: []const u8,
+
+    /// For .form:
+    ///
+    /// URL to use for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-action
     /// status: standard
     action: []const u8,
 
-    /// form:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-enctype
+    /// For .iframe:
+    ///
+    /// Permissions policy to be applied to the iframe's contents
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-allow
     /// status: standard
-    enctype: []const u8,
+    allow: []const u8,
 
-    /// form:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-method
+    /// For .iframe:
+    ///
+    /// Whether to allow the iframe's contents to use requestFullscreen()
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-allowfullscreen
     /// status: standard
-    method: []const u8,
+    allowfullscreen: []const u8,
 
-    /// form:
-    /// spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-novalidate
+    /// For .input:
+    ///
+    /// Allow the color's alpha component to be set
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-alpha
+    /// status: experimental
+    alpha: []const u8,
+
+    /// For:
+    ///   .area
+    ///   .img
+    ///   .input
+    ///
+    /// Replacement text for use when images are not available
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/image-maps.html#attr-area-alt
     /// status: standard
-    novalidate: []const u8,
+    alt: []const u8,
 
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-as
+    /// For .link:
+    ///
+    /// Potential destination for a preload request (for rel="preload" and rel="modulepreload")
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-as
     /// status: standard
     as: []const u8,
 
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-imagesizes
+    /// For .script:
+    ///
+    /// Execute script when available, without blocking while fetching
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-async
+    /// status: standard
+    @"async": []const u8,
+
+    /// Recommended autocapitalization behavior (for supported input methods)
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-autocapitalize
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/autocapitalize
+    /// status: standard
+    autocapitalize: []const u8,
+
+    /// For .form:
+    ///
+    /// Default setting for autofill feature for controls in the form
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/forms.html#attr-form-autocomplete
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/autocomplete
+    /// status: standard
+    /// For:
+    ///   .input
+    ///   .select
+    ///   .textarea
+    ///
+    /// Hint for form autofill feature
+    ///
+    /// status: unknown
+    autocomplete: []const u8,
+
+    /// Recommended autocorrection behavior (for supported input methods)
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-autocorrect
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/autocorrect
+    /// status: standard
+    autocorrect: []const u8,
+
+    /// Automatically focus the element when the page is loaded
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#dom-fe-autofocus
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/autofocus
+    /// status: standard
+    autofocus: []const u8,
+
+    /// For:
+    ///   .audio
+    ///   .video
+    ///
+    /// Hint that the media resource can be started automatically when the page is loaded
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-autoplay
+    /// status: standard
+    autoplay: []const u8,
+
+    /// For:
+    ///   .link
+    ///   .script
+    ///   .style
+    ///
+    /// Whether the element is potentially render-blocking
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-blocking
+    /// status: standard
+    blocking: []const u8,
+
+    /// For .meta:
+    ///
+    /// Character encoding declaration
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-a-charset
+    /// status: deprecated
+    charset: []const u8,
+
+    /// For .input:
+    ///
+    /// Whether the control is checked
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-checked
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#checked
+    /// status: standard
+    checked: []const u8,
+
+    /// For:
+    ///   .blockquote
+    ///   .del
+    ///   .ins
+    ///   .q
+    ///
+    /// Link to the source of the quotation or more information about the edit
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#attr-q-cite
+    /// status: standard
+    cite: []const u8,
+
+    /// For .global:
+    ///
+    /// Classes to which the element belongs
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/dom.html#global-attributes:classes-2
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/class
+    /// status: standard
+    class: []const u8,
+
+    /// For .dialog:
+    ///
+    /// Which user actions will close the dialog
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interactive-elements.html#attr-dialog-closedby
+    /// status: standard
+    closedby: []const u8,
+
+    /// For .link:
+    ///
+    /// Color to use when customizing a site's icon (for rel="mask-icon")
+    ///
+    /// status: unknown
+    color: []const u8,
+
+    /// For .input:
+    ///
+    /// The color space of the serialized color
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-colorspace
+    /// status: experimental
+    colorspace: []const u8,
+
+    /// For .textarea:
+    ///
+    /// Maximum number of characters per line
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-cols
+    /// status: standard
+    cols: []const u8,
+
+    /// For:
+    ///   .td
+    ///   .th
+    ///
+    /// Number of columns that the cell is to span
+    ///
+    /// status: standard
+    colspan: []const u8,
+
+    /// For .button:
+    ///
+    /// Indicates to the targeted element which action to take.
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-button-command
+    /// status: standard
+    command: []const u8,
+
+    /// For .button:
+    ///
+    /// Targets another element to be invoked.
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-button-commandfor
+    /// status: standard
+    commandfor: []const u8,
+
+    /// For .meta:
+    ///
+    /// Value of the element
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-meta-content
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/content
+    /// status: standard
+    content: []const u8,
+
+    /// Whether the element is editable
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-contenteditable
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/contenteditable
+    /// status: standard
+    contenteditable: []const u8,
+
+    /// For:
+    ///   .audio
+    ///   .video
+    ///
+    /// Show user agent controls
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-controls
+    /// status: standard
+    controls: []const u8,
+
+    /// For .area:
+    ///
+    /// Coordinates for the shape to be created in an image map
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/image-maps.html#attr-area-coords
+    /// status: standard
+    coords: []const u8,
+
+    /// For:
+    ///   .audio
+    ///   .img
+    ///   .link
+    ///   .script
+    ///   .video
+    ///
+    /// How the element handles crossorigin requests
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-crossorigin
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/crossorigin
+    /// status: standard
+    crossorigin: []const u8,
+
+    /// For .object:
+    ///
+    /// Address of the resource
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-object-data
+    /// status: standard
+    data: []const u8,
+
+    /// For:
+    ///   .del
+    ///   .ins
+    ///
+    /// Date and (optionally) time of the change
+    ///
+    /// status: standard
+    /// For .time:
+    ///
+    /// Machine-readable value
+    ///
+    /// status: unknown
+    datetime: []const u8,
+
+    /// For .img:
+    ///
+    /// Decoding hint to use when processing this image for presentation
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-decoding
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/img#decoding
+    /// status: standard
+    decoding: []const u8,
+
+    /// For .track:
+    ///
+    /// Enable the track if no other text track is more suitable
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-track-default
+    /// status: standard
+    default: []const u8,
+
+    /// For .script:
+    ///
+    /// Defer script execution
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-defer
+    /// status: standard
+    @"defer": []const u8,
+
+    /// The text directionality of the element
+    ///
+    /// Is a global attribute
+    ///
+    /// status: unknown
+    dir: []const u8,
+
+    /// For:
+    ///   .input
+    ///   .textarea
+    ///
+    /// Name of form control to use for sending the element's directionality in form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-dirname
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/dirname
+    /// status: standard
+    dirname: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .@"form-associated custom elements"
+    ///   .input
+    ///   .optgroup
+    ///   .option
+    ///   .select
+    ///   .textarea
+    ///
+    /// Whether the form control is disabled
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-disabled
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/disabled
+    /// status: standard
+    /// For .fieldset:
+    ///
+    /// Whether the descendant form controls, except any inside legend, are disabled
+    ///
+    /// status: unknown
+    /// For .link:
+    ///
+    /// Whether the link is disabled
+    ///
+    /// status: unknown
+    disabled: []const u8,
+
+    /// For:
+    ///   .a
+    ///   .area
+    ///
+    /// Whether to download the resource instead of navigating to it, and its filename if so
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-download
+    /// status: standard
+    download: []const u8,
+
+    /// Whether the element is draggable
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/dnd.html#the-draggable-attribute
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/draggable
+    /// status: standard
+    draggable: []const u8,
+
+    /// For .form:
+    ///
+    /// Entry list encoding type to use for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-enctype
+    /// status: standard
+    enctype: []const u8,
+
+    /// Hint for selecting an enter key action
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-enterkeyhint
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/enterkeyhint
+    /// status: standard
+    enterkeyhint: []const u8,
+
+    /// For:
+    ///   .img
+    ///   .link
+    ///   .script
+    ///
+    /// Sets the priority for fetches initiated by the element
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-fetchpriority
+    /// status: standard
+    fetchpriority: []const u8,
+
+    /// For .label:
+    ///
+    /// Associate the label with form control
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/forms.html#attr-label-for
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/for
+    /// status: standard
+    /// For .output:
+    ///
+    /// Specifies controls from which the output was calculated
+    ///
+    /// status: unknown
+    @"for": []const u8,
+
+    /// For:
+    ///   .button
+    ///   .fieldset
+    ///   .@"form-associated custom elements"
+    ///   .input
+    ///   .object
+    ///   .output
+    ///   .select
+    ///   .textarea
+    ///
+    /// Associates the element with a form element
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fae-form
+    /// status: standard
+    form: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .input
+    ///
+    /// URL to use for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formaction
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formaction
+    /// status: standard
+    formaction: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .input
+    ///
+    /// Entry list encoding type to use for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formenctype
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formenctype
+    /// status: standard
+    formenctype: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .input
+    ///
+    /// Variant to use for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formmethod
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formmethod
+    /// status: standard
+    formmethod: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .input
+    ///
+    /// Bypass form control validation for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formnovalidate
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formnovalidate
+    /// status: standard
+    formnovalidate: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .input
+    ///
+    /// Navigable for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-formtarget
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#formtarget
+    /// status: standard
+    formtarget: []const u8,
+
+    /// For:
+    ///   .td
+    ///   .th
+    ///
+    /// The header cells for this cell
+    ///
+    /// status: standard
+    headers: []const u8,
+
+    /// For:
+    ///   .canvas
+    ///   .embed
+    ///   .iframe
+    ///   .img
+    ///   .input
+    ///   .object
+    ///   .@"source (in picture)"
+    ///   .video
+    ///
+    /// Vertical dimension
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-height
+    /// status: standard
+    height: []const u8,
+
+    /// Whether the element is relevant
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#the-hidden-attribute
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/hidden
+    /// status: standard
+    hidden: []const u8,
+
+    /// For .meter:
+    ///
+    /// Low limit of high range
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-meter-high
+    /// status: standard
+    high: []const u8,
+
+    /// For:
+    ///   .a
+    ///   .area
+    ///
+    /// Address of the hyperlink
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-href
+    /// status: standard
+    /// For .base:
+    ///
+    /// Document base URL
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-href
+    /// status: standard
+    /// For .link:
+    ///
+    /// Address of the hyperlink
+    ///
+    /// status: unknown
+    href: []const u8,
+
+    /// For:
+    ///   .a
+    ///   .link
+    ///
+    /// Language of the linked resource
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-hreflang
+    /// status: standard
+    hreflang: []const u8,
+
+    /// For .meta:
+    ///
+    /// Pragma directive
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-meta-http-equiv
+    /// status: standard
+    @"http-equiv": []const u8,
+
+    /// For .global:
+    ///
+    /// The element's ID
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/dom.html#global-attributes:the-id-attribute-2
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/id
+    /// status: standard
+    id: []const u8,
+
+    /// For .link:
+    ///
+    /// Image sizes for different page layouts (for rel="preload")
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-imagesizes
     /// status: standard
     imagesizes: []const u8,
 
-    /// link:
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-imagesrcset
+    /// For .link:
+    ///
+    /// Images to use in different situations, e.g., high-resolution displays, small monitors, etc. (for rel="preload")
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-imagesrcset
     /// status: standard
     imagesrcset: []const u8,
 
-    /// summary:
+    /// Whether the element is inert.
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#the-inert-attribute
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/inert
     /// status: standard
-    display_list_item: []const u8,
+    inert: []const u8,
 
-    /// textarea:
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-wrap
+    /// Hint for selecting an input modality
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-inputmode
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/inputmode
     /// status: standard
-    wrap: []const u8,
+    inputmode: []const u8,
 
-    /// hr:
+    /// For:
+    ///   .link
+    ///   .script
+    ///
+    /// Integrity metadata used in Subresource Integrity checks SRI
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-integrity
+    /// MDN: https://developer.mozilla.org/docs/Web/Security/Subresource_Integrity
+    /// status: standard
+    integrity: []const u8,
+
+    /// Creates a customized built-in element
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/custom-elements.html#attr-is
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/is
+    /// status: standard
+    is: []const u8,
+
+    /// For .img:
+    ///
+    /// Whether the image is a server-side image map
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-ismap
+    /// status: standard
+    ismap: []const u8,
+
+    /// Global identifier for a microdata item
+    ///
+    /// Is a global attribute
+    ///
+    /// status: unknown
+    itemid: []const u8,
+
+    /// Property names of a microdata item
+    ///
+    /// Is a global attribute
+    ///
+    /// status: unknown
+    itemprop: []const u8,
+
+    /// Referenced elements
+    ///
+    /// Is a global attribute
+    ///
+    /// status: unknown
+    itemref: []const u8,
+
+    /// Introduces a microdata item
+    ///
+    /// Is a global attribute
+    ///
+    /// status: unknown
+    itemscope: []const u8,
+
+    /// Item types of a microdata item
+    ///
+    /// Is a global attribute
+    ///
+    /// status: unknown
+    itemtype: []const u8,
+
+    /// For .track:
+    ///
+    /// The type of text track
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-track-kind
+    /// status: standard
+    kind: []const u8,
+
+    /// For:
+    ///   .optgroup
+    ///   .option
+    ///   .track
+    ///
+    /// User-visible label
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-optgroup-label
+    /// status: standard
+    label: []const u8,
+
+    /// Language of the element
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/dom.html#attr-lang
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/lang
+    /// status: standard
+    lang: []const u8,
+
+    /// For .input:
+    ///
+    /// List of autocomplete options
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-list
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#list
+    /// status: standard
+    list: []const u8,
+
+    /// For:
+    ///   .iframe
+    ///   .img
+    ///
+    /// Used when determining loading deferral
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-loading
+    /// status: standard
+    loading: []const u8,
+
+    /// For:
+    ///   .audio
+    ///   .video
+    ///
+    /// Whether to loop the media resource
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-loop
+    /// status: standard
+    loop: []const u8,
+
+    /// For .meter:
+    ///
+    /// High limit of low range
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-meter-low
+    /// status: standard
+    low: []const u8,
+
+    /// For .input:
+    ///
+    /// Maximum value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-max
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/max
+    /// status: standard
+    /// For:
+    ///   .meter
+    ///   .progress
+    ///
+    /// Upper bound of range
+    ///
+    /// status: unknown
+    max: []const u8,
+
+    /// For:
+    ///   .input
+    ///   .textarea
+    ///
+    /// Maximum length of value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-maxlength
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/maxlength
+    /// status: standard
+    maxlength: []const u8,
+
+    /// For:
+    ///   .link
+    ///   .meta
+    ///   .source
+    ///   .style
+    ///
+    /// Applicable media
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-media
+    /// status: standard
+    media: []const u8,
+
+    /// For .form:
+    ///
+    /// Variant to use for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-method
+    /// status: standard
+    method: []const u8,
+
+    /// For .input:
+    ///
+    /// Minimum value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-min
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/min
+    /// status: standard
+    /// For .meter:
+    ///
+    /// Lower bound of range
+    ///
+    /// status: unknown
+    min: []const u8,
+
+    /// For:
+    ///   .input
+    ///   .textarea
+    ///
+    /// Minimum length of value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-minlength
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/minlength
+    /// status: standard
+    minlength: []const u8,
+
+    /// For:
+    ///   .input
+    ///   .select
+    ///
+    /// Whether to allow multiple values
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-multiple
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/multiple
+    /// status: standard
+    multiple: []const u8,
+
+    /// For:
+    ///   .audio
+    ///   .video
+    ///
+    /// Whether to mute the media resource by default
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-muted
+    /// status: standard
+    muted: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .fieldset
+    ///   .@"form-associated custom elements"
+    ///   .input
+    ///   .output
+    ///   .select
+    ///   .textarea
+    ///
+    /// Name of the element to use for form submission and in the form.elements API
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-name
+    /// status: standard
+    /// For .details:
+    ///
+    /// Name of group of mutually-exclusive details elements
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-a-name
     /// status: deprecated
-    noshade: []const u8,
+    /// For .form:
+    ///
+    /// Name of form to use in the document.forms API
+    ///
+    /// status: unknown
+    /// For:
+    ///   .iframe
+    ///   .object
+    ///
+    /// Name of content navigable
+    ///
+    /// status: unknown
+    /// For .map:
+    ///
+    /// Name of image map to reference from the usemap attribute
+    ///
+    /// status: unknown
+    /// For .meta:
+    ///
+    /// Metadata name
+    ///
+    /// status: unknown
+    /// For .slot:
+    ///
+    /// Name of shadow tree slot
+    ///
+    /// status: unknown
+    name: []const u8,
 
-    /// ol:
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#attr-ol-reversed
+    /// For .script:
+    ///
+    /// Prevents execution in user agents that support module scripts
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-nomodule
+    /// status: standard
+    nomodule: []const u8,
+
+    /// Cryptographic nonce used in Content Security Policy checks CSP
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/urls-and-fetching.html#attr-nonce
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/nonce
+    /// status: standard
+    nonce: []const u8,
+
+    /// For .form:
+    ///
+    /// Bypass form control validation for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-novalidate
+    /// status: standard
+    novalidate: []const u8,
+
+    /// For .details:
+    ///
+    /// Whether the details are visible
+    ///
+    /// status: standard
+    /// For .dialog:
+    ///
+    /// Whether the dialog box is showing
+    ///
+    /// status: unknown
+    open: []const u8,
+
+    /// For .meter:
+    ///
+    /// Optimum value in gauge
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-meter-optimum
+    /// status: standard
+    optimum: []const u8,
+
+    /// For .input:
+    ///
+    /// Pattern to be matched by the form control's value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-pattern
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/pattern
+    /// status: standard
+    pattern: []const u8,
+
+    /// For:
+    ///   .a
+    ///   .area
+    ///
+    /// URLs to ping
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/links.html#ping
+    /// status: standard
+    ping: []const u8,
+
+    /// For:
+    ///   .input
+    ///   .textarea
+    ///
+    /// User-visible label to be placed within the form control
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-placeholder
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/placeholder
+    /// status: standard
+    placeholder: []const u8,
+
+    /// For .video:
+    ///
+    /// Encourage the user agent to display video content within the element's playback area
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-video-playsinline
+    /// status: standard
+    playsinline: []const u8,
+
+    /// Makes the element a popover element
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/popover.html#the-popover-attribute
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/popover
+    /// status: standard
+    popover: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .input
+    ///
+    /// Targets a popover element to toggle, show, or hide
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/popover.html#attr-popovertarget
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#popovertarget
+    /// status: standard
+    popovertarget: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .input
+    ///
+    /// Indicates whether a targeted popover element is to be toggled, shown, or hidden
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/popover.html#attr-popovertargetaction
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input#popovertargetaction
+    /// status: standard
+    popovertargetaction: []const u8,
+
+    /// For .video:
+    ///
+    /// Poster frame to show prior to video playback
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-video-poster
+    /// status: standard
+    poster: []const u8,
+
+    /// For:
+    ///   .audio
+    ///   .video
+    ///
+    /// Hints how much buffering the media resource will likely need
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-media-preload
+    /// status: standard
+    preload: []const u8,
+
+    /// For .@"form-associated custom elements":
+    ///
+    /// Affects willValidate, plus any behavior added by the custom element author
+    ///
+    /// status: unknown
+    /// For:
+    ///   .input
+    ///   .textarea
+    ///
+    /// Whether to allow the value to be edited by the user
+    ///
+    /// status: unknown
+    readonly: []const u8,
+
+    /// For:
+    ///   .a
+    ///   .area
+    ///   .iframe
+    ///   .img
+    ///   .link
+    ///   .script
+    ///
+    /// Referrer policy for fetches initiated by the element
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#attr-link-referrerpolicy
+    /// status: standard
+    referrerpolicy: []const u8,
+
+    /// For:
+    ///   .a
+    ///   .area
+    ///
+    /// Relationship between the location in the document containing the hyperlink and the destination resource
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-rel
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/rel
+    /// status: standard
+    /// For .link:
+    ///
+    /// Relationship between the document containing the hyperlink and the destination resource
+    ///
+    /// status: unknown
+    rel: []const u8,
+
+    /// For:
+    ///   .input
+    ///   .select
+    ///   .textarea
+    ///
+    /// Whether the control is required for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-required
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/required
+    /// status: standard
+    required: []const u8,
+
+    /// For .ol:
+    ///
+    /// Number the list backwards
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#attr-ol-reversed
     /// status: standard
     reversed: []const u8,
 
-    /// ol:
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#attr-ol-start
+    /// For .textarea:
+    ///
+    /// Number of lines to show
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-rows
+    /// status: standard
+    rows: []const u8,
+
+    /// For:
+    ///   .td
+    ///   .th
+    ///
+    /// Number of rows that the cell is to span
+    ///
+    /// status: standard
+    rowspan: []const u8,
+
+    /// For .iframe:
+    ///
+    /// Security rules for nested content
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-sandbox
+    /// status: standard
+    sandbox: []const u8,
+
+    /// For .th:
+    ///
+    /// Specifies which cells the header cell applies to
+    ///
+    /// status: standard
+    scope: []const u8,
+
+    /// For .option:
+    ///
+    /// Whether the option is selected by default
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-option-selected
+    /// status: standard
+    selected: []const u8,
+
+    /// For .template:
+    ///
+    /// Sets clonable on a declarative shadow root
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-template-shadowrootclonable
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template#shadowrootclonable
+    /// status: standard
+    shadowrootclonable: []const u8,
+
+    /// For .template:
+    ///
+    /// Enables declarative shadow roots to indicate they will use a custom element registry
+    ///
+    /// status: unknown
+    shadowrootcustomelementregistry: []const u8,
+
+    /// For .template:
+    ///
+    /// Sets delegates focus on a declarative shadow root
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-template-shadowrootdelegatesfocus
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template#shadowrootdelegatesfocus
+    /// status: standard
+    shadowrootdelegatesfocus: []const u8,
+
+    /// For .template:
+    ///
+    /// Enables streaming declarative shadow roots
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-template-shadowrootmode
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template#shadowrootmode
+    /// status: standard
+    shadowrootmode: []const u8,
+
+    /// For .template:
+    ///
+    /// Sets serializable on a declarative shadow root
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-template-shadowrootserializable
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template#shadowrootserializable
+    /// status: experimental
+    shadowrootserializable: []const u8,
+
+    /// For .area:
+    ///
+    /// The kind of shape to be created in an image map
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/image-maps.html#attr-area-shape
+    /// status: standard
+    shape: []const u8,
+
+    /// For:
+    ///   .input
+    ///   .select
+    ///
+    /// Size of the control
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-size
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/size
+    /// status: standard
+    size: []const u8,
+
+    /// For:
+    ///   .img
+    ///   .source
+    ///
+    /// Image sizes for different page layouts
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-sizes
+    /// status: standard
+    /// For .link:
+    ///
+    /// Sizes of the icons (for rel="icon")
+    ///
+    /// status: unknown
+    sizes: []const u8,
+
+    /// For .global:
+    ///
+    /// The element's desired slot
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/dom.html#attr-slot
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/slot
+    /// status: standard
+    slot: []const u8,
+
+    /// For:
+    ///   .col
+    ///   .colgroup
+    ///
+    /// Number of columns spanned by the element
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#attr-colgroup-span
+    /// status: standard
+    span: []const u8,
+
+    /// Whether the element is to have its spelling and grammar checked
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-spellcheck
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/spellcheck
+    /// status: standard
+    spellcheck: []const u8,
+
+    /// For:
+    ///   .audio
+    ///   .embed
+    ///   .iframe
+    ///   .img
+    ///   .input
+    ///   .script
+    ///   .@"source (in video or audio)"
+    ///   .track
+    ///   .video
+    ///
+    /// Address of the resource
+    ///
+    /// status: deprecated
+    src: []const u8,
+
+    /// For .iframe:
+    ///
+    /// A document to render in the iframe
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-srcdoc
+    /// status: standard
+    srcdoc: []const u8,
+
+    /// For .track:
+    ///
+    /// Language of the text track
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#attr-track-srclang
+    /// status: standard
+    srclang: []const u8,
+
+    /// For:
+    ///   .img
+    ///   .source
+    ///
+    /// Images to use in different situations, e.g., high-resolution displays, small monitors, etc.
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-srcset
+    /// status: standard
+    srcset: []const u8,
+
+    /// For .ol:
+    ///
+    /// Starting value of the list
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#attr-ol-start
     /// status: standard
     start: []const u8,
 
-    /// frame:
+    /// For .input:
+    ///
+    /// Granularity to be matched by the form control's value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#attr-input-step
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes/step
+    /// status: standard
+    step: []const u8,
+
+    /// Presentational and formatting instructions
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/dom.html#the-style-attribute
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/style
+    /// status: standard
+    style: []const u8,
+
+    /// Whether the element is focusable and sequentially focusable, and
+    /// the relative order of the element for the purposes of sequential focus navigation
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#attr-tabindex
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/tabindex
+    /// status: standard
+    tabindex: []const u8,
+
+    /// For:
+    ///   .a
+    ///   .area
+    ///
+    /// Navigable for hyperlink navigation
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-target
+    /// status: standard
+    /// For .base:
+    ///
+    /// Default navigable for hyperlink navigation and form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/links.html#attr-hyperlink-target
+    /// status: standard
+    /// For .form:
+    ///
+    /// Navigable for form submission
+    ///
+    /// status: unknown
+    target: []const u8,
+
+    /// Full term or expansion of abbreviation
+    ///
+    /// Is a global attribute
+    ///
+    /// status: unknown
+    title: []const u8,
+
+    /// Whether the element is to be translated when the page is localized
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/dom.html#attr-translate
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/translate
+    /// status: standard
+    translate: []const u8,
+
+    /// For:
+    ///   .a
+    ///   .link
+    ///
+    /// Hint for the type of the referenced resource
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/obsolete.html#attr-li-type
     /// status: deprecated
-    noresize: []const u8,
+    /// For .button:
+    ///
+    /// Type of button
+    ///
+    /// status: unknown
+    /// For:
+    ///   .embed
+    ///   .object
+    ///   .source
+    ///
+    /// Type of embedded resource
+    ///
+    /// status: unknown
+    /// For .input:
+    ///
+    /// Type of form control
+    ///
+    /// status: unknown
+    /// For .ol:
+    ///
+    /// Kind of list marker
+    ///
+    /// status: unknown
+    /// For .script:
+    ///
+    /// Type of script
+    ///
+    /// status: unknown
+    type: []const u8,
+
+    /// For .img:
+    ///
+    /// Name of image map to use
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/image-maps.html#attr-hyperlink-usemap
+    /// status: standard
+    usemap: []const u8,
+
+    /// For:
+    ///   .button
+    ///   .option
+    ///
+    /// Value to be used for form submission
+    ///
+    /// status: standard
+    /// For .data:
+    ///
+    /// Machine-readable value
+    ///
+    /// status: unknown
+    /// For .input:
+    ///
+    /// Value of the form control
+    ///
+    /// status: unknown
+    /// For .li:
+    ///
+    /// Ordinal value of the list item
+    ///
+    /// status: unknown
+    /// For:
+    ///   .meter
+    ///   .progress
+    ///
+    /// Current value of the element
+    ///
+    /// status: unknown
+    value: []const u8,
+
+    /// For:
+    ///   .canvas
+    ///   .embed
+    ///   .iframe
+    ///   .img
+    ///   .input
+    ///   .object
+    ///   .@"source (in picture)"
+    ///   .video
+    ///
+    /// Horizontal dimension
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content-other.html#attr-dim-width
+    /// status: standard
+    width: []const u8,
+
+    /// For .textarea:
+    ///
+    /// How the value of the form control is to be wrapped for form submission
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#attr-textarea-wrap
+    /// status: standard
+    wrap: []const u8,
+
+    /// Whether the element can offer writing suggestions or not.
+    ///
+    /// Is a global attribute
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interaction.html#writing-suggestions
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Global_attributes/writingsuggestions
+    /// status: standard
+    writingsuggestions: []const u8,
 };
 pub const ElementTag = enum {
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-td-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/td
+    /// Hyperlink
+    ///
+    /// Element with interface HTMLAnchorElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .href
+    ///   .target
+    ///   .download
+    ///   .ping
+    ///   .rel
+    ///   .hreflang
+    ///   .type
+    ///   .referrerpolicy
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/a
     /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   abbr
-    ///   align
-    ///   axis
-    ///   bgcolor
-    ///   char
-    ///   charoff
-    ///   colspan
-    ///   headers
-    ///   rowspan
-    ///   scope
-    ///   valign
-    ///   width
-    td,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-meter-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/meter
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   high
-    ///   low
-    ///   max
-    ///   min
-    ///   optimum
-    ///   value
-    meter,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-kbd-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/kbd
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    kbd,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/select
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   autocomplete
-    ///   disabled
-    ///   form
-    ///   hr_in_select
-    ///   multiple
-    ///   name
-    ///   required
-    ///   size
-    select,
-
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/object
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   archive
-    ///   border
-    ///   classid
-    ///   codebase
-    ///   codetype
-    ///   data
-    ///   declare
-    ///   form
-    ///   height
-    ///   name
-    ///   standby
-    ///   type
-    ///   usemap
-    ///   width
-    object,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-cite-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/cite
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    cite,
-
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#the-slot-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/slot
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   name
-    slot,
-
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-col-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/col
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   char
-    ///   charoff
-    ///   span
-    ///   valign
-    ///   width
-    col,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-hgroup-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/hgroup
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    hgroup,
-
-    /// spec: https://html.spec.whatwg.org/multipage/image-maps.html#the-map-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/map
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   name
-    map,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-data-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/data
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   value
-    data,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   no_ua_styles_in_article_aside_nav_section
-    h1,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    h3,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-option-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/option
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   disabled
-    ///   label
-    ///   selected
-    ///   value
-    option,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#rb
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/rb
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    rb,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-figure-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/figure
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    figure,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-rt-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/rt
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    rt,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-bdi-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/bdi
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    bdi,
-
-    /// spec: https://wicg.github.io/fenced-frame/#the-fencedframe-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/fencedframe
-    /// status: experimental
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   allow
-    ///   height
-    ///   width
-    fencedframe,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-header-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/header
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    header,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#big
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/big
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    big,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-aside-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/aside
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    aside,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/button
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   command
-    ///   commandfor
-    ///   disabled
-    ///   form
-    ///   formaction
-    ///   formenctype
-    ///   formmethod
-    ///   formnovalidate
-    ///   formtarget
-    ///   name
-    ///   popovertarget
-    ///   popovertargetaction
-    ///   type
-    ///   value
-    button,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    h2,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-span-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/span
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    span,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-ul-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/ul
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   compact
-    ///   type
-    ul,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#center
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/center
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    center,
-
-    /// spec: https://html.spec.whatwg.org/multipage/input.html#the-input-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   accept
-    ///   align
-    ///   alpha
-    ///   alt
-    ///   autocomplete
-    ///   capture
-    ///   checked
-    ///   colorspace
-    ///   dirname
-    ///   disabled
-    ///   form
-    ///   formaction
-    ///   formenctype
-    ///   formmethod
-    ///   formnovalidate
-    ///   formtarget
-    ///   list
-    ///   max
-    ///   maxlength
-    ///   min
-    ///   minlength
-    ///   mozactionhint
-    ///   multiple
-    ///   name
-    ///   pattern
-    ///   placeholder
-    ///   popovertarget
-    ///   popovertargetaction
-    ///   readonly
-    ///   required
-    ///   size
-    ///   src
-    ///   step
-    ///   usemap
-    ///   webkitdirectory
-    input,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-footer-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/footer
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    footer,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#nobr
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/nobr
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    nobr,
-
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-th-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/th
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   abbr
-    ///   align
-    ///   axis
-    ///   bgcolor
-    ///   char
-    ///   charoff
-    ///   colspan
-    ///   headers
-    ///   rowspan
-    ///   scope
-    ///   valign
-    ///   width
-    th,
-
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#the-source-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/source
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   height
-    ///   media
-    ///   sizes
-    ///   src
-    ///   srcset
-    ///   type
-    ///   width
-    source,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-legend-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/legend
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    legend,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-dd-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dd
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    dd,
-
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/iframe
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   allow
-    ///   allowfullscreen
-    ///   allowpaymentrequest
-    ///   browsingtopics
-    ///   credentialless
-    ///   csp
-    ///   frameborder
-    ///   height
-    ///   loading
-    ///   longdesc
-    ///   marginheight
-    ///   marginwidth
-    ///   name
-    ///   referrerpolicy
-    ///   sandbox
-    ///   scrolling
-    ///   src
-    ///   srcdoc
-    ///   width
-    iframe,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-output-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/output
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   for
-    ///   form
-    ///   name
-    output,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-var-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/var
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    @"var",
-
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-meta-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/meta
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   charset
-    ///   content
-    ///   http-equiv
-    ///   name
-    ///   scheme
-    meta,
-
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-tr-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/tr
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   bgcolor
-    ///   char
-    ///   charoff
-    ///   valign
-    tr,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    h6,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#the-param-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/param
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   name
-    ///   type
-    ///   value
-    ///   valuetype
-    param,
-
-    /// spec: https://html.spec.whatwg.org/multipage/forms.html#the-label-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/label
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   for
-    label,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-menu-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/menu
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    menu,
-
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#the-track-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/track
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   default
-    ///   kind
-    ///   label
-    ///   src
-    ///   srclang
-    track,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-dfn-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dfn
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    dfn,
-
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-base-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/base
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   href
-    ///   target
-    base,
-
-    /// spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-embed-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/embed
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   height
-    ///   name
-    ///   src
-    ///   type
-    ///   width
-    embed,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/datalist
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    datalist,
-
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-html-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/html
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   version
-    ///   xmlns
-    html,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-bdo-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/bdo
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    bdo,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-optgroup-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/optgroup
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   disabled
-    ///   label
-    optgroup,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-section-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/section
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    section,
-
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-thead-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/thead
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   bgcolor
-    ///   char
-    ///   charoff
-    ///   valign
-    thead,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-p-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/p
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    p,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#acronym
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/acronym
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    acronym,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-rp-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/rp
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    rp,
-
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#the-script-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/script
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   async
-    ///   attributionsrc
-    ///   blocking
-    ///   crossorigin
-    ///   defer
-    ///   fetchpriority
-    ///   integrity
-    ///   nomodule
-    ///   referrerpolicy
-    ///   src
-    ///   type
-    script,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-em-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/em
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    em,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/main
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    main,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/a
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   attributionsourceid
-    ///   attributionsrc
-    ///   charset
-    ///   coords
-    ///   download
-    ///   href
-    ///   hreflang
-    ///   hreftranslate
-    ///   implicit_noopener
-    ///   name
-    ///   ping
-    ///   referrerpolicy
-    ///   rel
-    ///   rev
-    ///   shape
-    ///   target
-    ///   text_fragments
-    ///   type
     a,
 
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#the-template-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template
+    /// Abbreviation
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-abbr-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/abbr
     /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   shadowrootclonable
-    ///   shadowrootdelegatesfocus
-    ///   shadowrootmode
-    ///   shadowrootserializable
-    template,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-code-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/code
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    code,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#font
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/font
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   color
-    ///   face
-    ///   size
-    font,
-
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#the-video-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/video
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   aspect_ratio_computed_from_attributes
-    ///   autoplay
-    ///   controls
-    ///   controlslist
-    ///   crossorigin
-    ///   disablepictureinpicture
-    ///   disableremoteplayback
-    ///   height
-    ///   loop
-    ///   muted
-    ///   playsinline
-    ///   poster
-    ///   preload
-    ///   src
-    ///   width
-    video,
-
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/selectedcontent
-    /// status: experimental
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    selectedcontent,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-u-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/u
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    u,
-
-    /// spec: https://html.spec.whatwg.org/multipage/canvas.html#the-canvas-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/canvas
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   height
-    ///   moz-opaque
-    ///   width
-    canvas,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#rtc
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/rtc
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    rtc,
-
-    /// spec: https://html.spec.whatwg.org/multipage/rendering.html#the-marquee-element-2
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/marquee
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   behavior
-    ///   bgcolor
-    ///   direction
-    ///   height
-    ///   hspace
-    ///   loop
-    ///   scrollamount
-    ///   scrolldelay
-    ///   truespeed
-    ///   vspace
-    ///   width
-    marquee,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-i-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/i
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    i,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-ruby-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/ruby
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ruby,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    h4,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-time-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/time
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   datetime
-    time,
-
-    /// spec: https://html.spec.whatwg.org/multipage/media.html#the-audio-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/audio
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   autoplay
-    ///   controls
-    ///   controlslist
-    ///   crossorigin
-    ///   disableremoteplayback
-    ///   loop
-    ///   muted
-    ///   preload
-    ///   src
-    audio,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/fieldset
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   disabled
-    ///   form
-    ///   name
-    fieldset,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-br-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/br
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   clear
-    br,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#frameset
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/frameset
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   cols
-    ///   rows
-    frameset,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#dir
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dir
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   compact
-    dir,
-
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-table-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/table
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   bgcolor
-    ///   border
-    ///   cellpadding
-    ///   cellspacing
-    ///   frame
-    ///   rules
-    ///   summary
-    ///   width
-    table,
-
-    /// spec: https://html.spec.whatwg.org/multipage/edits.html#the-ins-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/ins
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   cite
-    ///   datetime
-    ins,
-
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/img
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   alt
-    ///   aspect_ratio_computed_from_attributes
-    ///   attributionsrc
-    ///   border
-    ///   crossorigin
-    ///   decoding
-    ///   fetchpriority
-    ///   height
-    ///   hspace
-    ///   ismap
-    ///   loading
-    ///   longdesc
-    ///   name
-    ///   referrerpolicy
-    ///   sizes
-    ///   src
-    ///   srcset
-    ///   usemap
-    ///   vspace
-    ///   width
-    img,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/nav
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    nav,
-
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-tfoot-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/tfoot
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   bgcolor
-    ///   char
-    ///   charoff
-    ///   valign
-    tfoot,
-
-    /// spec: https://html.spec.whatwg.org/multipage/scripting.html#the-noscript-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/noscript
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    noscript,
-
-    /// spec: https://html.spec.whatwg.org/multipage/embedded-content.html#the-picture-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/picture
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    picture,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#strike
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/strike
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    strike,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-dl-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dl
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    dl,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-sub-and-sup-elements
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/sup
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    sup,
-
-    /// spec: https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/details
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   name
-    ///   open
-    details,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/search
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    search,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#tt
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/tt
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    tt,
-
-    /// spec: https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dialog
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   closedby
-    ///   open
-    dialog,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-sub-and-sup-elements
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/sub
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    sub,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-strong-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/strong
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    strong,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-samp-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/samp
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    samp,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-address-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/address
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    address,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#xmp
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/xmp
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    xmp,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-s-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/s
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    s,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#plaintext
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/plaintext
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    plaintext,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-body-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/body
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   alink
-    ///   background
-    ///   bgcolor
-    ///   bottommargin
-    ///   leftmargin
-    ///   link
-    ///   rightmargin
-    ///   text
-    ///   topmargin
-    ///   vlink
-    body,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-progress-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/progress
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   max
-    ///   value
-    progress,
-
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-colgroup-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/colgroup
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   char
-    ///   charoff
-    ///   span
-    ///   valign
-    ///   width
-    colgroup,
-
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-title-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/title
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    title,
-
-    /// spec: https://html.spec.whatwg.org/multipage/image-maps.html#the-area-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/area
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   alt
-    ///   attributionsrc
-    ///   coords
-    ///   download
-    ///   href
-    ///   implicit_noopener
-    ///   nohref
-    ///   ping
-    ///   referrerpolicy
-    ///   rel
-    ///   shape
-    ///   target
-    area,
-
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-style-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/style
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   blocking
-    ///   media
-    ///   type
-    style,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-dt-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dt
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    dt,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/small
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    small,
-
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-caption-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/caption
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    caption,
-
-    /// spec: https://html.spec.whatwg.org/multipage/forms.html#the-form-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/form
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   accept-charset
-    ///   action
-    ///   autocomplete
-    ///   enctype
-    ///   method
-    ///   name
-    ///   novalidate
-    ///   rel
-    ///   target
-    form,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-wbr-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/wbr
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    wbr,
-
-    /// spec: https://html.spec.whatwg.org/multipage/edits.html#the-del-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/del
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   cite
-    ///   datetime
-    del,
-
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-link-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/link
-    /// status: standard
-    /// is a void element
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   as
-    ///   blocking
-    ///   charset
-    ///   crossorigin
-    ///   disabled
-    ///   fetchpriority
-    ///   href
-    ///   hreflang
-    ///   imagesizes
-    ///   imagesrcset
-    ///   integrity
-    ///   media
-    ///   referrerpolicy
-    ///   rel
-    ///   rev
-    ///   sizes
-    ///   target
-    ///   type
-    link,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-blockquote-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/blockquote
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   cite
-    blockquote,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-abbr-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/abbr
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
     abbr,
 
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-q-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/q
-    /// status: standard
+    /// Contact information for a page or article element
+    ///
+    /// Element with interface HTMLElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    ///   cite
-    q,
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-address-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/address
+    /// status: standard
+    address,
 
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-div-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/div
-    /// status: standard
+    /// Hyperlink or dead area on an image map
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLAreaElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    div,
+    ///   globals
+    ///   .alt
+    ///   .coords
+    ///   .shape
+    ///   .href
+    ///   .target
+    ///   .download
+    ///   .ping
+    ///   .rel
+    ///   .referrerpolicy
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/image-maps.html#the-area-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/area
+    /// status: standard
+    area,
 
-    /// spec: https://html.spec.whatwg.org/multipage/interactive-elements.html#the-summary-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/summary
-    /// status: standard
+    /// Self-contained syndicatable or reusable composition
+    ///
+    /// Element with interface HTMLElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    ///   display_list_item
-    summary,
-
-    /// spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-textarea-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/textarea
-    /// status: standard
+    ///   globals
     ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   autocomplete
-    ///   cols
-    ///   dirname
-    ///   disabled
-    ///   form
-    ///   maxlength
-    ///   minlength
-    ///   name
-    ///   placeholder
-    ///   readonly
-    ///   required
-    ///   rows
-    ///   wrap
-    textarea,
-
-    /// spec: https://html.spec.whatwg.org/multipage/semantics.html#the-head-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/head
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-article-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/article
     /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    head,
-
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-article-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/article
-    /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
     article,
 
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-pre-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/pre
-    /// status: standard
+    /// Sidebar for tangentially related content
+    ///
+    /// Element with interface HTMLElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    ///   width
-    pre,
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-aside-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/aside
+    /// status: standard
+    aside,
 
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-b-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/b
-    /// status: standard
+    /// Audio player
+    ///
+    /// Element with interface HTMLAudioElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
+    ///   globals
+    ///   .src
+    ///   .crossorigin
+    ///   .preload
+    ///   .autoplay
+    ///   .loop
+    ///   .muted
+    ///   .controls
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#the-audio-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/audio
+    /// status: standard
+    audio,
+
+    /// Keywords
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-b-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/b
+    /// status: standard
     b,
 
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-hr-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/hr
+    /// Base URL and default target navigable for hyperlinks and forms
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLBaseElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .href
+    ///   .target
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#the-base-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/base
     /// status: standard
-    /// is a void element
+    base,
+
+    /// Text directionality isolation
+    ///
+    /// Element with interface HTMLElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   color
-    ///   hr_in_select
-    ///   noshade
-    ///   size
-    ///   width
-    hr,
-
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-ol-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/ol
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-bdi-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/bdi
     /// status: standard
+    bdi,
+
+    /// Text directionality formatting
+    ///
+    /// Element with interface HTMLElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    ///   compact
-    ///   reversed
-    ///   start
-    ///   type
-    ol,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#frame
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/frame
-    /// status: deprecated
+    ///   globals
     ///
-    /// Allowed attributes:
-    ///   Global attributes
-    ///   frameborder
-    ///   marginheight
-    ///   marginwidth
-    ///   name
-    ///   noresize
-    ///   scrolling
-    ///   src
-    frame,
-
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#noembed
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/noembed
-    /// status: deprecated
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    noembed,
-
-    /// spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-mark-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/mark
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-bdo-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/bdo
     /// status: standard
-    ///
-    /// Allowed attributes:
-    ///   Global attributes
-    mark,
+    bdo,
 
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-li-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/li
-    /// status: standard
+    /// A section quoted from another source
+    ///
+    /// Element with interface HTMLQuoteElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    ///   type
-    ///   value
-    li,
+    ///   globals
+    ///   .cite
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-blockquote-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/blockquote
+    /// status: standard
+    blockquote,
 
-    /// spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
-    /// status: standard
+    /// Document body
+    ///
+    /// Element with interface HTMLBodyElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    h5,
+    ///   globals
+    ///   .onafterprint
+    ///   .onbeforeprint
+    ///   .onbeforeunload
+    ///   .onhashchange
+    ///   .onlanguagechange
+    ///   .onmessage
+    ///   .onmessageerror
+    ///   .onoffline
+    ///   .ononline
+    ///   .onpageswap
+    ///   .onpagehide
+    ///   .onpagereveal
+    ///   .onpageshow
+    ///   .onpopstate
+    ///   .onrejectionhandled
+    ///   .onstorage
+    ///   .onunhandledrejection
+    ///   .onunload
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-body-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/body
+    /// status: standard
+    body,
 
-    /// spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-figcaption-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/figcaption
-    /// status: standard
+    /// Line break, e.g. in poem or postal address
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLBRElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-br-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/br
+    /// status: standard
+    br,
+
+    /// Button control
+    ///
+    /// Element with interface HTMLButtonElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .command
+    ///   .commandfor
+    ///   .disabled
+    ///   .form
+    ///   .formaction
+    ///   .formenctype
+    ///   .formmethod
+    ///   .formnovalidate
+    ///   .formtarget
+    ///   .name
+    ///   .popovertarget
+    ///   .popovertargetaction
+    ///   .type
+    ///   .value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/button
+    /// status: standard
+    button,
+
+    /// Scriptable bitmap canvas
+    ///
+    /// Element with interface HTMLCanvasElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .width
+    ///   .height
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/canvas.html#the-canvas-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/canvas
+    /// status: standard
+    canvas,
+
+    /// Table caption
+    ///
+    /// Element with interface HTMLTableCaptionElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-caption-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/caption
+    /// status: standard
+    caption,
+
+    /// Title of a work
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-cite-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/cite
+    /// status: standard
+    cite,
+
+    /// Computer code
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-code-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/code
+    /// status: standard
+    code,
+
+    /// Table column
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLTableColElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .span
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-col-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/col
+    /// status: standard
+    col,
+
+    /// Group of columns in a table
+    ///
+    /// Element with interface HTMLTableColElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .span
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-colgroup-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/colgroup
+    /// status: standard
+    colgroup,
+
+    /// Machine-readable equivalent
+    ///
+    /// Element with interface HTMLDataElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-data-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/data
+    /// status: standard
+    data,
+
+    /// Container for options for combo box control
+    ///
+    /// Element with interface HTMLDataListElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-datalist-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/datalist
+    /// status: standard
+    datalist,
+
+    /// Content for corresponding dt element(s)
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-dd-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dd
+    /// status: standard
+    dd,
+
+    /// A removal from the document
+    ///
+    /// Element with interface HTMLModElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .cite
+    ///   .datetime
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/edits.html#the-del-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/del
+    /// status: standard
+    del,
+
+    /// Disclosure control for hiding details
+    ///
+    /// Element with interface HTMLDetailsElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .name
+    ///   .open
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/details
+    /// status: standard
+    details,
+
+    /// Defining instance
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-dfn-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dfn
+    /// status: standard
+    dfn,
+
+    /// Dialog box or window
+    ///
+    /// Element with interface HTMLDialogElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .open
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dialog
+    /// status: standard
+    dialog,
+
+    /// Generic flow container, or container for name-value groups in dl elements
+    ///
+    /// Element with interface HTMLDivElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-div-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/div
+    /// status: standard
+    div,
+
+    /// Association list consisting of zero or more name-value groups
+    ///
+    /// Element with interface HTMLDListElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-dl-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dl
+    /// status: standard
+    dl,
+
+    /// Legend for corresponding dd element(s)
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-dt-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/dt
+    /// status: standard
+    dt,
+
+    /// Stress emphasis
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-em-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/em
+    /// status: standard
+    em,
+
+    /// Plugin
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLEmbedElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .src
+    ///   .type
+    ///   .width
+    ///   .height
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-embed-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/embed
+    /// status: standard
+    embed,
+
+    /// Group of form controls
+    ///
+    /// Element with interface HTMLFieldSetElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .disabled
+    ///   .form
+    ///   .name
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-fieldset-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/fieldset
+    /// status: standard
+    fieldset,
+
+    /// Caption for figure
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-figcaption-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/figcaption
+    /// status: standard
     figcaption,
 
-    /// spec: https://html.spec.whatwg.org/multipage/obsolete.html#noframes
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/noframes
-    /// status: deprecated
+    /// Figure with optional caption
+    ///
+    /// Element with interface HTMLElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    noframes,
-
-    /// spec: https://html.spec.whatwg.org/multipage/tables.html#the-tbody-element
-    /// mdn: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/tbody
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-figure-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/figure
     /// status: standard
+    figure,
+
+    /// Footer for a page or section
+    ///
+    /// Element with interface HTMLElement
     ///
     /// Allowed attributes:
-    ///   Global attributes
-    ///   align
-    ///   bgcolor
-    ///   char
-    ///   charoff
-    ///   valign
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-footer-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/footer
+    /// status: standard
+    footer,
+
+    /// User-submittable form
+    ///
+    /// Element with interface HTMLFormElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .@"accept-charset"
+    ///   .action
+    ///   .autocomplete
+    ///   .enctype
+    ///   .method
+    ///   .name
+    ///   .novalidate
+    ///   .rel
+    ///   .target
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/forms.html#the-form-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/form
+    /// status: standard
+    form,
+
+    /// Heading
+    ///
+    /// Element with interface HTMLHeadingElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
+    /// status: standard
+    h1,
+
+    /// Heading
+    ///
+    /// Element with interface HTMLHeadingElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
+    /// status: standard
+    h2,
+
+    /// Heading
+    ///
+    /// Element with interface HTMLHeadingElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
+    /// status: standard
+    h3,
+
+    /// Heading
+    ///
+    /// Element with interface HTMLHeadingElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
+    /// status: standard
+    h4,
+
+    /// Heading
+    ///
+    /// Element with interface HTMLHeadingElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
+    /// status: standard
+    h5,
+
+    /// Heading
+    ///
+    /// Element with interface HTMLHeadingElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/Heading_Elements
+    /// status: standard
+    h6,
+
+    /// Container for document metadata
+    ///
+    /// Element with interface HTMLHeadElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#the-head-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/head
+    /// status: standard
+    head,
+
+    /// Introductory or navigational aids for a page or section
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-header-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/header
+    /// status: standard
+    header,
+
+    /// Heading container
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-hgroup-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/hgroup
+    /// status: standard
+    hgroup,
+
+    /// Thematic break
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLHRElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-hr-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/hr
+    /// status: standard
+    hr,
+
+    /// Root element
+    ///
+    /// Element with interface HTMLHtmlElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#the-html-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/html
+    /// status: standard
+    html,
+
+    /// Alternate voice
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-i-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/i
+    /// status: standard
+    i,
+
+    /// Child navigable
+    ///
+    /// Element with interface HTMLIFrameElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .src
+    ///   .srcdoc
+    ///   .name
+    ///   .sandbox
+    ///   .allow
+    ///   .allowfullscreen
+    ///   .width
+    ///   .height
+    ///   .referrerpolicy
+    ///   .loading
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/iframe
+    /// status: standard
+    iframe,
+
+    /// Image
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLImageElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .alt
+    ///   .src
+    ///   .srcset
+    ///   .sizes
+    ///   .crossorigin
+    ///   .usemap
+    ///   .ismap
+    ///   .width
+    ///   .height
+    ///   .referrerpolicy
+    ///   .decoding
+    ///   .loading
+    ///   .fetchpriority
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/img
+    /// status: standard
+    img,
+
+    /// Form control
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLInputElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .accept
+    ///   .alpha
+    ///   .alt
+    ///   .autocomplete
+    ///   .checked
+    ///   .colorspace
+    ///   .dirname
+    ///   .disabled
+    ///   .form
+    ///   .formaction
+    ///   .formenctype
+    ///   .formmethod
+    ///   .formnovalidate
+    ///   .formtarget
+    ///   .height
+    ///   .list
+    ///   .max
+    ///   .maxlength
+    ///   .min
+    ///   .minlength
+    ///   .multiple
+    ///   .name
+    ///   .pattern
+    ///   .placeholder
+    ///   .popovertarget
+    ///   .popovertargetaction
+    ///   .readonly
+    ///   .required
+    ///   .size
+    ///   .src
+    ///   .step
+    ///   .type
+    ///   .value
+    ///   .width
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/input.html#the-input-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/input
+    /// status: standard
+    input,
+
+    /// An addition to the document
+    ///
+    /// Element with interface HTMLModElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .cite
+    ///   .datetime
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/edits.html#the-ins-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/ins
+    /// status: standard
+    ins,
+
+    /// User input
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-kbd-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/kbd
+    /// status: standard
+    kbd,
+
+    /// Caption for a form control
+    ///
+    /// Element with interface HTMLLabelElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .@"for"
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/forms.html#the-label-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/label
+    /// status: standard
+    label,
+
+    /// Caption for fieldset
+    ///
+    /// Element with interface HTMLLegendElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-legend-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/legend
+    /// status: standard
+    legend,
+
+    /// List item
+    ///
+    /// Element with interface HTMLLIElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-li-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/li
+    /// status: standard
+    li,
+
+    /// Link metadata
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLLinkElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .href
+    ///   .crossorigin
+    ///   .rel
+    ///   .as
+    ///   .media
+    ///   .hreflang
+    ///   .type
+    ///   .sizes
+    ///   .imagesrcset
+    ///   .imagesizes
+    ///   .referrerpolicy
+    ///   .integrity
+    ///   .blocking
+    ///   .color
+    ///   .disabled
+    ///   .fetchpriority
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#the-link-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/link
+    /// status: standard
+    link,
+
+    /// Container for the dominant contents of the document
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/main
+    /// status: standard
+    main,
+
+    /// Image map
+    ///
+    /// Element with interface HTMLMapElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .name
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/image-maps.html#the-map-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/map
+    /// status: standard
+    map,
+
+    /// Highlight
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-mark-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/mark
+    /// status: standard
+    mark,
+
+    /// MathML root
+    ///
+    /// Element with interface Element
+    ///
+    /// Allowed attributes:
+    ///
+    /// status: unknown
+    math,
+
+    /// Menu of commands
+    ///
+    /// Element with interface HTMLMenuElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-menu-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/menu
+    /// status: standard
+    menu,
+
+    /// Text metadata
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLMetaElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .name
+    ///   .@"http-equiv"
+    ///   .content
+    ///   .charset
+    ///   .media
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#the-meta-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/meta
+    /// status: standard
+    meta,
+
+    /// Gauge
+    ///
+    /// Element with interface HTMLMeterElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .value
+    ///   .min
+    ///   .max
+    ///   .low
+    ///   .high
+    ///   .optimum
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-meter-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/meter
+    /// status: standard
+    meter,
+
+    /// Section with navigational links
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-nav-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/nav
+    /// status: standard
+    nav,
+
+    /// Fallback content for script
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#the-noscript-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/noscript
+    /// status: standard
+    noscript,
+
+    /// Image, child navigable, or plugin
+    ///
+    /// Element with interface HTMLObjectElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .data
+    ///   .type
+    ///   .name
+    ///   .form
+    ///   .width
+    ///   .height
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-object-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/object
+    /// status: standard
+    object,
+
+    /// Ordered list
+    ///
+    /// Element with interface HTMLOListElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .reversed
+    ///   .start
+    ///   .type
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-ol-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/ol
+    /// status: standard
+    ol,
+
+    /// Group of options in a list box
+    ///
+    /// Element with interface HTMLOptGroupElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .disabled
+    ///   .label
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-optgroup-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/optgroup
+    /// status: standard
+    optgroup,
+
+    /// Option in a list box or combo box control
+    ///
+    /// Element with interface HTMLOptionElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .disabled
+    ///   .label
+    ///   .selected
+    ///   .value
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-option-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/option
+    /// status: standard
+    option,
+
+    /// Calculated output value
+    ///
+    /// Element with interface HTMLOutputElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .@"for"
+    ///   .form
+    ///   .name
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-output-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/output
+    /// status: standard
+    output,
+
+    /// Paragraph
+    ///
+    /// Element with interface HTMLParagraphElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-p-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/p
+    /// status: standard
+    p,
+
+    /// Image
+    ///
+    /// Element with interface HTMLPictureElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content.html#the-picture-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/picture
+    /// status: standard
+    picture,
+
+    /// Block of preformatted text
+    ///
+    /// Element with interface HTMLPreElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-pre-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/pre
+    /// status: standard
+    pre,
+
+    /// Progress bar
+    ///
+    /// Element with interface HTMLProgressElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .value
+    ///   .max
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-progress-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/progress
+    /// status: standard
+    progress,
+
+    /// Quotation
+    ///
+    /// Element with interface HTMLQuoteElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .cite
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-q-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/q
+    /// status: standard
+    q,
+
+    /// Parenthesis for ruby annotation text
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-rp-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/rp
+    /// status: standard
+    rp,
+
+    /// Ruby annotation text
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-rt-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/rt
+    /// status: standard
+    rt,
+
+    /// Ruby annotation(s)
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-ruby-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/ruby
+    /// status: standard
+    ruby,
+
+    /// Inaccurate text
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-s-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/s
+    /// status: standard
+    s,
+
+    /// Computer output
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-samp-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/samp
+    /// status: standard
+    samp,
+
+    /// Embedded script
+    ///
+    /// Element with interface HTMLScriptElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .src
+    ///   .type
+    ///   .nomodule
+    ///   .@"async"
+    ///   .@"defer"
+    ///   .crossorigin
+    ///   .integrity
+    ///   .referrerpolicy
+    ///   .blocking
+    ///   .fetchpriority
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#the-script-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/script
+    /// status: standard
+    script,
+
+    /// Container for search controls
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-search-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/search
+    /// status: standard
+    search,
+
+    /// Generic document or application section
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/sections.html#the-section-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/section
+    /// status: standard
+    section,
+
+    /// List box control
+    ///
+    /// Element with interface HTMLSelectElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .autocomplete
+    ///   .disabled
+    ///   .form
+    ///   .multiple
+    ///   .name
+    ///   .required
+    ///   .size
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-select-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/select
+    /// status: standard
+    select,
+
+    /// Shadow tree slot
+    ///
+    /// Element with interface HTMLSlotElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .name
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#the-slot-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/slot
+    /// status: standard
+    slot,
+
+    /// Side comment
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-small-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/small
+    /// status: standard
+    small,
+
+    /// Image source for img or media source for video or audio
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLSourceElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .type
+    ///   .media
+    ///   .src
+    ///   .srcset
+    ///   .sizes
+    ///   .width
+    ///   .height
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/embedded-content.html#the-source-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/source
+    /// status: standard
+    source,
+
+    /// Generic phrasing container
+    ///
+    /// Element with interface HTMLSpanElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-span-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/span
+    /// status: standard
+    span,
+
+    /// Importance
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-strong-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/strong
+    /// status: standard
+    strong,
+
+    /// Embedded styling information
+    ///
+    /// Element with interface HTMLStyleElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .media
+    ///   .blocking
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#the-style-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/style
+    /// status: standard
+    style,
+
+    /// Subscript
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-sub-and-sup-elements
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/sub
+    /// status: standard
+    sub,
+
+    /// Caption for details
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/interactive-elements.html#the-summary-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/summary
+    /// status: standard
+    summary,
+
+    /// Superscript
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-sub-and-sup-elements
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/sup
+    /// status: standard
+    sup,
+
+    /// SVG root
+    ///
+    /// Element with interface SVGSVGElement
+    ///
+    /// Allowed attributes:
+    ///
+    /// status: unknown
+    svg,
+
+    /// Table
+    ///
+    /// Element with interface HTMLTableElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-table-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/table
+    /// status: standard
+    table,
+
+    /// Group of rows in a table
+    ///
+    /// Element with interface HTMLTableSectionElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-tbody-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/tbody
+    /// status: standard
     tbody,
+
+    /// Table cell
+    ///
+    /// Element with interface HTMLTableCellElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .colspan
+    ///   .rowspan
+    ///   .headers
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-td-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/td
+    /// status: standard
+    td,
+
+    /// Template
+    ///
+    /// Element with interface HTMLTemplateElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .shadowrootmode
+    ///   .shadowrootdelegatesfocus
+    ///   .shadowrootclonable
+    ///   .shadowrootserializable
+    ///   .shadowrootcustomelementregistry
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#the-template-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/template
+    /// status: standard
+    template,
+
+    /// Multiline text controls
+    ///
+    /// Element with interface HTMLTextAreaElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .autocomplete
+    ///   .cols
+    ///   .dirname
+    ///   .disabled
+    ///   .form
+    ///   .maxlength
+    ///   .minlength
+    ///   .name
+    ///   .placeholder
+    ///   .readonly
+    ///   .required
+    ///   .rows
+    ///   .wrap
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-textarea-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/textarea
+    /// status: standard
+    textarea,
+
+    /// Group of footer rows in a table
+    ///
+    /// Element with interface HTMLTableSectionElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-tfoot-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/tfoot
+    /// status: standard
+    tfoot,
+
+    /// Table header cell
+    ///
+    /// Element with interface HTMLTableCellElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .colspan
+    ///   .rowspan
+    ///   .headers
+    ///   .scope
+    ///   .abbr
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-th-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/th
+    /// status: standard
+    th,
+
+    /// Group of heading rows in a table
+    ///
+    /// Element with interface HTMLTableSectionElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-thead-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/thead
+    /// status: standard
+    thead,
+
+    /// Machine-readable equivalent of date- or time-related data
+    ///
+    /// Element with interface HTMLTimeElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .datetime
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-time-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/time
+    /// status: standard
+    time,
+
+    /// Document title
+    ///
+    /// Element with interface HTMLTitleElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/semantics.html#the-title-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/title
+    /// status: standard
+    title,
+
+    /// Table row
+    ///
+    /// Element with interface HTMLTableRowElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/tables.html#the-tr-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/tr
+    /// status: standard
+    tr,
+
+    /// Timed text track
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLTrackElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .default
+    ///   .kind
+    ///   .label
+    ///   .src
+    ///   .srclang
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#the-track-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/track
+    /// status: standard
+    track,
+
+    /// Unarticulated annotation
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-u-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/u
+    /// status: standard
+    u,
+
+    /// List
+    ///
+    /// Element with interface HTMLUListElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-ul-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/ul
+    /// status: standard
+    ul,
+
+    /// Variable
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-var-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/var
+    /// status: standard
+    @"var",
+
+    /// Video player
+    ///
+    /// Element with interface HTMLVideoElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///   .src
+    ///   .crossorigin
+    ///   .poster
+    ///   .preload
+    ///   .autoplay
+    ///   .playsinline
+    ///   .loop
+    ///   .muted
+    ///   .controls
+    ///   .width
+    ///   .height
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/media.html#the-video-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/video
+    /// status: standard
+    video,
+
+    /// Line breaking opportunity
+    ///
+    /// Is a void element
+    ///
+    /// Element with interface HTMLElement
+    ///
+    /// Allowed attributes:
+    ///   globals
+    ///
+    /// Spec: https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-wbr-element
+    /// MDN: https://developer.mozilla.org/docs/Web/HTML/Reference/Elements/wbr
+    /// status: standard
+    wbr,
 };
 
 // @GENERATED SECTION END

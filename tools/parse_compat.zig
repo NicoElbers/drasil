@@ -72,7 +72,6 @@ pub fn parseCompatData(origin: []const u8, value: std.json.Value, gpa: Allocator
             switch (entry.value_ptr.*) {
                 .string => |s| spec_url = s,
                 .array => |a| {
-                    std.log.info("Spec is array over string", .{});
                     spec_url = a.items[0].string; // TODO: better solution
                 },
                 else => @panic("spec url is not a string or array"),
@@ -99,7 +98,6 @@ pub fn parseCompatData(origin: []const u8, value: std.json.Value, gpa: Allocator
                     assert(deprecated == null);
                     deprecated = status_entry.value_ptr.bool;
                 } else {
-                    std.log.err("{s}", .{status_entry.key_ptr.*});
                     @panic("Status has unknown field");
                 }
             }
@@ -131,7 +129,7 @@ pub fn parseAttribute(name: []const u8, origin: []const u8, value: std.json.Valu
             assert(compat == null);
             compat = try parseCompatData(origin, entry.value_ptr.*, gpa);
         } else {
-            std.log.err("{s}", .{entry.key_ptr.*});
+            // std.log.err("{s}", .{entry.key_ptr.*});
             // @panic("Attribute has more fields than __compat?");
         }
     }
