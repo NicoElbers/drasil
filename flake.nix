@@ -27,6 +27,9 @@
             bashInteractive
             zig_bound
             zls_bound
+
+            python3Packages.beautifulsoup4
+            python3Packages.html5lib
           ];
         };
       });

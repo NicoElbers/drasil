@@ -37,6 +37,11 @@
             .hash = "N-V-__8AAEZaeAHytKVhdyt-PXLZzWNasu--vG_FvMZA0ams",
             .lazy = true,
         },
+        .html = .{
+            .url = "git+https://github.com/whatwg/html.git#08ea4a7ab382a9019ee0eaa52a588aba277c9bc3",
+            .hash = "N-V-__8AANoS7AWqpUkZ6qNYMZR4muaYQduj70WFO7RAMGgV",
+            .lazy = true,
+        },
     },
     .paths = .{
         "build.zig",

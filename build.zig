@@ -40,9 +40,8 @@ fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {
 
     const run = b.addRunArtifact(exe);
 
-    // assert(args.len == 5); // {self} {elements zon} {attributes zon} {html_data file} {Tree file}
-    run.addFileArg(b.path("tools/html_elements.zon"));
-    run.addFileArg(b.path("tools/html_attributes.zon"));
+    // assert(args.len == 4); // {self} {tools dir} {html_data file} {Tree file}
+    run.addDirectoryArg(b.path("tools/"));
     run.addFileArg(b.path("src/html_data.zig"));
     run.addFileArg(b.path("src/Tree.zig"));
 
@@ -50,9 +49,29 @@ fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {
 }
 
 fn updateHtmlDataZonStep(b: *Build, target: Target, optimize: Optimize) ?void {
-    const step = b.step("html_zon", "Update the automatically generated HtmlNode.zig");
+    const step = b.step("html_zon", "Update the zon files containing HTML data");
 
     const compat_data = b.lazyDependency("browser-compat-data", .{}) orelse return null;
+    const html = b.lazyDependency("html", .{}) orelse return null;
+
+    // Let python create the JSON
+    const elements_json_gen = b.addSystemCommand(&.{"python"});
+    // const json_gen = b.addSystemCommand(&.{"echo"});
+    elements_json_gen.addFileArg(b.path("tools/parse_elements.py"));
+    elements_json_gen.addFileArg(html.path("source"));
+    elements_json_gen.addFileArg(b.path("tools/html_elements.json"));
+
+    const attributes_json_gen = b.addSystemCommand(&.{"python"});
+    // const json_gen = b.addSystemCommand(&.{"echo"});
+    attributes_json_gen.addFileArg(b.path("tools/parse_attributes.py"));
+    attributes_json_gen.addFileArg(html.path("source"));
+    attributes_json_gen.addFileArg(b.path("tools/html_attributes.json"));
+
+    const events_json_gen = b.addSystemCommand(&.{"python"});
+    // const json_gen = b.addSystemCommand(&.{"echo"});
+    events_json_gen.addFileArg(b.path("tools/parse_events.py"));
+    events_json_gen.addFileArg(html.path("source"));
+    events_json_gen.addFileArg(b.path("tools/html_events.json"));
 
     const mod = b.createModule(.{
         .root_source_file = b.path("tools/gen_html_data_zon.zig"),
@@ -66,11 +85,13 @@ fn updateHtmlDataZonStep(b: *Build, target: Target, optimize: Optimize) ?void {
     });
 
     const run = b.addRunArtifact(exe);
+    run.step.dependOn(&events_json_gen.step); // Generate zon after JSON
+    run.step.dependOn(&elements_json_gen.step); // Generate zon after JSON
+    run.step.dependOn(&attributes_json_gen.step); // Generate zon after JSON
 
-    // assert(args.len == 4); // {self} {html_dir} {elements zon} {attributes zon}
+    // assert(args.len == 3); // {self} {html_dir} {tools dir}
     run.addDirectoryArg(compat_data.path("html"));
-    run.addFileArg(b.path("tools/html_elements.zon"));
-    run.addFileArg(b.path("tools/html_attributes.zon"));
+    run.addDirectoryArg(b.path("tools/"));
 
     step.dependOn(&run.step);
 }

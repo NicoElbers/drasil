@@ -1,0 +1,1874 @@
+[
+  {
+    "attribute_name": "abbr",
+    "details": [
+      {
+        "elements": [
+          "th"
+        ],
+        "description": "Alternative label to use for the header cell when referencing the cell in other contexts"
+      }
+    ]
+  },
+  {
+    "attribute_name": "accept",
+    "details": [
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Hint for expected file type in file upload controls"
+      }
+    ]
+  },
+  {
+    "attribute_name": "accept-charset",
+    "details": [
+      {
+        "elements": [
+          "form"
+        ],
+        "description": "Character encodings to use for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "accesskey",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Keyboard shortcut to activate or focus element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "action",
+    "details": [
+      {
+        "elements": [
+          "form"
+        ],
+        "description": "URL to use for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "allow",
+    "details": [
+      {
+        "elements": [
+          "iframe"
+        ],
+        "description": "Permissions policy to be applied to the iframe's contents"
+      }
+    ]
+  },
+  {
+    "attribute_name": "allowfullscreen",
+    "details": [
+      {
+        "elements": [
+          "iframe"
+        ],
+        "description": "Whether to allow the iframe's contents to use requestFullscreen()"
+      }
+    ]
+  },
+  {
+    "attribute_name": "alpha",
+    "details": [
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Allow the color's alpha component to be set"
+      }
+    ]
+  },
+  {
+    "attribute_name": "alt",
+    "details": [
+      {
+        "elements": [
+          "area",
+          "img",
+          "input"
+        ],
+        "description": "Replacement text for use when images are not available"
+      }
+    ]
+  },
+  {
+    "attribute_name": "as",
+    "details": [
+      {
+        "elements": [
+          "link"
+        ],
+        "description": "Potential destination for a preload request (for rel=\"preload\" and rel=\"modulepreload\")"
+      }
+    ]
+  },
+  {
+    "attribute_name": "async",
+    "details": [
+      {
+        "elements": [
+          "script"
+        ],
+        "description": "Execute script when available, without blocking while fetching"
+      }
+    ]
+  },
+  {
+    "attribute_name": "autocapitalize",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Recommended autocapitalization behavior (for supported input methods)"
+      }
+    ]
+  },
+  {
+    "attribute_name": "autocomplete",
+    "details": [
+      {
+        "elements": [
+          "form"
+        ],
+        "description": "Default setting for autofill feature for controls in the form"
+      },
+      {
+        "elements": [
+          "input",
+          "select",
+          "textarea"
+        ],
+        "description": "Hint for form autofill feature"
+      }
+    ]
+  },
+  {
+    "attribute_name": "autocorrect",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Recommended autocorrection behavior (for supported input methods)"
+      }
+    ]
+  },
+  {
+    "attribute_name": "autofocus",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Automatically focus the element when the page is loaded"
+      }
+    ]
+  },
+  {
+    "attribute_name": "autoplay",
+    "details": [
+      {
+        "elements": [
+          "audio",
+          "video"
+        ],
+        "description": "Hint that the media resource can be started automatically when the page is loaded"
+      }
+    ]
+  },
+  {
+    "attribute_name": "blocking",
+    "details": [
+      {
+        "elements": [
+          "link",
+          "script",
+          "style"
+        ],
+        "description": "Whether the element is potentially render-blocking"
+      }
+    ]
+  },
+  {
+    "attribute_name": "charset",
+    "details": [
+      {
+        "elements": [
+          "meta"
+        ],
+        "description": "Character encoding declaration"
+      }
+    ]
+  },
+  {
+    "attribute_name": "checked",
+    "details": [
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Whether the control is checked"
+      }
+    ]
+  },
+  {
+    "attribute_name": "cite",
+    "details": [
+      {
+        "elements": [
+          "blockquote",
+          "del",
+          "ins",
+          "q"
+        ],
+        "description": "Link to the source of the quotation or more information about the edit"
+      }
+    ]
+  },
+  {
+    "attribute_name": "class",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Classes to which the element belongs"
+      }
+    ]
+  },
+  {
+    "attribute_name": "closedby",
+    "details": [
+      {
+        "elements": [
+          "dialog"
+        ],
+        "description": "Which user actions will close the dialog"
+      }
+    ]
+  },
+  {
+    "attribute_name": "color",
+    "details": [
+      {
+        "elements": [
+          "link"
+        ],
+        "description": "Color to use when customizing a site's icon (for rel=\"mask-icon\")"
+      }
+    ]
+  },
+  {
+    "attribute_name": "colorspace",
+    "details": [
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "The color space of the serialized color"
+      }
+    ]
+  },
+  {
+    "attribute_name": "cols",
+    "details": [
+      {
+        "elements": [
+          "textarea"
+        ],
+        "description": "Maximum number of characters per line"
+      }
+    ]
+  },
+  {
+    "attribute_name": "colspan",
+    "details": [
+      {
+        "elements": [
+          "td",
+          "th"
+        ],
+        "description": "Number of columns that the cell is to span"
+      }
+    ]
+  },
+  {
+    "attribute_name": "command",
+    "details": [
+      {
+        "elements": [
+          "button"
+        ],
+        "description": "Indicates to the targeted element which action to take."
+      }
+    ]
+  },
+  {
+    "attribute_name": "commandfor",
+    "details": [
+      {
+        "elements": [
+          "button"
+        ],
+        "description": "Targets another element to be invoked."
+      }
+    ]
+  },
+  {
+    "attribute_name": "content",
+    "details": [
+      {
+        "elements": [
+          "meta"
+        ],
+        "description": "Value of the element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "contenteditable",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Whether the element is editable"
+      }
+    ]
+  },
+  {
+    "attribute_name": "controls",
+    "details": [
+      {
+        "elements": [
+          "audio",
+          "video"
+        ],
+        "description": "Show user agent controls"
+      }
+    ]
+  },
+  {
+    "attribute_name": "coords",
+    "details": [
+      {
+        "elements": [
+          "area"
+        ],
+        "description": "Coordinates for the shape to be created in an image map"
+      }
+    ]
+  },
+  {
+    "attribute_name": "crossorigin",
+    "details": [
+      {
+        "elements": [
+          "audio",
+          "img",
+          "link",
+          "script",
+          "video"
+        ],
+        "description": "How the element handles crossorigin requests"
+      }
+    ]
+  },
+  {
+    "attribute_name": "data",
+    "details": [
+      {
+        "elements": [
+          "object"
+        ],
+        "description": "Address of the resource"
+      }
+    ]
+  },
+  {
+    "attribute_name": "datetime",
+    "details": [
+      {
+        "elements": [
+          "del",
+          "ins"
+        ],
+        "description": "Date and (optionally) time of the change"
+      },
+      {
+        "elements": [
+          "time"
+        ],
+        "description": "Machine-readable value"
+      }
+    ]
+  },
+  {
+    "attribute_name": "decoding",
+    "details": [
+      {
+        "elements": [
+          "img"
+        ],
+        "description": "Decoding hint to use when processing this image for presentation"
+      }
+    ]
+  },
+  {
+    "attribute_name": "default",
+    "details": [
+      {
+        "elements": [
+          "track"
+        ],
+        "description": "Enable the track if no other text track is more suitable"
+      }
+    ]
+  },
+  {
+    "attribute_name": "defer",
+    "details": [
+      {
+        "elements": [
+          "script"
+        ],
+        "description": "Defer script execution"
+      }
+    ]
+  },
+  {
+    "attribute_name": "dir",
+    "details": [
+      {
+        "elements": [
+          "bdo"
+        ],
+        "description": "The text directionality of the element"
+      },
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "The text directionality of the element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "dirname",
+    "details": [
+      {
+        "elements": [
+          "input",
+          "textarea"
+        ],
+        "description": "Name of form control to use for sending the element's directionality in form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "disabled",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "form-associated custom elements",
+          "input",
+          "optgroup",
+          "option",
+          "select",
+          "textarea"
+        ],
+        "description": "Whether the form control is disabled"
+      },
+      {
+        "elements": [
+          "fieldset"
+        ],
+        "description": "Whether the descendant form controls, except any inside legend, are disabled"
+      },
+      {
+        "elements": [
+          "link"
+        ],
+        "description": "Whether the link is disabled"
+      }
+    ]
+  },
+  {
+    "attribute_name": "download",
+    "details": [
+      {
+        "elements": [
+          "a",
+          "area"
+        ],
+        "description": "Whether to download the resource instead of navigating to it, and its filename if so"
+      }
+    ]
+  },
+  {
+    "attribute_name": "draggable",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Whether the element is draggable"
+      }
+    ]
+  },
+  {
+    "attribute_name": "enctype",
+    "details": [
+      {
+        "elements": [
+          "form"
+        ],
+        "description": "Entry list encoding type to use for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "enterkeyhint",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Hint for selecting an enter key action"
+      }
+    ]
+  },
+  {
+    "attribute_name": "fetchpriority",
+    "details": [
+      {
+        "elements": [
+          "img",
+          "link",
+          "script"
+        ],
+        "description": "Sets the priority for fetches initiated by the element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "for",
+    "details": [
+      {
+        "elements": [
+          "label"
+        ],
+        "description": "Associate the label with form control"
+      },
+      {
+        "elements": [
+          "output"
+        ],
+        "description": "Specifies controls from which the output was calculated"
+      }
+    ]
+  },
+  {
+    "attribute_name": "form",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "fieldset",
+          "form-associated custom elements",
+          "input",
+          "object",
+          "output",
+          "select",
+          "textarea"
+        ],
+        "description": "Associates the element with a form element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "formaction",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "input"
+        ],
+        "description": "URL to use for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "formenctype",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "input"
+        ],
+        "description": "Entry list encoding type to use for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "formmethod",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "input"
+        ],
+        "description": "Variant to use for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "formnovalidate",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "input"
+        ],
+        "description": "Bypass form control validation for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "formtarget",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "input"
+        ],
+        "description": "Navigable for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "headers",
+    "details": [
+      {
+        "elements": [
+          "td",
+          "th"
+        ],
+        "description": "The header cells for this cell"
+      }
+    ]
+  },
+  {
+    "attribute_name": "height",
+    "details": [
+      {
+        "elements": [
+          "canvas",
+          "embed",
+          "iframe",
+          "img",
+          "input",
+          "object",
+          "source (in picture)",
+          "video"
+        ],
+        "description": "Vertical dimension"
+      }
+    ]
+  },
+  {
+    "attribute_name": "hidden",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Whether the element is relevant"
+      }
+    ]
+  },
+  {
+    "attribute_name": "high",
+    "details": [
+      {
+        "elements": [
+          "meter"
+        ],
+        "description": "Low limit of high range"
+      }
+    ]
+  },
+  {
+    "attribute_name": "href",
+    "details": [
+      {
+        "elements": [
+          "a",
+          "area"
+        ],
+        "description": "Address of the hyperlink"
+      },
+      {
+        "elements": [
+          "base"
+        ],
+        "description": "Document base URL"
+      },
+      {
+        "elements": [
+          "link"
+        ],
+        "description": "Address of the hyperlink"
+      }
+    ]
+  },
+  {
+    "attribute_name": "hreflang",
+    "details": [
+      {
+        "elements": [
+          "a",
+          "link"
+        ],
+        "description": "Language of the linked resource"
+      }
+    ]
+  },
+  {
+    "attribute_name": "http-equiv",
+    "details": [
+      {
+        "elements": [
+          "meta"
+        ],
+        "description": "Pragma directive"
+      }
+    ]
+  },
+  {
+    "attribute_name": "id",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "The element's ID"
+      }
+    ]
+  },
+  {
+    "attribute_name": "imagesizes",
+    "details": [
+      {
+        "elements": [
+          "link"
+        ],
+        "description": "Image sizes for different page layouts (for rel=\"preload\")"
+      }
+    ]
+  },
+  {
+    "attribute_name": "imagesrcset",
+    "details": [
+      {
+        "elements": [
+          "link"
+        ],
+        "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc. (for rel=\"preload\")"
+      }
+    ]
+  },
+  {
+    "attribute_name": "inert",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Whether the element is inert."
+      }
+    ]
+  },
+  {
+    "attribute_name": "inputmode",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Hint for selecting an input modality"
+      }
+    ]
+  },
+  {
+    "attribute_name": "integrity",
+    "details": [
+      {
+        "elements": [
+          "link",
+          "script"
+        ],
+        "description": "Integrity metadata used in Subresource Integrity checks SRI"
+      }
+    ]
+  },
+  {
+    "attribute_name": "is",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Creates a customized built-in element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "ismap",
+    "details": [
+      {
+        "elements": [
+          "img"
+        ],
+        "description": "Whether the image is a server-side image map"
+      }
+    ]
+  },
+  {
+    "attribute_name": "itemid",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Global identifier for a microdata item"
+      }
+    ]
+  },
+  {
+    "attribute_name": "itemprop",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Property names of a microdata item"
+      }
+    ]
+  },
+  {
+    "attribute_name": "itemref",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Referenced elements"
+      }
+    ]
+  },
+  {
+    "attribute_name": "itemscope",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Introduces a microdata item"
+      }
+    ]
+  },
+  {
+    "attribute_name": "itemtype",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Item types of a microdata item"
+      }
+    ]
+  },
+  {
+    "attribute_name": "kind",
+    "details": [
+      {
+        "elements": [
+          "track"
+        ],
+        "description": "The type of text track"
+      }
+    ]
+  },
+  {
+    "attribute_name": "label",
+    "details": [
+      {
+        "elements": [
+          "optgroup",
+          "option",
+          "track"
+        ],
+        "description": "User-visible label"
+      }
+    ]
+  },
+  {
+    "attribute_name": "lang",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Language of the element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "list",
+    "details": [
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "List of autocomplete options"
+      }
+    ]
+  },
+  {
+    "attribute_name": "loading",
+    "details": [
+      {
+        "elements": [
+          "iframe",
+          "img"
+        ],
+        "description": "Used when determining loading deferral"
+      }
+    ]
+  },
+  {
+    "attribute_name": "loop",
+    "details": [
+      {
+        "elements": [
+          "audio",
+          "video"
+        ],
+        "description": "Whether to loop the media resource"
+      }
+    ]
+  },
+  {
+    "attribute_name": "low",
+    "details": [
+      {
+        "elements": [
+          "meter"
+        ],
+        "description": "High limit of low range"
+      }
+    ]
+  },
+  {
+    "attribute_name": "max",
+    "details": [
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Maximum value"
+      },
+      {
+        "elements": [
+          "meter",
+          "progress"
+        ],
+        "description": "Upper bound of range"
+      }
+    ]
+  },
+  {
+    "attribute_name": "maxlength",
+    "details": [
+      {
+        "elements": [
+          "input",
+          "textarea"
+        ],
+        "description": "Maximum length of value"
+      }
+    ]
+  },
+  {
+    "attribute_name": "media",
+    "details": [
+      {
+        "elements": [
+          "link",
+          "meta",
+          "source",
+          "style"
+        ],
+        "description": "Applicable media"
+      }
+    ]
+  },
+  {
+    "attribute_name": "method",
+    "details": [
+      {
+        "elements": [
+          "form"
+        ],
+        "description": "Variant to use for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "min",
+    "details": [
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Minimum value"
+      },
+      {
+        "elements": [
+          "meter"
+        ],
+        "description": "Lower bound of range"
+      }
+    ]
+  },
+  {
+    "attribute_name": "minlength",
+    "details": [
+      {
+        "elements": [
+          "input",
+          "textarea"
+        ],
+        "description": "Minimum length of value"
+      }
+    ]
+  },
+  {
+    "attribute_name": "multiple",
+    "details": [
+      {
+        "elements": [
+          "input",
+          "select"
+        ],
+        "description": "Whether to allow multiple values"
+      }
+    ]
+  },
+  {
+    "attribute_name": "muted",
+    "details": [
+      {
+        "elements": [
+          "audio",
+          "video"
+        ],
+        "description": "Whether to mute the media resource by default"
+      }
+    ]
+  },
+  {
+    "attribute_name": "name",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "fieldset",
+          "form-associated custom elements",
+          "input",
+          "output",
+          "select",
+          "textarea"
+        ],
+        "description": "Name of the element to use for form submission and in the form.elements API"
+      },
+      {
+        "elements": [
+          "details"
+        ],
+        "description": "Name of group of mutually-exclusive details elements"
+      },
+      {
+        "elements": [
+          "form"
+        ],
+        "description": "Name of form to use in the document.forms API"
+      },
+      {
+        "elements": [
+          "iframe",
+          "object"
+        ],
+        "description": "Name of content navigable"
+      },
+      {
+        "elements": [
+          "map"
+        ],
+        "description": "Name of image map to reference from the usemap attribute"
+      },
+      {
+        "elements": [
+          "meta"
+        ],
+        "description": "Metadata name"
+      },
+      {
+        "elements": [
+          "slot"
+        ],
+        "description": "Name of shadow tree slot"
+      }
+    ]
+  },
+  {
+    "attribute_name": "nomodule",
+    "details": [
+      {
+        "elements": [
+          "script"
+        ],
+        "description": "Prevents execution in user agents that support module scripts"
+      }
+    ]
+  },
+  {
+    "attribute_name": "nonce",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Cryptographic nonce used in Content Security Policy checks CSP"
+      }
+    ]
+  },
+  {
+    "attribute_name": "novalidate",
+    "details": [
+      {
+        "elements": [
+          "form"
+        ],
+        "description": "Bypass form control validation for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "open",
+    "details": [
+      {
+        "elements": [
+          "details"
+        ],
+        "description": "Whether the details are visible"
+      },
+      {
+        "elements": [
+          "dialog"
+        ],
+        "description": "Whether the dialog box is showing"
+      }
+    ]
+  },
+  {
+    "attribute_name": "optimum",
+    "details": [
+      {
+        "elements": [
+          "meter"
+        ],
+        "description": "Optimum value in gauge"
+      }
+    ]
+  },
+  {
+    "attribute_name": "pattern",
+    "details": [
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Pattern to be matched by the form control's value"
+      }
+    ]
+  },
+  {
+    "attribute_name": "ping",
+    "details": [
+      {
+        "elements": [
+          "a",
+          "area"
+        ],
+        "description": "URLs to ping"
+      }
+    ]
+  },
+  {
+    "attribute_name": "placeholder",
+    "details": [
+      {
+        "elements": [
+          "input",
+          "textarea"
+        ],
+        "description": "User-visible label to be placed within the form control"
+      }
+    ]
+  },
+  {
+    "attribute_name": "playsinline",
+    "details": [
+      {
+        "elements": [
+          "video"
+        ],
+        "description": "Encourage the user agent to display video content within the element's playback area"
+      }
+    ]
+  },
+  {
+    "attribute_name": "popover",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Makes the element a popover element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "popovertarget",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "input"
+        ],
+        "description": "Targets a popover element to toggle, show, or hide"
+      }
+    ]
+  },
+  {
+    "attribute_name": "popovertargetaction",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "input"
+        ],
+        "description": "Indicates whether a targeted popover element is to be toggled, shown, or hidden"
+      }
+    ]
+  },
+  {
+    "attribute_name": "poster",
+    "details": [
+      {
+        "elements": [
+          "video"
+        ],
+        "description": "Poster frame to show prior to video playback"
+      }
+    ]
+  },
+  {
+    "attribute_name": "preload",
+    "details": [
+      {
+        "elements": [
+          "audio",
+          "video"
+        ],
+        "description": "Hints how much buffering the media resource will likely need"
+      }
+    ]
+  },
+  {
+    "attribute_name": "readonly",
+    "details": [
+      {
+        "elements": [
+          "form-associated custom elements"
+        ],
+        "description": "Affects willValidate, plus any behavior added by the custom element author"
+      },
+      {
+        "elements": [
+          "input",
+          "textarea"
+        ],
+        "description": "Whether to allow the value to be edited by the user"
+      }
+    ]
+  },
+  {
+    "attribute_name": "referrerpolicy",
+    "details": [
+      {
+        "elements": [
+          "a",
+          "area",
+          "iframe",
+          "img",
+          "link",
+          "script"
+        ],
+        "description": "Referrer policy for fetches initiated by the element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "rel",
+    "details": [
+      {
+        "elements": [
+          "a",
+          "area"
+        ],
+        "description": "Relationship between the location in the document containing the hyperlink and the destination resource"
+      },
+      {
+        "elements": [
+          "link"
+        ],
+        "description": "Relationship between the document containing the hyperlink and the destination resource"
+      }
+    ]
+  },
+  {
+    "attribute_name": "required",
+    "details": [
+      {
+        "elements": [
+          "input",
+          "select",
+          "textarea"
+        ],
+        "description": "Whether the control is required for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "reversed",
+    "details": [
+      {
+        "elements": [
+          "ol"
+        ],
+        "description": "Number the list backwards"
+      }
+    ]
+  },
+  {
+    "attribute_name": "rows",
+    "details": [
+      {
+        "elements": [
+          "textarea"
+        ],
+        "description": "Number of lines to show"
+      }
+    ]
+  },
+  {
+    "attribute_name": "rowspan",
+    "details": [
+      {
+        "elements": [
+          "td",
+          "th"
+        ],
+        "description": "Number of rows that the cell is to span"
+      }
+    ]
+  },
+  {
+    "attribute_name": "sandbox",
+    "details": [
+      {
+        "elements": [
+          "iframe"
+        ],
+        "description": "Security rules for nested content"
+      }
+    ]
+  },
+  {
+    "attribute_name": "scope",
+    "details": [
+      {
+        "elements": [
+          "th"
+        ],
+        "description": "Specifies which cells the header cell applies to"
+      }
+    ]
+  },
+  {
+    "attribute_name": "selected",
+    "details": [
+      {
+        "elements": [
+          "option"
+        ],
+        "description": "Whether the option is selected by default"
+      }
+    ]
+  },
+  {
+    "attribute_name": "shadowrootclonable",
+    "details": [
+      {
+        "elements": [
+          "template"
+        ],
+        "description": "Sets clonable on a declarative shadow root"
+      }
+    ]
+  },
+  {
+    "attribute_name": "shadowrootcustomelementregistry",
+    "details": [
+      {
+        "elements": [
+          "template"
+        ],
+        "description": "Enables declarative shadow roots to indicate they will use a custom element registry"
+      }
+    ]
+  },
+  {
+    "attribute_name": "shadowrootdelegatesfocus",
+    "details": [
+      {
+        "elements": [
+          "template"
+        ],
+        "description": "Sets delegates focus on a declarative shadow root"
+      }
+    ]
+  },
+  {
+    "attribute_name": "shadowrootmode",
+    "details": [
+      {
+        "elements": [
+          "template"
+        ],
+        "description": "Enables streaming declarative shadow roots"
+      }
+    ]
+  },
+  {
+    "attribute_name": "shadowrootserializable",
+    "details": [
+      {
+        "elements": [
+          "template"
+        ],
+        "description": "Sets serializable on a declarative shadow root"
+      }
+    ]
+  },
+  {
+    "attribute_name": "shape",
+    "details": [
+      {
+        "elements": [
+          "area"
+        ],
+        "description": "The kind of shape to be created in an image map"
+      }
+    ]
+  },
+  {
+    "attribute_name": "size",
+    "details": [
+      {
+        "elements": [
+          "input",
+          "select"
+        ],
+        "description": "Size of the control"
+      }
+    ]
+  },
+  {
+    "attribute_name": "sizes",
+    "details": [
+      {
+        "elements": [
+          "img",
+          "source"
+        ],
+        "description": "Image sizes for different page layouts"
+      },
+      {
+        "elements": [
+          "link"
+        ],
+        "description": "Sizes of the icons (for rel=\"icon\")"
+      }
+    ]
+  },
+  {
+    "attribute_name": "slot",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "The element's desired slot"
+      }
+    ]
+  },
+  {
+    "attribute_name": "span",
+    "details": [
+      {
+        "elements": [
+          "col",
+          "colgroup"
+        ],
+        "description": "Number of columns spanned by the element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "spellcheck",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Whether the element is to have its spelling and grammar checked"
+      }
+    ]
+  },
+  {
+    "attribute_name": "src",
+    "details": [
+      {
+        "elements": [
+          "audio",
+          "embed",
+          "iframe",
+          "img",
+          "input",
+          "script",
+          "source (in video or audio)",
+          "track",
+          "video"
+        ],
+        "description": "Address of the resource"
+      }
+    ]
+  },
+  {
+    "attribute_name": "srcdoc",
+    "details": [
+      {
+        "elements": [
+          "iframe"
+        ],
+        "description": "A document to render in the iframe"
+      }
+    ]
+  },
+  {
+    "attribute_name": "srclang",
+    "details": [
+      {
+        "elements": [
+          "track"
+        ],
+        "description": "Language of the text track"
+      }
+    ]
+  },
+  {
+    "attribute_name": "srcset",
+    "details": [
+      {
+        "elements": [
+          "img",
+          "source"
+        ],
+        "description": "Images to use in different situations, e.g., high-resolution displays, small monitors, etc."
+      }
+    ]
+  },
+  {
+    "attribute_name": "start",
+    "details": [
+      {
+        "elements": [
+          "ol"
+        ],
+        "description": "Starting value of the list"
+      }
+    ]
+  },
+  {
+    "attribute_name": "step",
+    "details": [
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Granularity to be matched by the form control's value"
+      }
+    ]
+  },
+  {
+    "attribute_name": "style",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Presentational and formatting instructions"
+      }
+    ]
+  },
+  {
+    "attribute_name": "tabindex",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Whether the element is focusable and sequentially focusable, and\n     the relative order of the element for the purposes of sequential focus navigation"
+      }
+    ]
+  },
+  {
+    "attribute_name": "target",
+    "details": [
+      {
+        "elements": [
+          "a",
+          "area"
+        ],
+        "description": "Navigable for hyperlink navigation"
+      },
+      {
+        "elements": [
+          "base"
+        ],
+        "description": "Default navigable for hyperlink navigation and form submission"
+      },
+      {
+        "elements": [
+          "form"
+        ],
+        "description": "Navigable for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "title",
+    "details": [
+      {
+        "elements": [
+          "abbr",
+          "dfn"
+        ],
+        "description": "Full term or expansion of abbreviation"
+      },
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Advisory information for the element"
+      },
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Description of pattern (when used with pattern attribute)"
+      },
+      {
+        "elements": [
+          "link",
+          "style"
+        ],
+        "description": "CSS style sheet set name"
+      },
+      {
+        "elements": [
+          "link"
+        ],
+        "description": "Title of the link"
+      }
+    ]
+  },
+  {
+    "attribute_name": "translate",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Whether the element is to be translated when the page is localized"
+      }
+    ]
+  },
+  {
+    "attribute_name": "type",
+    "details": [
+      {
+        "elements": [
+          "a",
+          "link"
+        ],
+        "description": "Hint for the type of the referenced resource"
+      },
+      {
+        "elements": [
+          "button"
+        ],
+        "description": "Type of button"
+      },
+      {
+        "elements": [
+          "embed",
+          "object",
+          "source"
+        ],
+        "description": "Type of embedded resource"
+      },
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Type of form control"
+      },
+      {
+        "elements": [
+          "ol"
+        ],
+        "description": "Kind of list marker"
+      },
+      {
+        "elements": [
+          "script"
+        ],
+        "description": "Type of script"
+      }
+    ]
+  },
+  {
+    "attribute_name": "usemap",
+    "details": [
+      {
+        "elements": [
+          "img"
+        ],
+        "description": "Name of image map to use"
+      }
+    ]
+  },
+  {
+    "attribute_name": "value",
+    "details": [
+      {
+        "elements": [
+          "button",
+          "option"
+        ],
+        "description": "Value to be used for form submission"
+      },
+      {
+        "elements": [
+          "data"
+        ],
+        "description": "Machine-readable value"
+      },
+      {
+        "elements": [
+          "input"
+        ],
+        "description": "Value of the form control"
+      },
+      {
+        "elements": [
+          "li"
+        ],
+        "description": "Ordinal value of the list item"
+      },
+      {
+        "elements": [
+          "meter",
+          "progress"
+        ],
+        "description": "Current value of the element"
+      }
+    ]
+  },
+  {
+    "attribute_name": "width",
+    "details": [
+      {
+        "elements": [
+          "canvas",
+          "embed",
+          "iframe",
+          "img",
+          "input",
+          "object",
+          "source (in picture)",
+          "video"
+        ],
+        "description": "Horizontal dimension"
+      }
+    ]
+  },
+  {
+    "attribute_name": "wrap",
+    "details": [
+      {
+        "elements": [
+          "textarea"
+        ],
+        "description": "How the value of the form control is to be wrapped for form submission"
+      }
+    ]
+  },
+  {
+    "attribute_name": "writingsuggestions",
+    "details": [
+      {
+        "elements": [
+          "global"
+        ],
+        "description": "Whether the element can offer writing suggestions or not."
+      }
+    ]
+  }
+]
