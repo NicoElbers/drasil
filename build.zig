@@ -1,6 +1,10 @@
+var check: *Step = undefined;
+
 pub fn build(b: *Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+
+    check = b.step("check", "Checks for all compile errors, without installing binaries");
 
     updateHtmlDataZonStep(b, target, optimize) orelse return;
     updateHtmlDataStep(b, target, optimize);
@@ -18,10 +22,13 @@ pub fn build(b: *Build) void {
         .root_module = drasil_mod,
         .filters = filters,
     });
+    check.dependOn(&drasil_tests.step);
+
     const run_drasil_tests = b.addRunArtifact(drasil_tests);
 
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_drasil_tests.step);
+    test_step.dependOn(check); // Ensure everything compiles
 }
 
 fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {
@@ -37,6 +44,7 @@ fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {
         .name = "generate_html_data",
         .root_module = mod,
     });
+    check.dependOn(&exe.step);
 
     const run = b.addRunArtifact(exe);
 
@@ -83,6 +91,7 @@ fn updateHtmlDataZonStep(b: *Build, target: Target, optimize: Optimize) ?void {
         .name = "generate_html_data_zon",
         .root_module = mod,
     });
+    check.dependOn(&exe.step);
 
     const run = b.addRunArtifact(exe);
     run.step.dependOn(&events_json_gen.step); // Generate zon after JSON
@@ -122,6 +131,8 @@ fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) v
     counter_exe.rdynamic = true;
     counter_exe.entry = .disabled;
 
+    check.dependOn(&counter_exe.step);
+
     const server_mod = b.createModule(.{
         .root_source_file = b.path("example/example_server.zig"),
         .target = target,
@@ -132,6 +143,7 @@ fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) v
         .name = "example_server",
         .root_module = server_mod,
     });
+    check.dependOn(&server_exe.step);
 
     {
         const run_server = b.addRunArtifact(server_exe);
@@ -148,5 +160,6 @@ const std = @import("std");
 
 const Build = std.Build;
 const Module = Build.Module;
+const Step = Build.Step;
 const Target = Build.ResolvedTarget;
 const Optimize = std.builtin.Mode;
