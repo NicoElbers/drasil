@@ -49,26 +49,40 @@ const App = struct {
     button: SubTree.Index,
 
     pub fn init(manager: *Manager) !SubTree.Index {
-        return try manager.register(
-            App{
-                .header = try Header.init(manager),
-                .button = try Button.init(manager),
-            },
-            generate,
-        );
+        const click_event = try manager.registerEvent();
+        const reset_event = try manager.registerEvent();
+
+        const sti = try manager.register(generate);
+
+        const button = try AlternatingButton.init(manager, click_event, reset_event);
+        const counter: *u32 = blk: {
+            const ctx: *AlternatingButton = @alignCast(@ptrCast(button.tree(manager).ctx));
+            break :blk &ctx.counter;
+        };
+
+        const header = try Header.init(manager, counter, click_event, reset_event);
+
+        try sti.setContext(manager, App{
+            .header = header,
+            .button = button,
+        });
+
+        return sti;
     }
 
     fn generate(
-        ctx: *anyopaque,
+        ctx: ?*anyopaque,
         manager: *Manager,
         gpa: Allocator,
         arena: Allocator,
     ) !SubTree.Managed {
         _ = gpa;
 
-        const data: *@This() = @alignCast(@ptrCast(ctx));
+        const data: *@This() = @alignCast(@ptrCast(ctx.?));
 
         std.log.info("Generating app", .{});
+
+        manager.subTree(data.header).dirty();
 
         return manager.manage(
             arena,
@@ -80,67 +94,128 @@ const App = struct {
     }
 };
 
-const Button = struct {
-    cb: Callback.Index,
-    count: u32 = 0,
+const AlternatingButton = struct {
+    click_event: Event,
+    reset_event: Event,
+    counter: u32 = 0,
+    prng: Random.DefaultPrng,
 
-    pub fn init(manager: *Manager) !SubTree.Index {
-        return try manager.register(
-            Button{ .cb = try manager.registerCallback(callback) },
-            generate,
-        );
+    pub fn init(manager: *Manager, click_event: Event, reset_event: Event) !SubTree.Index {
+        const sti = try manager.register(generate);
+
+        // Never intend to deregister this listener
+        _ = try click_event.addListener(manager, sti, click);
+        _ = try reset_event.addListener(manager, sti, reset);
+
+        try sti.setContext(manager, @This(){
+            .click_event = click_event,
+            .reset_event = reset_event,
+            .prng = Random.DefaultPrng.init(0xdeadbeef),
+        });
+
+        return sti;
     }
 
-    fn callback(st: *SubTree, gpa: Allocator, data: Callback.Data) !void {
+    fn reset(st: *SubTree, gpa: Allocator, data: ?*anyopaque) !void {
         _ = gpa;
         _ = data;
-        const ctx: *Button = @alignCast(@ptrCast(st.ctx));
+        const ctx: *@This() = @alignCast(@ptrCast(st.ctx));
 
-        std.log.info("Running callback", .{});
+        std.log.info("Reset callback called", .{});
 
         st.dirty();
-        ctx.count += 1;
+        ctx.counter = 0;
+    }
+
+    fn click(st: *SubTree, gpa: Allocator, data: ?*anyopaque) !void {
+        _ = gpa;
+        _ = data;
+        const ctx: *@This() = @alignCast(@ptrCast(st.ctx.?));
+
+        std.log.info("Click callback called", .{});
+
+        st.dirty();
+        ctx.counter += 1;
     }
 
     fn generate(
-        ctx: *anyopaque,
+        ctx: ?*anyopaque,
         manager: *Manager,
         gpa: Allocator,
         arena: Allocator,
     ) !SubTree.Managed {
-        const data: *Button = @alignCast(@ptrCast(ctx));
+        const data: *@This() = @alignCast(@ptrCast(ctx.?));
         _ = gpa;
 
         std.log.info("Generating button", .{});
 
-        return manager.manage(arena, .button(
-            &.{.{ .onclick = data.cb }},
-            &.{
-                .raw(try std.fmt.allocPrint(arena, "Clicked {d} times!", .{data.count})),
-            },
-        ));
+        const button_a: Tree = .button(&.{.{ .onclick = data.click_event }}, &.{.raw("Click me!")});
+        const button_b: Tree = .button(&.{.{ .onclick = data.reset_event }}, &.{.raw("Don't click me >:(")});
+
+        return manager.manage(
+            arena,
+            .div(
+                &.{},
+                if (data.prng.random().boolean())
+                    &.{ button_a, button_b }
+                else
+                    &.{ button_b, button_a },
+            ),
+        );
     }
 };
 
 const Header = struct {
-    pub fn init(manager: *Manager) !SubTree.Index {
-        return try manager.register(Header{}, generate);
+    counter: *u32,
+
+    pub fn init(manager: *Manager, counter: *u32, click_event: Event, reset_event: Event) !SubTree.Index {
+        const sti = try manager.register(generate);
+        try sti.setContext(manager, Header{ .counter = counter });
+
+        _ = try click_event.addListener(manager, sti, callback);
+        _ = try reset_event.addListener(manager, sti, callback);
+
+        return sti;
+    }
+
+    pub fn callback(st: *SubTree, gpa: Allocator, data: ?*anyopaque) !void {
+        _ = gpa;
+        _ = data;
+        st.dirty();
     }
 
     fn generate(
-        ctx: *anyopaque,
+        ctx: ?*anyopaque,
         manager: *Manager,
         gpa: Allocator,
         arena: Allocator,
     ) !SubTree.Managed {
-        _ = ctx;
+        const data: *Header = @alignCast(@ptrCast(ctx.?));
         _ = gpa;
 
         std.log.info("Generating header", .{});
 
+        const suffix = switch (data.counter.*) {
+            0...5 => "",
+            6...10 => "!",
+            11...15 => "!!",
+            16...20 => "!!!",
+            21...25 => "!!! WOW",
+            26...30 => ".",
+            31...35 => "..",
+            36...40 => "...",
+            41...45 => "... You gotta stop",
+            else => blk: {
+                data.counter.* = 0;
+                break :blk " Told you";
+            },
+        };
+
+        const score_text = try std.fmt.allocPrint(arena, "Score: {d}", .{data.counter.*});
+
         return manager.manage(
             arena,
-            .h1(&.{}, &.{.raw("Hello world!")}),
+            .h1(&.{}, &.{ .raw(score_text), .raw(suffix) }),
         );
     }
 };
@@ -153,6 +228,9 @@ const assert = std.debug.assert;
 
 const Manager = drasil.Manager;
 const SubTree = Manager.SubTree;
+const Tree = drasil.Tree;
 const Callback = Manager.Callback;
+const Event = Manager.Event;
 const Allocator = std.mem.Allocator;
 const Ref = web.js.Ref;
+const Random = std.Random;
