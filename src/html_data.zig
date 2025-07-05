@@ -1,5 +1,5 @@
 const Manager = @import("Manager.zig");
-const Callback = Manager.Callback;
+const Event = Manager.Event;
 
 // @GENERATED SECTION START
 
@@ -9,238 +9,238 @@ pub const Attribute = union(enum) {
     // Events
 
     /// Event with interface Event
-    onDOMContentLoaded: Callback.Index,
+    onDOMContentLoaded: Event,
 
     /// Event with interface Event
-    onafterprint: Callback.Index,
+    onafterprint: Event,
 
     /// Event with interface Event
-    onbeforematch: Callback.Index,
+    onbeforematch: Event,
 
     /// Event with interface Event
-    onbeforeprint: Callback.Index,
+    onbeforeprint: Event,
 
     /// Event with interface ToggleEvent
-    onbeforetoggle: Callback.Index,
+    onbeforetoggle: Event,
 
     /// Event with interface BeforeUnloadEvent
-    onbeforeunload: Callback.Index,
+    onbeforeunload: Event,
 
     /// Event with interface Event
-    onblur: Callback.Index,
+    onblur: Event,
 
     /// Event with interface Event
-    oncancel: Callback.Index,
+    oncancel: Event,
 
     /// Event with interface Event
-    onchange: Callback.Index,
+    onchange: Event,
 
     /// Event with interface PointerEvent
-    onclick: Callback.Index,
+    onclick: Event,
 
     /// Event with interface Event
-    onclose: Callback.Index,
+    onclose: Event,
 
     /// Event with interface CommandEvent
-    oncommand: Callback.Index,
+    oncommand: Event,
 
     /// Event with interface MessageEvent
-    onconnect: Callback.Index,
+    onconnect: Event,
 
     /// Event with interface Event
-    oncontextlost: Callback.Index,
+    oncontextlost: Event,
 
     /// Event with interface Event
-    oncontextrestored: Callback.Index,
+    oncontextrestored: Event,
 
     /// Event with interface NavigationCurrentEntryChangeEvent
-    oncurrententrychange: Callback.Index,
+    oncurrententrychange: Event,
 
     /// Event with interface Event
-    ondispose: Callback.Index,
+    ondispose: Event,
 
     /// Event with interface Event
-    onerror: Callback.Index,
+    onerror: Event,
 
     /// Event with interface Event
-    onfocus: Callback.Index,
+    onfocus: Event,
 
     /// Event with interface FormDataEvent
-    onformdata: Callback.Index,
+    onformdata: Event,
 
     /// Event with interface HashChangeEvent
-    onhashchange: Callback.Index,
+    onhashchange: Event,
 
     /// Event with interface Event
-    oninput: Callback.Index,
+    oninput: Event,
 
     /// Event with interface Event
-    oninvalid: Callback.Index,
+    oninvalid: Event,
 
     /// Event with interface Event
-    onlanguagechange: Callback.Index,
+    onlanguagechange: Event,
 
     /// Event with interface Event
-    onload: Callback.Index,
+    onload: Event,
 
     /// Event with interface MessageEvent
-    onmessage: Callback.Index,
+    onmessage: Event,
 
     /// Event with interface MessageEvent
-    onmessageerror: Callback.Index,
+    onmessageerror: Event,
 
     /// Event with interface NavigateEvent
-    onnavigate: Callback.Index,
+    onnavigate: Event,
 
     /// Event with interface ErrorEvent
-    onnavigateerror: Callback.Index,
+    onnavigateerror: Event,
 
     /// Event with interface Event
-    onnavigatesuccess: Callback.Index,
+    onnavigatesuccess: Event,
 
     /// Event with interface Event
-    onoffline: Callback.Index,
+    onoffline: Event,
 
     /// Event with interface Event
-    ononline: Callback.Index,
+    ononline: Event,
 
     /// Event with interface Event
-    onopen: Callback.Index,
+    onopen: Event,
 
     /// Event with interface PageTransitionEvent
-    onpagehide: Callback.Index,
+    onpagehide: Event,
 
     /// Event with interface PageRevealEvent
-    onpagereveal: Callback.Index,
+    onpagereveal: Event,
 
     /// Event with interface PageTransitionEvent
-    onpageshow: Callback.Index,
+    onpageshow: Event,
 
     /// Event with interface PageSwapEvent
-    onpageswap: Callback.Index,
+    onpageswap: Event,
 
     /// Event with interface PointerEvent
-    onpointercancel: Callback.Index,
+    onpointercancel: Event,
 
     /// Event with interface PopStateEvent
-    onpopstate: Callback.Index,
+    onpopstate: Event,
 
     /// Event with interface Event
-    onreadystatechange: Callback.Index,
+    onreadystatechange: Event,
 
     /// Event with interface PromiseRejectionEvent
-    onrejectionhandled: Callback.Index,
+    onrejectionhandled: Event,
 
     /// Event with interface Event
-    onreset: Callback.Index,
+    onreset: Event,
 
     /// Event with interface Event
-    onselect: Callback.Index,
+    onselect: Event,
 
     /// Event with interface StorageEvent
-    onstorage: Callback.Index,
+    onstorage: Event,
 
     /// Event with interface SubmitEvent
-    onsubmit: Callback.Index,
+    onsubmit: Event,
 
     /// Event with interface ToggleEvent
-    ontoggle: Callback.Index,
+    ontoggle: Event,
 
     /// Event with interface PromiseRejectionEvent
-    onunhandledrejection: Callback.Index,
+    onunhandledrejection: Event,
 
     /// Event with interface Event
-    onunload: Callback.Index,
+    onunload: Event,
 
     /// Event with interface Event
-    onvisibilitychange: Callback.Index,
+    onvisibilitychange: Event,
 
     /// Event with interface Event
-    onabort: Callback.Index,
+    onabort: Event,
 
     /// Event with interface Event
-    oncanplay: Callback.Index,
+    oncanplay: Event,
 
     /// Event with interface Event
-    oncanplaythrough: Callback.Index,
+    oncanplaythrough: Event,
 
     /// Event with interface Event
-    ondurationchange: Callback.Index,
+    ondurationchange: Event,
 
     /// Event with interface Event
-    onemptied: Callback.Index,
+    onemptied: Event,
 
     /// Event with interface Event
-    onended: Callback.Index,
+    onended: Event,
 
     /// Event with interface Event
-    onloadeddata: Callback.Index,
+    onloadeddata: Event,
 
     /// Event with interface Event
-    onloadedmetadata: Callback.Index,
+    onloadedmetadata: Event,
 
     /// Event with interface Event
-    onloadstart: Callback.Index,
+    onloadstart: Event,
 
     /// Event with interface Event
-    onpause: Callback.Index,
+    onpause: Event,
 
     /// Event with interface Event
-    onplay: Callback.Index,
+    onplay: Event,
 
     /// Event with interface Event
-    onplaying: Callback.Index,
+    onplaying: Event,
 
     /// Event with interface Event
-    onprogress: Callback.Index,
+    onprogress: Event,
 
     /// Event with interface Event
-    onratechange: Callback.Index,
+    onratechange: Event,
 
     /// Event with interface Event
-    onresize: Callback.Index,
+    onresize: Event,
 
     /// Event with interface Event
-    onseeked: Callback.Index,
+    onseeked: Event,
 
     /// Event with interface Event
-    onseeking: Callback.Index,
+    onseeking: Event,
 
     /// Event with interface Event
-    onstalled: Callback.Index,
+    onstalled: Event,
 
     /// Event with interface Event
-    onsuspend: Callback.Index,
+    onsuspend: Event,
 
     /// Event with interface Event
-    ontimeupdate: Callback.Index,
+    ontimeupdate: Event,
 
     /// Event with interface Event
-    onvolumechange: Callback.Index,
+    onvolumechange: Event,
 
     /// Event with interface Event
-    onwaiting: Callback.Index,
+    onwaiting: Event,
 
     /// Event with interface DragEvent
-    ondrag: Callback.Index,
+    ondrag: Event,
 
     /// Event with interface DragEvent
-    ondragend: Callback.Index,
+    ondragend: Event,
 
     /// Event with interface DragEvent
-    ondragenter: Callback.Index,
+    ondragenter: Event,
 
     /// Event with interface DragEvent
-    ondragleave: Callback.Index,
+    ondragleave: Event,
 
     /// Event with interface DragEvent
-    ondragover: Callback.Index,
+    ondragover: Event,
 
     /// Event with interface DragEvent
-    ondragstart: Callback.Index,
+    ondragstart: Event,
 
     /// Event with interface DragEvent
-    ondrop: Callback.Index,
+    ondrop: Event,
 
     // Attributes
 
