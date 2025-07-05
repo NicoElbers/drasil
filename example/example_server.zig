@@ -24,7 +24,7 @@ pub fn main() !void {
     var http_server = try addr.listen(.{ .reuse_address = true });
     defer http_server.deinit();
 
-    log.info("Started server on {}", .{addr});
+    log.info("Started server on http://{}", .{addr});
 
     while (true) {
         const conn = try http_server.accept();

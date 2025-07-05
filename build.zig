@@ -34,26 +34,46 @@ pub fn build(b: *Build) void {
 fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {
     const step = b.step("html_data", "Update the automatically generated HtmlNode.zig");
 
-    const mod = b.createModule(.{
+    const html_mod = b.createModule(.{
         .root_source_file = b.path("tools/gen_html_data.zig"),
         .optimize = optimize,
         .target = target,
     });
 
-    const exe = b.addExecutable(.{
+    const html_exe = b.addExecutable(.{
         .name = "generate_html_data",
-        .root_module = mod,
+        .root_module = html_mod,
     });
-    check.dependOn(&exe.step);
+    check.dependOn(&html_exe.step);
 
-    const run = b.addRunArtifact(exe);
+    const html_run = b.addRunArtifact(html_exe);
 
     // assert(args.len == 4); // {self} {tools dir} {html_data file} {Tree file}
-    run.addDirectoryArg(b.path("tools/"));
-    run.addFileArg(b.path("src/html_data.zig"));
-    run.addFileArg(b.path("src/Tree.zig"));
+    html_run.addDirectoryArg(b.path("tools/"));
+    html_run.addFileArg(b.path("src/html_data.zig"));
+    html_run.addFileArg(b.path("src/Tree.zig"));
 
-    step.dependOn(&run.step);
+    step.dependOn(&html_run.step);
+
+    const web_mod = b.createModule(.{
+        .root_source_file = b.path("tools/gen_web_data.zig"),
+        .optimize = optimize,
+        .target = target,
+    });
+
+    const web_exe = b.addExecutable(.{
+        .name = "generate_web_data",
+        .root_module = web_mod,
+    });
+    check.dependOn(&web_exe.step);
+
+    const web_run = b.addRunArtifact(web_exe);
+
+    // assert(args.len == 3); // {self} {tools dir} {web dir}
+    web_run.addDirectoryArg(b.path("tools/"));
+    web_run.addDirectoryArg(b.path("src/web/"));
+
+    step.dependOn(&web_run.step);
 }
 
 fn updateHtmlDataZonStep(b: *Build, target: Target, optimize: Optimize) ?void {
@@ -149,7 +169,7 @@ fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) v
         const run_server = b.addRunArtifact(server_exe);
         run_server.addFileArg(counter_exe.getEmittedBin()); // wasm path
         run_server.addFileArg(b.path("example/index.html")); // html path
-        run_server.addFileArg(b.path("js/init.js")); // js path
+        run_server.addFileArg(b.path("src/web/init.js")); // js path
 
         const step = b.step("counter", "Hosts an example counter on localhost:8080");
         step.dependOn(&run_server.step);
