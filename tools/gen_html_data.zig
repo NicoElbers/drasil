@@ -156,7 +156,7 @@ fn writeAttributes(
             \\
         , .{event.interface});
 
-        try writer.print("    {p}: Callback.Index,\n\n", .{std.zig.fmtId(full_name)});
+        try writer.print("    {p}: Event,\n\n", .{std.zig.fmtId(full_name)});
     }
 
     try writer.writeAll("    // Attributes\n\n");

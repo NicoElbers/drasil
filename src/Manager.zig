@@ -4,32 +4,90 @@ const Manager = @This();
 
 gpa: Allocator,
 context_arena: ArenaAllocator,
-sub_trees: std.ArrayListUnmanaged(SubTree),
-callbacks: std.ArrayListUnmanaged(Callback.Fn),
+sub_trees: ArrayListUnmanaged(SubTree),
+events: ArrayListUnmanaged(?ArrayListUnmanaged(Event.Listener)),
 
-pub const Callback = struct {
+pub const Event = enum(u32) {
+    _,
+
+    var id_counter: u32 = 0;
+
+    const Listener = struct {
+        id: Id,
+        sti: SubTree.Index,
+        cb: Fn,
+
+        const Id = enum(u32) { _ };
+    };
+
     pub const Fn = *const fn (
         sub_tree: *SubTree,
         gpa: Allocator,
-        data: Callback.Data,
+        data: ?*anyopaque,
     ) anyerror!void;
-    pub const Data = union(enum) {
-        empty,
-        string: []const u8,
-        time_ns: u64,
-    };
-    pub const Index = enum(u32) { _ };
+
+    /// Asserts that the event is registered
+    pub fn fire(event: Event, manager: *Manager, data: ?*anyopaque) !void {
+        const list = event.listeners(manager).?;
+
+        for (list.items) |listener| {
+            const tree = listener.sti.tree(manager);
+            try listener.cb(tree, manager.gpa, data);
+        }
+    }
+
+    /// Asserts that the event is registered
+    pub fn addListener(event: Event, manager: *Manager, sti: SubTree.Index, callback: Fn) !Listener.Id {
+        const list = event.listeners(manager).?;
+
+        const id: Listener.Id = @enumFromInt(id_counter);
+        id_counter += 1;
+
+        try list.append(manager.gpa, .{
+            .id = id,
+            .cb = callback,
+            .sti = sti,
+        });
+
+        return id;
+    }
+
+    /// Asserts that the event is registered
+    /// Asserts that the id is registered
+    pub fn removeListener(event: Event, manager: *Manager, id: Listener.Id) void {
+        const list = event.listeners(manager).?;
+
+        for (list.items, 0..) |listener, idx| {
+            if (listener.id == id) {
+                list.swapRemove(idx);
+                return;
+            }
+        }
+        unreachable; // id was not registered
+    }
+
+    /// Asserts that the event was registered
+    pub fn deregister(event: Event, manager: *Manager) void {
+        event.listeners(manager).?.* = null;
+    }
+
+    fn listeners(event: Event, manager: *Manager) ?*ArrayListUnmanaged(Listener) {
+        const idx = @intFromEnum(event);
+        if (manager.events.items.len <= idx) return null;
+        if (manager.events.items[idx]) |*l| return l;
+        return null;
+    }
 };
 
 pub const SubTree = struct {
     arena: ArenaAllocator,
     generator: Generator,
-    ctx: *anyopaque,
+    ctx: ?*anyopaque,
     cache: ?Managed,
 
     pub const Generator = *const fn (
         /// User provided data, owned by `HtmlTree`.
-        ctx: *anyopaque,
+        ctx: ?*anyopaque,
         /// Reference to the parent `Manager` for rendering subtrees.
         manager: *Manager,
         /// Allocator for persistent data, memory fully managed by generator.
@@ -42,7 +100,26 @@ pub const SubTree = struct {
     /// Wrapper around tree to distinguish managed variants
     pub const Managed = struct { tree: Tree };
 
-    pub const Index = enum(u32) { _ };
+    pub const Index = enum(u32) {
+        _,
+
+        pub fn tree(index: Index, manager: *Manager) *SubTree {
+            return manager.subTree(index);
+        }
+
+        pub fn setContext(index: Index, manager: *Manager, context: anytype) !void {
+            try index.tree(manager).setContext(manager, context);
+        }
+    };
+
+    pub fn setContext(self: *SubTree, manager: *Manager, context: anytype) !void {
+        assert(self.ctx == null);
+
+        const ctx = try manager.context_arena.allocator().create(@TypeOf(context));
+        ctx.* = context;
+
+        self.ctx = ctx;
+    }
 
     pub fn dirty(self: *SubTree) void {
         _ = self.arena.reset(.{ .retain_with_limit = 1 << 20 });
@@ -98,7 +175,7 @@ pub fn init(gpa: Allocator) Manager {
         .gpa = gpa,
         .context_arena = .init(gpa),
         .sub_trees = .empty,
-        .callbacks = .empty,
+        .events = .empty,
     };
 }
 
@@ -110,51 +187,39 @@ pub fn deinit(self: *Manager) void {
     }
     self.sub_trees.deinit(self.gpa);
 
-    self.callbacks.deinit(self.gpa);
+    // Can't figure out a better way for rn
+    for (0..self.events.items.len) |idx| {
+        if (self.events.items[idx] == null) continue;
+        self.events.items[idx].?.deinit(self.gpa);
+    }
+    self.events.deinit(self.gpa);
 
     self.context_arena.deinit();
 }
 
-pub fn register(self: *Manager, context: anytype, generator: SubTree.Generator) !SubTree.Index {
-    const ctx = try self.context_arena.allocator().create(@TypeOf(context));
-    ctx.* = context;
-
+pub fn register(self: *Manager, generator: SubTree.Generator) !SubTree.Index {
     const index: SubTree.Index = @enumFromInt(self.sub_trees.items.len);
     try self.sub_trees.append(self.gpa, .{
         .arena = .init(self.gpa),
         .generator = generator,
-        .ctx = ctx,
+        .ctx = null,
         .cache = null,
     });
 
     return index;
 }
 
-pub fn registerCallback(self: *Manager, func: Callback.Fn) !Callback.Index {
-    // TODO: some bookkeeping to register a callback to a specific subtree
+pub fn registerEvent(self: *Manager) !Event {
+    for (self.events.items, 0..) |event, idx| {
+        if (event != null) continue;
 
-    const index: Callback.Index = @enumFromInt(self.callbacks.items.len);
-
-    try self.callbacks.append(self.gpa, func);
-
-    return index;
-}
-
-pub fn fireCallback(
-    self: *Manager,
-    subtree_index: SubTree.Index,
-    callback_index: Callback.Index,
-    data: Callback.Data,
-) !void {
-    // TODO: validate callback_index
-    // TODO: validate subtree_index
-    // TODO: validate that subtree indeed registered this callback
-
-    const cb = self.callbacks.items[@intFromEnum(callback_index)];
-    const subtree = self.subTree(subtree_index);
-
-    // TODO: Error handling, do not crash please
-    try cb(subtree, self.gpa, data);
+        self.events.items[idx] = .empty;
+        return @enumFromInt(idx);
+    } else {
+        const idx = self.events.items.len;
+        try self.events.append(self.gpa, .empty);
+        return @enumFromInt(idx);
+    }
 }
 
 pub fn manage(self: *Manager, arena: Allocator, tree: Tree) !SubTree.Managed {
@@ -233,7 +298,6 @@ pub fn render(self: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
 
     try self.innerRender(
         tree,
-        sub_tree_index,
         false,
         {},
         arr.writer(),
@@ -264,7 +328,6 @@ pub fn renderPretty(self: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
 fn innerRender(
     manager: *Manager,
     tree: Tree,
-    sub_tree_index: SubTree.Index,
     comptime pretty: bool,
     indent: if (pretty) u16 else void,
     writer: anytype,
@@ -272,28 +335,27 @@ fn innerRender(
     const renderAttributes = struct {
         fn renderAttributes(
             attributes: []const Attribute,
-            sti: SubTree.Index,
             w: @TypeOf(writer),
         ) !void {
             for (attributes) |attr| {
-                try w.print(" {s}", .{@tagName(attr)});
+                // try w.print(" {s}", .{@tagName(attr)});
 
                 switch (attr) {
                     inline else => |v| {
                         switch (@TypeOf(v)) {
                             // TODO: Escape
-                            []const u8 => try w.print("=\"{s}\"", .{v}),
-                            bool => try w.print("=\"{s}\"", .{v}),
+                            []const u8 => try w.print(" {s}=\"{s}\"", .{ @tagName(attr), v }),
+                            bool => try w.print(" {s}=\"{s}\"", .{ @tagName(attr), v }),
                             void => {},
-                            Callback.Index => try w.print(
-                                "=\"callback({d}, {d})\"",
-                                .{ @intFromEnum(sti), @intFromEnum(v) },
+                            Event => try w.print(
+                                " drasil-event=\"[{d}, {d}]\"",
+                                .{ @intFromEnum(attr), @intFromEnum(v) },
                             ),
                             else => {
                                 if (@typeInfo(@TypeOf(v)) != .@"enum")
                                     @compileError("Invalid attribute type");
 
-                                try w.print("=\"{s}\"", .{@tagName(v)});
+                                try w.print(" {s}=\"{s}\"", .{ @tagName(attr), @tagName(v) });
                             },
                         }
                     },
@@ -317,7 +379,7 @@ fn innerRender(
                 try writer.writeByteNTimes(' ', indent);
 
             try writer.print("<{s}", .{@tagName(v.tag)});
-            try renderAttributes(v.attributes, sub_tree_index, writer);
+            try renderAttributes(v.attributes, writer);
             try writer.writeAll(">");
 
             if (pretty)
@@ -329,7 +391,7 @@ fn innerRender(
                 try writer.writeByteNTimes(' ', indent);
 
             try writer.print("<{s}", .{@tagName(v.tag)});
-            try renderAttributes(v.attributes, sub_tree_index, writer);
+            try renderAttributes(v.attributes, writer);
             try writer.writeAll(">");
 
             if (pretty)
@@ -339,7 +401,7 @@ fn innerRender(
             const new_indent = if (pretty) indent + 1 else {};
 
             for (v.sub_trees) |child| {
-                try manager.innerRender(child, sub_tree_index, pretty, new_indent, writer);
+                try manager.innerRender(child, pretty, new_indent, writer);
             }
 
             // end
@@ -351,10 +413,9 @@ fn innerRender(
             if (pretty)
                 try writer.writeAll("\n");
         },
-        .static => |ptr| try manager.innerRender(ptr.*, sub_tree_index, pretty, indent, writer),
+        .static => |ptr| try manager.innerRender(ptr.*, pretty, indent, writer),
         .dynamic => |idx| try manager.innerRender(
             try manager.generate(idx),
-            idx,
             pretty,
             indent,
             writer,
@@ -363,7 +424,10 @@ fn innerRender(
 }
 
 const std = @import("std");
+const builtin = @import("builtin");
 const html_data = @import("html_data.zig");
+
+const assert = std.debug.assert;
 
 const Tree = @import("Tree.zig");
 const ArenaAllocator = std.heap.ArenaAllocator;

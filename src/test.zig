@@ -44,7 +44,7 @@ test "sanity" {
     {
         const Case = struct {
             fn generate(
-                ctx: *anyopaque,
+                ctx: ?*anyopaque,
                 manager: *Manager,
                 gpa: Allocator,
                 arena: Allocator,
@@ -61,14 +61,14 @@ test "sanity" {
         var manager: Manager = .init(alloc);
         defer manager.deinit();
 
-        const case = try manager.register(Case{}, Case.generate);
+        const case = try manager.register(Case.generate);
 
         try casePure(&manager, case, "<h1>Hello world!</h1>");
     }
     {
         const Case = struct {
             fn generate(
-                ctx: *anyopaque,
+                ctx: ?*anyopaque,
                 manager: *Manager,
                 gpa: Allocator,
                 arena: Allocator,
@@ -81,7 +81,7 @@ test "sanity" {
                     .div(&.{}, &.{
                         .h1(&.{.{ .id = "id" }}, &.{.raw("Hello world!")}),
                         .p(&.{.{ .class = "class" }}, &.{
-                            .br(&.{.{ .clear = "" }}),
+                            .br(&.{.{ .autocorrect = "" }}),
                         }),
                     }),
                 );
@@ -90,12 +90,12 @@ test "sanity" {
         var manager: Manager = .init(alloc);
         defer manager.deinit();
 
-        const case = try manager.register(Case{}, Case.generate);
+        const case = try manager.register(Case.generate);
 
         try casePure(
             &manager,
             case,
-            "<div><h1 id=\"id\">Hello world!</h1><p class=\"class\"><br clear=\"\"></p></div>",
+            "<div><h1 id=\"id\">Hello world!</h1><p class=\"class\"><br autocorrect=\"\"></p></div>",
         );
     }
 }
@@ -106,12 +106,12 @@ test "state" {
             num: u8,
 
             fn generate(
-                ctx: *anyopaque,
+                ctx: ?*anyopaque,
                 manager: *Manager,
                 gpa: Allocator,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx));
+                const case: *@This() = @alignCast(@ptrCast(ctx.?));
                 _ = gpa;
 
                 return manager.manage(
@@ -125,12 +125,14 @@ test "state" {
         defer manager.deinit();
 
         {
-            const case = try manager.register(Case{ .num = 0 }, Case.generate);
+            const case = try manager.register(Case.generate);
+            try case.setContext(&manager, Case{ .num = 0 });
 
             try casePure(&manager, case, "0");
         }
         {
-            const case = try manager.register(Case{ .num = 69 }, Case.generate);
+            const case = try manager.register(Case.generate);
+            try case.setContext(&manager, Case{ .num = 69 });
 
             try casePure(&manager, case, "69");
         }
@@ -139,13 +141,21 @@ test "state" {
         const Case = struct {
             count: u8,
 
+            pub fn init(manager: *Manager, count: u8) !SubTree.Index {
+                const sti = try manager.register(generate);
+
+                try sti.setContext(manager, @This(){ .count = count });
+
+                return sti;
+            }
+
             fn generate(
-                ctx: *anyopaque,
+                ctx: ?*anyopaque,
                 manager: *Manager,
                 gpa: Allocator,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx));
+                const case: *@This() = @alignCast(@ptrCast(ctx.?));
                 _ = gpa;
 
                 defer case.count += 1;
@@ -161,12 +171,12 @@ test "state" {
         defer manager.deinit();
 
         {
-            const case = try manager.register(Case{ .count = 0 }, Case.generate);
+            const case = try Case.init(&manager, 0);
 
             try caseImpure(&manager, case, "0", "1");
         }
         {
-            const case = try manager.register(Case{ .count = 69 }, Case.generate);
+            const case = try Case.init(&manager, 69);
 
             try caseImpure(&manager, case, "69", "70");
         }
@@ -178,17 +188,21 @@ test "nested" {
         const Nested = struct {
             num: u8,
 
-            pub fn init(num: u8) !@This() {
-                return .{ .num = num };
+            pub fn init(manager: *Manager, num: u8) !SubTree.Index {
+                const sti = try manager.register(generate);
+
+                try sti.setContext(manager, @This(){ .num = num });
+
+                return sti;
             }
 
             fn generate(
-                ctx: *anyopaque,
+                ctx: ?*anyopaque,
                 manager: *Manager,
                 gpa: Allocator,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx));
+                const case: *@This() = @alignCast(@ptrCast(ctx.?));
                 _ = gpa;
 
                 return manager.manage(
@@ -201,20 +215,21 @@ test "nested" {
         const Case = struct {
             index: SubTree.Index,
 
-            pub fn init(manager: *Manager, num: u8) !@This() {
-                return .{ .index = try manager.register(
-                    Nested{ .num = num },
-                    Nested.generate,
-                ) };
+            pub fn init(manager: *Manager, index: SubTree.Index) !SubTree.Index {
+                const sti = try manager.register(generate);
+
+                try sti.setContext(manager, @This(){ .index = index });
+
+                return sti;
             }
 
             fn generate(
-                ctx: *anyopaque,
+                ctx: ?*anyopaque,
                 manager: *Manager,
                 gpa: Allocator,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx));
+                const case: *@This() = @alignCast(@ptrCast(ctx.?));
                 _ = gpa;
 
                 return manager.manage(
@@ -228,13 +243,13 @@ test "nested" {
         defer manager.deinit();
 
         {
-            const case = try manager.register(Case.init(&manager, 10), Case.generate);
-
+            const nested = try Nested.init(&manager, 10);
+            const case = try Case.init(&manager, nested);
             try casePure(&manager, case, "10");
         }
         {
-            const case = try manager.register(Case.init(&manager, 30), Case.generate);
-
+            const nested = try Nested.init(&manager, 30);
+            const case = try Case.init(&manager, nested);
             try casePure(&manager, case, "30");
         }
     }
@@ -244,33 +259,32 @@ test "callbacks" {
     {
         const Case = struct {
             fired: bool = false,
-            event: Callback.Index,
+            event: Event,
 
-            pub fn init(manager: *Manager) !struct { SubTree.Index, Callback.Index } {
-                const cb = try manager.registerCallback(callback);
+            pub fn init(manager: *Manager, event: Event) !SubTree.Index {
+                const sti = try manager.register(generate);
 
-                return .{
-                    try manager.register(@This(){ .event = cb }, generate),
-                    cb,
-                };
+                try sti.setContext(manager, @This(){ .event = event });
+
+                _ = try event.addListener(manager, sti, callback);
+
+                return sti;
             }
 
-            fn callback(st: *SubTree, gpa: Allocator, data: Callback.Data) !void {
-                const case: *@This() = @alignCast(@ptrCast(st.ctx));
+            fn callback(st: *SubTree, _: Allocator, _: ?*anyopaque) !void {
+                const case: *@This() = @alignCast(@ptrCast(st.ctx.?));
                 st.dirty();
-                _ = gpa;
-                _ = data;
 
                 case.fired = true;
             }
 
             fn generate(
-                ctx: *anyopaque,
+                ctx: ?*anyopaque,
                 manager: *Manager,
                 gpa: Allocator,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx));
+                const case: *@This() = @alignCast(@ptrCast(ctx.?));
                 _ = gpa;
 
                 return manager.manage(
@@ -283,14 +297,16 @@ test "callbacks" {
         var manager: Manager = .init(alloc);
         defer manager.deinit();
 
-        const case, const cb = try Case.init(&manager);
+        const event = try manager.registerEvent();
+
+        const case = try Case.init(&manager, event);
 
         {
             const render = try manager.render(case);
             defer alloc.free(render);
             try std.testing.expectEqualStrings("false", render);
         }
-        try manager.fireCallback(case, cb, .empty);
+        try event.fire(&manager, null);
         {
             const render = try manager.render(case);
             defer alloc.free(render);
@@ -302,32 +318,29 @@ test "callbacks" {
 test "nested callback" {
     { // NOTE: This is god awful code, do not copy this
         const NestedCallback = struct {
-            cb: Callback.Index,
+            event: Event,
 
-            pub fn init(manager: *Manager, cb: Callback.Index) !SubTree.Index {
-                return manager.register(@This(){
-                    .cb = cb,
-                }, generate);
+            pub fn init(manager: *Manager, event: Event) !SubTree.Index {
+                const sti = try manager.register(generate);
+
+                sti.setContext(manager, @This(){ .event = event });
+
+                return sti;
             }
 
-            fn callback(st: *SubTree, gpa: Allocator, data: Callback.Data) !void {
-                _ = st;
-                _ = gpa;
-                _ = data;
-            }
+            fn callback(_: *SubTree, _: Allocator, _: ?*anyopaque) !void {}
 
             fn generate(
-                ctx: *anyopaque,
+                ctx: ?*anyopaque,
                 manager: *Manager,
-                gpa: Allocator,
+                _: Allocator,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const data: *@This() = @alignCast(@ptrCast(ctx));
-                _ = gpa;
+                const data: *@This() = @alignCast(@ptrCast(ctx.?));
 
                 return manager.manage(
                     arena,
-                    .button(&.{.{ .onclick = data.cb }}, &.{}),
+                    .button(&.{.{ .onclick = data.event }}, &.{}),
                 );
             }
         };
@@ -335,19 +348,13 @@ test "nested callback" {
         const Case = struct {
             index: SubTree.Index,
 
-            pub fn init(manager: *Manager, index: SubTree.Index) !SubTree.Index {
-                return manager.register(@This(){
-                    .index = index,
-                }, generate);
-            }
-
             fn generate(
-                ctx: *anyopaque,
+                ctx: ?*anyopaque,
                 manager: *Manager,
                 gpa: Allocator,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx));
+                const case: *@This() = @alignCast(@ptrCast(ctx.?));
                 _ = gpa;
 
                 return manager.manage(
@@ -360,18 +367,26 @@ test "nested callback" {
         var manager: Manager = .init(alloc);
         defer manager.deinit();
 
-        const cb: Callback.Index = try manager.registerCallback(NestedCallback.callback);
-        assert(@intFromEnum(cb) == 0);
-        const nested = try NestedCallback.init(&manager, cb);
-        assert(@intFromEnum(nested) == 0);
-        const case = try Case.init(&manager, nested);
-        assert(@intFromEnum(case) == 1);
+        const event = try manager.registerEvent();
+        try std.testing.expectEqual(0, @intFromEnum(event));
+
+        const nested = try manager.register(NestedCallback.generate);
+        _ = try nested.setContext(&manager, NestedCallback{ .event = event });
+        try std.testing.expectEqual(0, @intFromEnum(nested));
+
+        _ = try event.addListener(&manager, nested, NestedCallback.callback);
+
+        const case = try manager.register(Case.generate);
+        try case.setContext(&manager, Case{ .index = nested });
+        try std.testing.expectEqual(1, @intFromEnum(case));
 
         {
             const content = try manager.render(case);
             defer alloc.free(content);
+
+            // @intFromEnum(@as(AttributeTag, .onclick)) == 9
             try std.testing.expectEqualStrings(
-                "<button onclick=\"callback(0, 0)\"></button>",
+                "<button drasil-event=\"[9, 0]\"></button>",
                 content,
             );
         }
@@ -385,6 +400,6 @@ const assert = std.debug.assert;
 
 const Tree = drasil.Tree;
 const Manager = drasil.Manager;
+const Event = Manager.Event;
 const SubTree = Manager.SubTree;
 const Allocator = std.mem.Allocator;
-const Callback = Manager.Callback;
