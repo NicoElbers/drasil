@@ -205,6 +205,7 @@ const Header = struct {
             31...35 => "..",
             36...40 => "...",
             41...45 => "... You gotta stop",
+            46...49 => "... You won't make it to 50",
             else => blk: {
                 data.counter.* = 0;
                 break :blk " Told you";
@@ -229,7 +230,6 @@ const assert = std.debug.assert;
 const Manager = drasil.Manager;
 const SubTree = Manager.SubTree;
 const Tree = drasil.Tree;
-const Callback = Manager.Callback;
 const Event = Manager.Event;
 const Allocator = std.mem.Allocator;
 const Ref = web.js.Ref;
