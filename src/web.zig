@@ -1,42 +1,50 @@
-pub const Options = struct {
-    init: *const fn () anyerror!void,
-    render: *const fn () anyerror!void,
-    manager: *Manager,
-    log_buffer_size: usize = 1024,
+// TODO: Generally get better at detecting errors in javascript
+
+const global = struct {
+    pub var manager: *Manager = undefined;
+    pub var gpa: Allocator = undefined;
 };
-const options: Options = @import("root").drasil_options;
 
-pub const panic = std.debug.FullPanic(struct {
-    pub fn panicFn(msg: []const u8, addr: ?usize) noreturn {
-        _ = addr; // Wasm can't really do stack traces
-
-        const panic_log = std.log.scoped(.panic);
-        panic_log.err("{s}", .{msg});
-        @trap();
-    }
-}.panicFn);
-
-pub fn logFn(
-    comptime level: std.log.Level,
-    comptime scope: @TypeOf(.enum_literal),
-    comptime format: []const u8,
-    args: anytype,
-) void {
-    var buf: [options.log_buffer_size]u8 = undefined;
-
-    const prefix = if (scope == .default) "wasm: " else "wasm(" ++ @tagName(scope) ++ "): ";
-
-    const msg = std.fmt.bufPrint(&buf, prefix ++ format, args) catch blk: {
-        buf[buf.len - 3 ..][0..3].* = "...".*;
-        break :blk &buf;
-    };
-
-    js.log(.fromLevel(level), msg);
+pub fn setup(manager: *Manager, gpa: Allocator) void {
+    global.manager = manager;
+    global.gpa = gpa;
 }
 
-export fn init() void {
-    options.init() catch |err|
+pub const exports = {
+    _ = &init;
+    _ = &handleEvent;
+    _ = &js.allocRet;
+};
+
+export fn init() callconv(.c) void {
+    root.setup() catch |err|
         std.debug.panic("Init error: {s}", .{@errorName(err)});
+
+    root.render() catch |err|
+        std.debug.panic("Render error: {s}", .{@errorName(err)});
+}
+
+const AttributeTag = std.meta.Tag(Attribute);
+export fn handleEvent(
+    ref: js.Ref,
+    data_type: u32,
+    event: Manager.Event,
+) void {
+    const event_tag = std.enums.fromInt(AttributeTag, data_type) orelse
+        std.debug.panic("{d} is not valid data type", .{data_type});
+
+    // TODO: Autogen this based on tools/html_events.zon the interface field
+    var data: Data = switch (event_tag) {
+        .onclick => .{ .pointer_event = .{ .ref = ref } },
+        else => std.debug.panic("{d} is not an event", .{event}),
+    };
+
+    event.fire(global.manager, &data) catch |err|
+        std.debug.panic("Firing event error: {s}", .{@errorName(err)});
+
+    // TODO: see if we can avoid rerenders in callbacks
+    root.render() catch |err|
+        std.debug.panic("Render error: {s}", .{@errorName(err)});
 }
 
 pub const js = struct {
@@ -69,15 +77,6 @@ pub const js = struct {
             api.unref(self);
         }
 
-        pub fn byId(id: []const u8) ?Ref {
-            const ref = api.refById(id.ptr, id.len);
-            return switch (ref) {
-                .invalid => null,
-                else => ref,
-            };
-        }
-
-        // TODO: make this API take an allocator
         pub fn call(
             self: Ref,
             comptime Ret: type,
@@ -88,27 +87,37 @@ pub const js = struct {
             void => void,
             else => std.json.Parsed(Ret),
         } {
-            var call_buf: [1024]u8 = undefined;
-            var fbw = std.io.fixedBufferStream(&call_buf);
-            try std.json.stringify(args, .{}, fbw.writer());
-            const json_args = fbw.getWritten();
+            assert(self != .invalid);
+
+            var arr: std.ArrayListUnmanaged(u8) = .empty;
+            defer arr.deinit(gpa);
+
+            try std.json.stringify(args, .{}, arr.writer(gpa));
+
+            const json_args = arr.items;
 
             const js_ret = api.refCall(self, func.ptr, func.len, json_args.ptr, json_args.len);
 
             const json_ret = js_ret.to() orelse return error.JsError;
 
-            if (Ret == void) return;
+            if (Ret == void) {
+                global.gpa.free(json_args);
+
+                return;
+            }
 
             return std.json.parseFromSlice(Ret, gpa, json_ret, .{});
         }
 
-        // TODO: make this API take an allocator
-        pub fn set(self: Ref, field: []const u8, arg: anytype) !void {
-            var assign_buf: [1024]u8 = undefined;
-            var fbw = std.io.fixedBufferStream(&assign_buf);
-            try std.json.stringify(arg, .{}, fbw.writer());
+        pub fn set(self: Ref, gpa: Allocator, field: []const u8, arg: anytype) !void {
+            assert(self != .invalid);
 
-            const json_arg = fbw.getWritten();
+            var arr: std.ArrayListUnmanaged(u8) = .empty;
+            defer arr.deinit(gpa);
+
+            try std.json.stringify(arg, .{}, arr.writer(gpa));
+
+            const json_arg = arr.items;
 
             api.refSet(
                 self,
@@ -120,6 +129,8 @@ pub const js = struct {
         }
 
         pub fn get(self: Ref, field: []const u8) ![]const u8 {
+            assert(self != .invalid);
+
             return api.refGet(
                 self,
                 field.ptr,
@@ -127,7 +138,9 @@ pub const js = struct {
             ).to() orelse error.JsError;
         }
 
-        pub fn getRef(self: Ref, field: []const u8) ?[]const u8 {
+        pub fn getRef(self: Ref, field: []const u8) ?Ref {
+            assert(self != .invalid);
+
             const ref = api.refGetRef(
                 self,
                 field.ptr,
@@ -137,36 +150,10 @@ pub const js = struct {
             if (ref == .invalid) return null;
             return ref;
         }
-
-        // TODO: make this API take an allocator
-        pub fn setInnerHtml(self: Ref, content: []const u8) void {
-            self.set("innerHTML", content) catch @panic("fuck me");
-        }
     };
 
-    const AttributeTag = std.meta.Tag(Attribute);
-    export fn handleCallback(
-        ref: Ref,
-        data_type: u32,
-        event: Manager.Event,
-    ) void {
-        const event_tag = std.enums.fromInt(AttributeTag, data_type) orelse
-            std.debug.panic("{d} is not valid data type", .{data_type});
-
-        var data: Data = switch (event_tag) {
-            .onclick => .{ .pointer_event = .{ .ref = ref } },
-            else => std.debug.panic("{d} is not an event", .{event}),
-        };
-
-        event.fire(options.manager, &data) catch
-            @panic("Firing event failed");
-
-        options.render() catch
-            std.debug.panic("Error rendering page", .{});
-    }
-
     export fn allocRet(size: usize) ?[*]const u8 {
-        const slice = options.manager.gpa.alloc(u8, size) catch return null;
+        const slice = global.gpa.alloc(u8, size) catch return null;
         return slice.ptr;
     }
 
@@ -223,6 +210,8 @@ pub const js = struct {
     };
 };
 
+// TODO: autogen a lot of the JS API
+
 pub const PointerEvent = struct {
     ref: js.Ref,
 
@@ -237,13 +226,69 @@ pub const Data = union(enum) {
     time_ns: u64,
 };
 
+pub const Element = struct {
+    ref: js.Ref,
+
+    pub fn byId(id: []const u8) ?Element {
+        const ref = js.api.refById(id.ptr, id.len);
+        return switch (ref) {
+            .invalid => null,
+            else => .{ .ref = ref },
+        };
+    }
+
+    pub fn unref(self: Element) void {
+        self.ref.unref();
+    }
+
+    pub fn setInnerHtml(self: Element, gpa: Allocator, content: []const u8) !void {
+        try self.ref.set(gpa, "innerHTML", content);
+    }
+};
+
+pub const panic = std.debug.FullPanic(struct {
+    pub fn panicFn(msg: []const u8, addr: ?usize) noreturn {
+        _ = addr; // Wasm can't really do stack traces
+
+        const panic_log = std.log.scoped(.panic);
+        panic_log.err("{s}", .{msg});
+        @trap();
+    }
+}.panicFn);
+
+pub fn logFn(
+    comptime level: std.log.Level,
+    comptime scope: @TypeOf(.enum_literal),
+    comptime format: []const u8,
+    args: anytype,
+) void {
+    var buf: [options.log_buffer_size]u8 = undefined;
+
+    const prefix = if (scope == .default) "wasm: " else "wasm(" ++ @tagName(scope) ++ "): ";
+
+    const msg = std.fmt.bufPrint(&buf, prefix ++ format, args) catch blk: {
+        buf[buf.len - 3 ..][0..3].* = "...".*;
+        break :blk &buf;
+    };
+
+    js.log(.fromLevel(level), msg);
+}
+
+pub const Options = struct {
+    log_buffer_size: usize = 1024,
+};
+
 const std = @import("std");
+const root = @import("root");
 const html_data = @import("html_data.zig");
 
 const assert = std.debug.assert;
+const options: Options = if (@hasDecl(root, "drasil_options"))
+    root.drasil_options
+else
+    .{};
 
 const Manager = @import("Manager.zig");
 const SubTree = Manager.SubTree;
-const Callback = Manager.Callback;
 const Attribute = html_data.Attribute;
 const Allocator = std.mem.Allocator;
