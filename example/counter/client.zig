@@ -1,60 +1,93 @@
+//! TODO: Add more explanation to things when we're closer to done
+
+// Initialize logging for wasm
 pub const std_options: std.Options = .{
     .logFn = web.logFn,
 };
+
+// Initialize the panic handler for wasm
 pub const panic = web.panic;
 
-pub const drasil_options: web.Options = .{
-    .init = init,
-    .render = render,
-    .manager = &global.manager_inst,
-};
-
+// Setup an allocator to be accessed globally
 const global = struct {
     var dbg_inst = std.heap.DebugAllocator(.{}).init;
-    pub var gpa = dbg_inst.allocator();
-
-    pub var manager_inst: Manager = undefined;
-    pub var manager: *Manager = &manager_inst;
-
-    pub var app: SubTree.Index = undefined;
+    pub const gpa = dbg_inst.allocator();
 };
 
-fn init() !void {
-    global.manager_inst = .init(global.gpa);
+// Ensure the correct functions are exported
+comptime {
+    web.exports;
+}
 
+// Our own program state
+const State = struct {
+    app: SubTree.Index,
+    manager: Manager,
+};
+var state: State = undefined;
+
+// The setup function that is called once when the wasm blob is loaded.
+// This is referenced by `web` and must thus be public
+pub fn setup() !void {
     std.log.info("Hello world!", .{});
     std.log.debug("Hello world!", .{});
     std.log.warn("Hello world!", .{});
     std.log.err("Hello world!", .{});
 
-    global.app = try App.init(global.manager);
+    var manager: Manager = .init(global.gpa);
+    errdefer manager.deinit();
 
-    try render();
+    const app = try App.init(&manager);
+
+    state = .{
+        .app = app,
+        .manager = manager,
+    };
+
+    // This tells `web` which allocator we want it to use for communication
+    // with wasm, and tells it where to send events from the browser to
+    web.setup(&state.manager, global.gpa);
 }
 
-fn render() !void {
+// The render function is called every time the browser sends an event.
+// TODO: do we need to call it more often than that?
+pub fn render() !void {
     std.log.info("Render", .{});
 
-    const content = try global.manager.render(global.app);
+    // Generating the content, this is the string of HTML
+    const content = try state.manager.render(state.app);
     defer global.gpa.free(content);
 
-    const app_ref = Ref.byId("app").?;
+    // A reference to the DOM element with id "app"
+    const app_ref = Element.byId("app").?;
     defer app_ref.unref();
 
-    app_ref.setInnerHtml(content);
+    // Set the HTML!
+    try app_ref.setInnerHtml(global.gpa, content);
 }
 
+// A simple app component. It's a little contrived for this demo.
 const App = struct {
+    // We have references to other components or `SubTree`s. Since we don't
+    // want to accidentally invalidate a pointer, we pass around indices
+    // instead.
     header: SubTree.Index,
     button: SubTree.Index,
 
+    // A function we use to setup all state
     pub fn init(manager: *Manager) !SubTree.Index {
+        // Registering an event which can be called either internally or via
+        // browser events
         const click_event = try manager.registerEvent();
         const reset_event = try manager.registerEvent();
 
+        // `sti`, stands for `SubTree Index`
         const sti = try manager.register(generate);
 
         const button = try AlternatingButton.init(manager, click_event, reset_event);
+
+        // Get the pointer to the counter in the button
+        // TODO: make this not shit
         const counter: *u32 = blk: {
             const ctx: *AlternatingButton = @alignCast(@ptrCast(button.tree(manager).ctx));
             break :blk &ctx.counter;
@@ -62,6 +95,8 @@ const App = struct {
 
         const header = try Header.init(manager, counter, click_event, reset_event);
 
+        // We can give the sti we created earlier some context we can use while
+        // generating or while handling an event callback
         try sti.setContext(manager, App{
             .header = header,
             .button = button,
@@ -77,13 +112,11 @@ const App = struct {
         arena: Allocator,
     ) !SubTree.Managed {
         _ = gpa;
+        std.log.info("Generating app", .{});
 
         const data: *@This() = @alignCast(@ptrCast(ctx.?));
 
-        std.log.info("Generating app", .{});
-
-        manager.subTree(data.header).dirty();
-
+        // Create the resulting HTML
         return manager.manage(
             arena,
             .main(&.{}, &.{
@@ -103,7 +136,8 @@ const AlternatingButton = struct {
     pub fn init(manager: *Manager, click_event: Event, reset_event: Event) !SubTree.Index {
         const sti = try manager.register(generate);
 
-        // Never intend to deregister this listener
+        // Add a callback to both of these events
+        // TODO: Do everything you can to remove passing in sti here
         _ = try click_event.addListener(manager, sti, click);
         _ = try reset_event.addListener(manager, sti, reset);
 
@@ -232,5 +266,5 @@ const SubTree = Manager.SubTree;
 const Tree = drasil.Tree;
 const Event = Manager.Event;
 const Allocator = std.mem.Allocator;
-const Ref = web.js.Ref;
+const Element = web.Element;
 const Random = std.Random;

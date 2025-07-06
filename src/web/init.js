@@ -184,28 +184,29 @@ async function init() {
         return storeSting(json_ret);
       },
 
-      // Fetch API
-      startFetch: function (id, target_ptr, target_len) {
-        const target = loadString(target_ptr, target_len);
-
-        fetch(target)
-          .then((res) => res.bytes())
-          .then((bytes) => {
-            const ret_ptr = wasm_exports.allocRet(bytes.length);
-            const slice = new Uint8Array(
-              wasm_memory.buffer,
-              ret_ptr,
-              bytes.length,
-            );
-            slice.set(bytes);
-
-            wasm_exports.handleFetch(id, packSlice(ret_ptr, slice.length));
-          })
-          .catch((reason) => {
-            console.error(`Error while fetching ${reason}`);
-            wasm_exports.handleFetch(id, 0n);
-          });
-      },
+      // Fetch API TODO: integrate with web.zig
+      //
+      // startFetch: function (id, target_ptr, target_len) {
+      //   const target = loadString(target_ptr, target_len);
+      //
+      //   fetch(target)
+      //     .then((res) => res.bytes())
+      //     .then((bytes) => {
+      //       const ret_ptr = wasm_exports.allocRet(bytes.length);
+      //       const slice = new Uint8Array(
+      //         wasm_memory.buffer,
+      //         ret_ptr,
+      //         bytes.length,
+      //       );
+      //       slice.set(bytes);
+      //
+      //       wasm_exports.handleFetch(id, packSlice(ret_ptr, slice.length));
+      //     })
+      //     .catch((reason) => {
+      //       console.error(`Error while fetching ${reason}`);
+      //       wasm_exports.handleFetch(id, 0n);
+      //     });
+      // },
     },
   };
 
@@ -216,15 +217,12 @@ async function init() {
   wasm_exports = wasm.instance.exports;
   window.drasil_wasm = wasm;
 
-  if (
-    !wasm_exports.init ||
-    !wasm_exports.handleCallback ||
-    !wasm_exports.allocRet
-  ) {
-    throw new Error("WASM module missing required exports");
+  const expected_exports = ["init", "handleEvent", "allocRet"];
+  for (const ee of expected_exports) {
+    if (!wasm_exports[ee]) {
+      throw new Error(`WASM module missing required export: ${ee}`);
+    }
   }
-
-  const events_start = performance.now();
 
   // Setup event handling
   for (const ev of events) {
@@ -235,16 +233,12 @@ async function init() {
 
         const ref = refObject(event);
 
-        wasm_exports.handleCallback(ref, data[0], data[1]);
+        wasm_exports.handleEvent(ref, data[0], data[1]);
 
         references[ref] = null;
       }
     });
   }
-
-  const events_end = performance.now();
-  const events_duration = events_end - events_start;
-  console.log(`Creating events took ${events_duration}ms`);
 
   wasm_exports.init();
 }
