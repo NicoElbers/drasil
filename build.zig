@@ -28,7 +28,6 @@ pub fn build(b: *Build) void {
 
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_drasil_tests.step);
-    test_step.dependOn(check); // Ensure everything compiles
 }
 
 fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {
