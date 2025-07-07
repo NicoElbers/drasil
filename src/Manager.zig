@@ -6,6 +6,63 @@ gpa: Allocator,
 context_arena: ArenaAllocator,
 sub_trees: ArrayListUnmanaged(SubTree),
 events: ArrayListUnmanaged(?ArrayListUnmanaged(Event.Listener)),
+reactive: ArrayListUnmanaged(?ArrayListUnmanaged(SubTree.Index)),
+
+const ReactiveIndex = enum(u32) { _ };
+pub fn Reactive(comptime T: type) type {
+    return struct {
+        value: T,
+        index: ReactiveIndex,
+
+        pub fn init(m: *Manager, value: T) !@This() {
+            const index: ReactiveIndex = blk: for (m.reactive.items, 0..) |*r, idx| {
+                if (r.* != null) continue;
+                r.* = .empty;
+                break :blk @enumFromInt(idx);
+            } else {
+                const idx = m.reactive.items.len;
+                try m.reactive.append(m.gpa, .empty);
+                break :blk @enumFromInt(idx);
+            };
+
+            return .{
+                .value = value,
+                .index = index,
+            };
+        }
+
+        pub fn deinit(self: @This(), m: *Manager) T {
+            const deps = self.dependees(m).?;
+            deps.deinit(m.gpa);
+            deps.* = null;
+
+            return self.value;
+        }
+
+        pub fn get(self: *@This(), m: *Manager, sti: SubTree.Index) !*const T {
+            try self.dependees(m).?.append(m.gpa, sti);
+            return &self.value;
+        }
+
+        pub fn getMut(self: *@This(), m: *Manager) *T {
+            const deps = self.dependees(m).?;
+            for (deps.items) |sti| {
+                // Dirties the cache, causing a rerender
+                sti.tree(m).dirty();
+            }
+            deps.shrinkRetainingCapacity(0);
+
+            return &self.value;
+        }
+
+        fn dependees(self: *@This(), m: *Manager) ?*ArrayListUnmanaged(SubTree.Index) {
+            const idx = @intFromEnum(self.index);
+            if (m.reactive.items.len <= idx) return null;
+            if (m.reactive.items[idx]) |*l| return l;
+            return null;
+        }
+    };
+}
 
 pub const Event = enum(u32) {
     _,
@@ -14,15 +71,15 @@ pub const Event = enum(u32) {
 
     const Listener = struct {
         id: Id,
-        sti: SubTree.Index,
+        ctx: ?*anyopaque,
         cb: Fn,
 
         const Id = enum(u32) { _ };
     };
 
     pub const Fn = *const fn (
-        sub_tree: *SubTree,
-        gpa: Allocator,
+        ctx: ?*anyopaque,
+        manager: *Manager,
         data: ?*anyopaque,
     ) anyerror!void;
 
@@ -31,22 +88,27 @@ pub const Event = enum(u32) {
         const list = event.listeners(manager).?;
 
         for (list.items) |listener| {
-            const tree = listener.sti.tree(manager);
-            try listener.cb(tree, manager.gpa, data);
+            try listener.cb(listener.ctx, manager, data);
         }
     }
 
     /// Asserts that the event is registered
-    pub fn addListener(event: Event, manager: *Manager, sti: SubTree.Index, callback: Fn) !Listener.Id {
+    pub fn addListener(
+        event: Event,
+        manager: *Manager,
+        ctx: ?*anyopaque,
+        callback: Fn,
+    ) !Listener.Id {
         const list = event.listeners(manager).?;
 
         const id: Listener.Id = @enumFromInt(id_counter);
         id_counter += 1;
 
+        std.log.info("Click listener ctx: {any}", .{ctx});
         try list.append(manager.gpa, .{
             .id = id,
+            .ctx = ctx,
             .cb = callback,
-            .sti = sti,
         });
 
         return id;
@@ -68,7 +130,9 @@ pub const Event = enum(u32) {
 
     /// Asserts that the event was registered
     pub fn deregister(event: Event, manager: *Manager) void {
-        event.listeners(manager).?.* = null;
+        const arr = event.listeners(manager).?;
+        arr.deinit(manager.gpa);
+        arr.* = null;
     }
 
     fn listeners(event: Event, manager: *Manager) ?*ArrayListUnmanaged(Listener) {
@@ -86,12 +150,10 @@ pub const SubTree = struct {
     cache: ?Managed,
 
     pub const Generator = *const fn (
-        /// User provided data, owned by `HtmlTree`.
-        ctx: ?*anyopaque,
+        /// `SubTree.Index` used to access context and read reactive variables
+        sti: SubTree.Index,
         /// Reference to the parent `Manager` for rendering subtrees.
         manager: *Manager,
-        /// Allocator for persistent data, memory fully managed by generator.
-        gpa: Allocator,
         /// Arena for temporary data, particularly useful for formatted strings.
         /// This arena is reset before every call to generator.
         arena: Allocator,
@@ -109,6 +171,20 @@ pub const SubTree = struct {
 
         pub fn setContext(index: Index, manager: *Manager, context: anytype) !void {
             try index.tree(manager).setContext(manager, context);
+        }
+
+        pub fn contextPtr(index: Index, manager: *Manager) ?*anyopaque {
+            return index.tree(manager).ctx;
+        }
+
+        fn generate(index: Index, m: *Manager) !Tree {
+            const st = m.subTree(index);
+            st.update(m);
+
+            if (st.cache == null)
+                st.cache = try st.generator(index, m, st.arena.allocator());
+
+            return st.cache.?.tree;
         }
     };
 
@@ -155,19 +231,6 @@ pub const SubTree = struct {
     pub fn update(self: *SubTree, manager: *Manager) void {
         if (self.isDirty(manager)) self.dirty();
     }
-
-    fn generate(self: *SubTree, manager: *Manager) !Tree {
-        self.update(manager);
-        if (self.cache == null)
-            self.cache = try self.generator(
-                self.ctx,
-                manager,
-                manager.gpa,
-                self.arena.allocator(),
-            );
-
-        return self.cache.?.tree;
-    }
 };
 
 pub fn init(gpa: Allocator) Manager {
@@ -176,6 +239,7 @@ pub fn init(gpa: Allocator) Manager {
         .context_arena = .init(gpa),
         .sub_trees = .empty,
         .events = .empty,
+        .reactive = .empty,
     };
 }
 
@@ -193,6 +257,12 @@ pub fn deinit(self: *Manager) void {
         self.events.items[idx].?.deinit(self.gpa);
     }
     self.events.deinit(self.gpa);
+
+    for (0..self.reactive.items.len) |idx| {
+        if (self.reactive.items[idx] == null) continue;
+        self.reactive.items[idx].?.deinit(self.gpa);
+    }
+    self.reactive.deinit(self.gpa);
 
     self.context_arena.deinit();
 }
@@ -287,12 +357,11 @@ pub fn subTree(self: *Manager, sub_tree_index: SubTree.Index) *SubTree {
 }
 
 pub fn generate(self: *Manager, sub_tree_index: SubTree.Index) !Tree {
-    return self.subTree(sub_tree_index).generate(self);
+    return sub_tree_index.generate(self);
 }
 
 pub fn render(self: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
-    const sub_tree = self.subTree(sub_tree_index);
-    const tree = try sub_tree.generate(self);
+    const tree = try self.generate(sub_tree_index);
 
     var arr: std.ArrayList(u8) = .init(self.gpa);
 
