@@ -257,13 +257,13 @@ test "callbacks" {
                     .event = event,
                 });
 
-                _ = try event.addListener(m, sti.contextPtr(m), callback);
+                _ = try event.addListener(m, .{ .sti = sti }, callback);
 
                 return sti;
             }
 
-            fn callback(ctx: ?*anyopaque, m: *Manager, _: ?*anyopaque) !void {
-                const case: *@This() = @alignCast(@ptrCast(ctx.?));
+            fn callback(ctx: Context, m: *Manager, _: ?*anyopaque) !void {
+                const case: *@This() = @alignCast(@ptrCast(ctx.sti.contextPtr(m)));
                 case.fired.getMut(m).* = true;
             }
 
@@ -316,7 +316,7 @@ test "nested callback" {
                 return sti;
             }
 
-            fn callback(_: ?*anyopaque, _: *Manager, _: ?*anyopaque) !void {}
+            fn callback(_: Context, _: *Manager, _: ?*anyopaque) !void {}
 
             fn generate(
                 sti: SubTree.Index,
@@ -359,7 +359,7 @@ test "nested callback" {
         _ = try nested.setContext(&manager, NestedCallback{ .event = event });
         try std.testing.expectEqual(0, @intFromEnum(nested));
 
-        _ = try event.addListener(&manager, null, NestedCallback.callback);
+        _ = try event.addListener(&manager, .none, NestedCallback.callback);
 
         const case = try manager.register(Case.generate);
         try case.setContext(&manager, Case{ .index = nested });
@@ -386,6 +386,7 @@ const assert = std.debug.assert;
 const Tree = drasil.Tree;
 const Manager = drasil.Manager;
 const Event = Manager.Event;
+const Context = Event.Context;
 const SubTree = Manager.SubTree;
 const Allocator = std.mem.Allocator;
 const Reactive = Manager.Reactive;
