@@ -44,15 +44,13 @@ test "sanity" {
     {
         const Case = struct {
             fn generate(
-                ctx: ?*anyopaque,
-                manager: *Manager,
-                gpa: Allocator,
+                sti: SubTree.Index,
+                m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
-                _ = ctx;
-                _ = gpa;
+                _ = sti;
 
-                return manager.manage(
+                return m.manage(
                     arena,
                     .h1(&.{}, &.{.raw("Hello world!")}),
                 );
@@ -68,13 +66,11 @@ test "sanity" {
     {
         const Case = struct {
             fn generate(
-                ctx: ?*anyopaque,
+                sti: SubTree.Index,
                 manager: *Manager,
-                gpa: Allocator,
                 arena: Allocator,
             ) !SubTree.Managed {
-                _ = ctx;
-                _ = gpa;
+                _ = sti;
 
                 return manager.manage(
                     arena,
@@ -106,15 +102,13 @@ test "state" {
             num: u8,
 
             fn generate(
-                ctx: ?*anyopaque,
-                manager: *Manager,
-                gpa: Allocator,
+                sti: SubTree.Index,
+                m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx.?));
-                _ = gpa;
+                const case: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
 
-                return manager.manage(
+                return m.manage(
                     arena,
                     .raw(try std.fmt.allocPrint(arena, "{d}", .{case.num})),
                 );
@@ -150,17 +144,15 @@ test "state" {
             }
 
             fn generate(
-                ctx: ?*anyopaque,
-                manager: *Manager,
-                gpa: Allocator,
+                sti: SubTree.Index,
+                m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx.?));
-                _ = gpa;
+                const case: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
 
                 defer case.count += 1;
 
-                return manager.manage(
+                return m.manage(
                     arena,
                     .raw(try std.fmt.allocPrint(arena, "{d}", .{case.count})),
                 );
@@ -197,15 +189,13 @@ test "nested" {
             }
 
             fn generate(
-                ctx: ?*anyopaque,
-                manager: *Manager,
-                gpa: Allocator,
+                sti: SubTree.Index,
+                m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx.?));
-                _ = gpa;
+                const case: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
 
-                return manager.manage(
+                return m.manage(
                     arena,
                     .raw(try std.fmt.allocPrint(arena, "{d}", .{case.num})),
                 );
@@ -224,15 +214,13 @@ test "nested" {
             }
 
             fn generate(
-                ctx: ?*anyopaque,
-                manager: *Manager,
-                gpa: Allocator,
+                sti: SubTree.Index,
+                m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx.?));
-                _ = gpa;
+                const case: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
 
-                return manager.manage(
+                return m.manage(
                     arena,
                     .dyn(case.index),
                 );
@@ -258,38 +246,38 @@ test "nested" {
 test "callbacks" {
     {
         const Case = struct {
-            fired: bool = false,
+            fired: Reactive(bool),
             event: Event,
 
-            pub fn init(manager: *Manager, event: Event) !SubTree.Index {
-                const sti = try manager.register(generate);
+            pub fn init(m: *Manager, event: Event) !SubTree.Index {
+                const sti = try m.register(generate);
 
-                try sti.setContext(manager, @This(){ .event = event });
+                try sti.setContext(m, @This(){
+                    .fired = try .init(m, false),
+                    .event = event,
+                });
 
-                _ = try event.addListener(manager, sti, callback);
+                _ = try event.addListener(m, sti.contextPtr(m), callback);
 
                 return sti;
             }
 
-            fn callback(st: *SubTree, _: Allocator, _: ?*anyopaque) !void {
-                const case: *@This() = @alignCast(@ptrCast(st.ctx.?));
-                st.dirty();
-
-                case.fired = true;
+            fn callback(ctx: ?*anyopaque, m: *Manager, _: ?*anyopaque) !void {
+                const case: *@This() = @alignCast(@ptrCast(ctx.?));
+                case.fired.getMut(m).* = true;
             }
 
             fn generate(
-                ctx: ?*anyopaque,
-                manager: *Manager,
-                gpa: Allocator,
+                sti: SubTree.Index,
+                m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx.?));
-                _ = gpa;
+                const case: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
 
-                return manager.manage(
+                const fired = try case.fired.get(m, sti);
+                return m.manage(
                     arena,
-                    .raw(try std.fmt.allocPrint(arena, "{}", .{case.fired})),
+                    .raw(try std.fmt.allocPrint(arena, "{}", .{fired.*})),
                 );
             }
         };
@@ -328,17 +316,16 @@ test "nested callback" {
                 return sti;
             }
 
-            fn callback(_: *SubTree, _: Allocator, _: ?*anyopaque) !void {}
+            fn callback(_: ?*anyopaque, _: *Manager, _: ?*anyopaque) !void {}
 
             fn generate(
-                ctx: ?*anyopaque,
-                manager: *Manager,
-                _: Allocator,
+                sti: SubTree.Index,
+                m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const data: *@This() = @alignCast(@ptrCast(ctx.?));
+                const data: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
 
-                return manager.manage(
+                return m.manage(
                     arena,
                     .button(&.{.{ .onclick = data.event }}, &.{}),
                 );
@@ -349,15 +336,13 @@ test "nested callback" {
             index: SubTree.Index,
 
             fn generate(
-                ctx: ?*anyopaque,
-                manager: *Manager,
-                gpa: Allocator,
+                sti: SubTree.Index,
+                m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
-                const case: *@This() = @alignCast(@ptrCast(ctx.?));
-                _ = gpa;
+                const case: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
 
-                return manager.manage(
+                return m.manage(
                     arena,
                     .dyn(case.index),
                 );
@@ -374,7 +359,7 @@ test "nested callback" {
         _ = try nested.setContext(&manager, NestedCallback{ .event = event });
         try std.testing.expectEqual(0, @intFromEnum(nested));
 
-        _ = try event.addListener(&manager, nested, NestedCallback.callback);
+        _ = try event.addListener(&manager, null, NestedCallback.callback);
 
         const case = try manager.register(Case.generate);
         try case.setContext(&manager, Case{ .index = nested });
@@ -403,3 +388,4 @@ const Manager = drasil.Manager;
 const Event = Manager.Event;
 const SubTree = Manager.SubTree;
 const Allocator = std.mem.Allocator;
+const Reactive = Manager.Reactive;
