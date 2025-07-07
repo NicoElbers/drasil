@@ -133,13 +133,9 @@ const AlternatingButton = struct {
     pub fn init(m: *Manager, click_event: Event, reset_event: Event) !SubTree.Index {
         const sti = try m.register(generate);
 
-        // HACK: Make this hack less hacky
-        const sti_big: usize = @intFromEnum(sti);
-        const sti_pass: ?*anyopaque = @ptrFromInt(sti_big);
-
         // Add a callback to both of these events
-        _ = try click_event.addListener(m, sti_pass, click);
-        _ = try reset_event.addListener(m, sti_pass, reset);
+        _ = try click_event.addListener(m, .{ .sti = sti }, click);
+        _ = try reset_event.addListener(m, .{ .sti = sti }, reset);
 
         try sti.setContext(m, @This(){
             .click_event = click_event,
@@ -151,24 +147,19 @@ const AlternatingButton = struct {
         return sti;
     }
 
-    fn reset(context: ?*anyopaque, m: *Manager, data: ?*anyopaque) !void {
+    fn reset(context: Context, m: *Manager, data: ?*anyopaque) !void {
         _ = data;
         std.log.info("Reset callback called", .{});
-        // const ctx: *@This() = @alignCast(@ptrCast(context.?));
-
-        const sti: SubTree.Index = @enumFromInt(@intFromPtr(context));
-        const ctx: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
+        const ctx: *@This() = @alignCast(@ptrCast(context.sti.contextPtr(m).?));
 
         ctx.counter.getMut(m).* = 0;
     }
 
-    fn click(context: ?*anyopaque, m: *Manager, data: ?*anyopaque) !void {
+    fn click(context: Context, m: *Manager, data: ?*anyopaque) !void {
         _ = data;
-        // const ctx: *@This() = @alignCast(@ptrCast(context.?));
 
         std.log.info("Click callback called", .{});
-        const sti: SubTree.Index = @enumFromInt(@intFromPtr(context));
-        const ctx: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
+        const ctx: *@This() = @alignCast(@ptrCast(context.sti.contextPtr(m).?));
 
         ctx.counter.getMut(m).* += 1;
     }
@@ -255,6 +246,7 @@ const Manager = drasil.Manager;
 const SubTree = Manager.SubTree;
 const Tree = drasil.Tree;
 const Event = Manager.Event;
+const Context = Event.Context;
 const Allocator = std.mem.Allocator;
 const Element = web.Element;
 const Random = std.Random;

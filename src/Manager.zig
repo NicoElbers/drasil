@@ -71,14 +71,20 @@ pub const Event = enum(u32) {
 
     const Listener = struct {
         id: Id,
-        ctx: ?*anyopaque,
+        ctx: Context,
         cb: Fn,
 
         const Id = enum(u32) { _ };
     };
 
+    pub const Context = union(enum) {
+        none,
+        sti: SubTree.Index,
+        ptr: *anyopaque,
+    };
+
     pub const Fn = *const fn (
-        ctx: ?*anyopaque,
+        ctx: Context,
         manager: *Manager,
         data: ?*anyopaque,
     ) anyerror!void;
@@ -96,7 +102,7 @@ pub const Event = enum(u32) {
     pub fn addListener(
         event: Event,
         manager: *Manager,
-        ctx: ?*anyopaque,
+        ctx: Context,
         callback: Fn,
     ) !Listener.Id {
         const list = event.listeners(manager).?;
