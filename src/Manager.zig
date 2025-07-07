@@ -6,60 +6,44 @@ gpa: Allocator,
 context_arena: ArenaAllocator,
 sub_trees: ArrayListUnmanaged(SubTree),
 events: ArrayListUnmanaged(?ArrayListUnmanaged(Event.Listener)),
-reactive: ArrayListUnmanaged(?ArrayListUnmanaged(SubTree.Index)),
 
 const ReactiveIndex = enum(u32) { _ };
 pub fn Reactive(comptime T: type) type {
     return struct {
         value: T,
-        index: ReactiveIndex,
+        event: Event,
 
         pub fn init(m: *Manager, value: T) !@This() {
-            const index: ReactiveIndex = blk: for (m.reactive.items, 0..) |*r, idx| {
-                if (r.* != null) continue;
-                r.* = .empty;
-                break :blk @enumFromInt(idx);
-            } else {
-                const idx = m.reactive.items.len;
-                try m.reactive.append(m.gpa, .empty);
-                break :blk @enumFromInt(idx);
-            };
-
             return .{
                 .value = value,
-                .index = index,
+                .event = try m.registerEvent(),
             };
         }
 
         pub fn deinit(self: @This(), m: *Manager) T {
-            const deps = self.dependees(m).?;
-            deps.deinit(m.gpa);
-            deps.* = null;
-
+            self.event.deregister(m);
             return self.value;
         }
 
         pub fn get(self: *@This(), m: *Manager, sti: SubTree.Index) !*const T {
-            try self.dependees(m).?.append(m.gpa, sti);
+            _ = try self.event.addListener(m, .{ .sti = sti }, dirty);
             return &self.value;
         }
 
         pub fn getMut(self: *@This(), m: *Manager) *T {
-            const deps = self.dependees(m).?;
-            for (deps.items) |sti| {
-                // Dirties the cache, causing a rerender
-                sti.tree(m).dirty();
-            }
-            deps.shrinkRetainingCapacity(0);
+            // We know that the callback won't fail, nor will
+            // `Event.fire` ever fail, thus we can catch unreachable
+            self.event.fire(m, null) catch unreachable;
+
+            // Clear all listeners
+            // TODO: Event should have a better primive to do this
+            self.event.listeners(m).?.shrinkRetainingCapacity(0);
 
             return &self.value;
         }
 
-        fn dependees(self: *@This(), m: *Manager) ?*ArrayListUnmanaged(SubTree.Index) {
-            const idx = @intFromEnum(self.index);
-            if (m.reactive.items.len <= idx) return null;
-            if (m.reactive.items[idx]) |*l| return l;
-            return null;
+        fn dirty(ctx: Event.Context, m: *Manager, _: ?*anyopaque) !void {
+            ctx.sti.tree(m).dirty();
         }
     };
 }
@@ -245,7 +229,6 @@ pub fn init(gpa: Allocator) Manager {
         .context_arena = .init(gpa),
         .sub_trees = .empty,
         .events = .empty,
-        .reactive = .empty,
     };
 }
 
@@ -263,12 +246,6 @@ pub fn deinit(self: *Manager) void {
         self.events.items[idx].?.deinit(self.gpa);
     }
     self.events.deinit(self.gpa);
-
-    for (0..self.reactive.items.len) |idx| {
-        if (self.reactive.items[idx] == null) continue;
-        self.reactive.items[idx].?.deinit(self.gpa);
-    }
-    self.reactive.deinit(self.gpa);
 
     self.context_arena.deinit();
 }
