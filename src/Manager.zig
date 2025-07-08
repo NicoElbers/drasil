@@ -25,8 +25,14 @@ pub fn Reactive(comptime T: type) type {
             return self.value;
         }
 
-        pub fn get(self: *@This(), m: *Manager, sti: SubTree.Index) !*const T {
-            _ = try self.event.addListener(m, .{ .sti = sti }, dirty);
+        pub fn get(self: *const @This(), m: *Manager, sti: anytype) !*const T {
+            const stgi: SubTree.GenericIndex = if (@TypeOf(sti) == SubTree.GenericIndex)
+                sti
+            else
+                sti.generic();
+
+            _ = try self.event.addListener(m, .{ .sti = stgi }, SubTree.dirtyCallback);
+
             return &self.value;
         }
 
@@ -40,10 +46,6 @@ pub fn Reactive(comptime T: type) type {
             self.event.listeners(m).?.shrinkRetainingCapacity(0);
 
             return &self.value;
-        }
-
-        fn dirty(ctx: Event.Context, m: *Manager, _: ?*anyopaque) !void {
-            ctx.sti.tree(m).dirty();
         }
     };
 }
@@ -63,7 +65,7 @@ pub const Event = enum(u32) {
 
     pub const Context = union(enum) {
         none,
-        sti: SubTree.Index,
+        sti: SubTree.GenericIndex,
         ptr: *anyopaque,
     };
 
@@ -94,7 +96,6 @@ pub const Event = enum(u32) {
         const id: Listener.Id = @enumFromInt(id_counter);
         id_counter += 1;
 
-        std.log.info("Click listener ctx: {any}", .{ctx});
         try list.append(manager.gpa, .{
             .id = id,
             .ctx = ctx,
@@ -140,8 +141,8 @@ pub const SubTree = struct {
     cache: ?Managed,
 
     pub const Generator = *const fn (
-        /// `SubTree.Index` used to access context and read reactive variables
-        sti: SubTree.Index,
+        /// `SubTree.GenericIndex` used to access context and read reactive variables
+        sti: GenericIndex,
         /// Reference to the parent `Manager` for rendering subtrees.
         manager: *Manager,
         /// Arena for temporary data, particularly useful for formatted strings.
@@ -152,22 +153,19 @@ pub const SubTree = struct {
     /// Wrapper around tree to distinguish managed variants
     pub const Managed = struct { tree: Tree };
 
-    pub const Index = enum(u32) {
+    /// A type erased version of a `SubTree.Index`
+    pub const GenericIndex = enum(u32) {
         _,
 
-        pub fn tree(index: Index, manager: *Manager) *SubTree {
-            return manager.subTree(index);
+        pub fn specific(index: GenericIndex, comptime T: type) Index(T) {
+            return @enumFromInt(@intFromEnum(index));
         }
 
-        pub fn setContext(index: Index, manager: *Manager, context: anytype) !void {
-            try index.tree(manager).setContext(manager, context);
+        pub fn tree(index: GenericIndex, m: *Manager) *SubTree {
+            return m.subTree(index);
         }
 
-        pub fn contextPtr(index: Index, manager: *Manager) ?*anyopaque {
-            return index.tree(manager).ctx;
-        }
-
-        fn generate(index: Index, m: *Manager) !Tree {
+        fn generrate(index: GenericIndex, m: *Manager) !Tree {
             const st = m.subTree(index);
             st.update(m);
 
@@ -176,7 +174,56 @@ pub const SubTree = struct {
 
             return st.cache.?.tree;
         }
+
+        pub fn render(index: GenericIndex, m: *Manager) ![]const u8 {
+            return try m.render(index);
+        }
+
+        pub fn listen(index: GenericIndex, m: *Manager, event: Event) !Event.Listener.Id {
+            return try event.addListener(m, .{ .sti = index }, dirtyCallback);
+        }
     };
+
+    pub fn Index(comptime T: type) type {
+        return enum(u32) {
+            _,
+
+            const Self = @This();
+
+            pub const Generator = *const fn (
+                sti: Self,
+                manager: *Manager,
+                arena: Allocator,
+            ) anyerror!SubTree.Managed;
+
+            pub fn generic(self: Self) GenericIndex {
+                return @enumFromInt(@intFromEnum(self));
+            }
+
+            pub fn setContext(self: Self, m: *Manager, value: T) !void {
+                try self.tree(m).setContext(m, value);
+            }
+
+            pub fn context(self: Self, m: *Manager) ?*T {
+                return if (self.tree(m).ctx) |ptr|
+                    @alignCast(@ptrCast(ptr))
+                else
+                    null;
+            }
+
+            pub fn tree(self: Self, m: *Manager) *SubTree {
+                return self.generic().tree(m);
+            }
+
+            pub fn render(self: Self, m: *Manager) ![]const u8 {
+                return try self.generic().render(m);
+            }
+
+            pub fn listen(self: Self, m: *Manager, event: Event) !Event.Listener.Id {
+                return try self.generic().listen(m, event);
+            }
+        };
+    }
 
     pub fn setContext(self: *SubTree, manager: *Manager, context: anytype) !void {
         assert(self.ctx == null);
@@ -221,6 +268,10 @@ pub const SubTree = struct {
     pub fn update(self: *SubTree, manager: *Manager) void {
         if (self.isDirty(manager)) self.dirty();
     }
+
+    fn dirtyCallback(ctx: Event.Context, m: *Manager, _: ?*anyopaque) !void {
+        ctx.sti.tree(m).dirty();
+    }
 };
 
 pub fn init(gpa: Allocator) Manager {
@@ -250,11 +301,25 @@ pub fn deinit(self: *Manager) void {
     self.context_arena.deinit();
 }
 
-pub fn register(self: *Manager, generator: SubTree.Generator) !SubTree.Index {
-    const index: SubTree.Index = @enumFromInt(self.sub_trees.items.len);
+pub fn register(
+    self: *Manager,
+    comptime T: type,
+    generator: SubTree.Index(T).Generator,
+) !SubTree.Index(T) {
+    comptime {
+        const si = @typeInfo(SubTree.GenericIndex);
+        const ti = @typeInfo(SubTree.Index(T));
+        assert(si.@"enum".tag_type == ti.@"enum".tag_type);
+    }
+
+    const index: SubTree.Index(T) = @enumFromInt(self.sub_trees.items.len);
     try self.sub_trees.append(self.gpa, .{
         .arena = .init(self.gpa),
-        .generator = generator,
+
+        // This is safe because `SubTree.GenericIndex` and `SubTree.Index(T)`
+        // have the same layout being u32's
+        .generator = @ptrCast(generator),
+
         .ctx = null,
         .cache = null,
     });
@@ -335,20 +400,16 @@ pub fn manage(self: *Manager, arena: Allocator, tree: Tree) !SubTree.Managed {
     }
 }
 
-pub fn subTree(self: *Manager, sub_tree_index: SubTree.Index) *SubTree {
+pub fn subTree(self: *Manager, sub_tree_index: SubTree.GenericIndex) *SubTree {
     return &self.sub_trees.items[@intFromEnum(sub_tree_index)];
 }
 
-pub fn generate(self: *Manager, sub_tree_index: SubTree.Index) !Tree {
-    return sub_tree_index.generate(self);
-}
+fn render(m: *Manager, sti: SubTree.GenericIndex) ![]const u8 {
+    const tree = try sti.generrate(m);
 
-pub fn render(self: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
-    const tree = try self.generate(sub_tree_index);
+    var arr: std.ArrayList(u8) = .init(m.gpa);
 
-    var arr: std.ArrayList(u8) = .init(self.gpa);
-
-    try self.innerRender(
+    try m.innerRender(
         tree,
         false,
         {},
@@ -467,7 +528,7 @@ fn innerRender(
         },
         .static => |ptr| try manager.innerRender(ptr.*, pretty, indent, writer),
         .dynamic => |idx| try manager.innerRender(
-            try manager.generate(idx),
+            try idx.generrate(manager),
             pretty,
             indent,
             writer,

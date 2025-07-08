@@ -21,7 +21,7 @@ comptime {
 
 // Our own program state
 const State = struct {
-    app: SubTree.Index,
+    app: SubTree.Index(App),
     manager: Manager,
 };
 var state: State = undefined;
@@ -55,7 +55,7 @@ pub fn render() !void {
     std.log.info("Render", .{});
 
     // Generating the content, this is the string of HTML
-    const content = try state.manager.render(state.app);
+    const content = try state.app.render(&state.manager);
     defer global.gpa.free(content);
 
     // A reference to the DOM element with id "app"
@@ -71,33 +71,31 @@ const App = struct {
     // We have references to other components or `SubTree`s. Since we don't
     // want to accidentally invalidate a pointer, we pass around indices
     // instead.
-    header: SubTree.Index,
-    button: SubTree.Index,
+    header: SubTree.Index(Header),
+    button: SubTree.Index(AlternatingButton),
 
     // A function we use to setup all state
-    pub fn init(manager: *Manager) !SubTree.Index {
+    pub fn init(manager: *Manager) !SubTree.Index(App) {
         // Registering an event which can be called either internally or via
         // browser events
         const click_event = try manager.registerEvent();
         const reset_event = try manager.registerEvent();
 
         // `sti`, stands for `SubTree Index`
-        const sti = try manager.register(generate);
+        const sti = try manager.register(App, generate);
 
         const button = try AlternatingButton.init(manager, click_event, reset_event);
 
         // Get the pointer to the counter in the button
         // TODO: make this not shit
-        const counter: *Reactive(u32) = blk: {
-            const ctx: *AlternatingButton = @alignCast(@ptrCast(button.contextPtr(manager)));
-            break :blk &ctx.counter;
-        };
+
+        const counter = &button.context(manager).?.counter;
 
         const header = try Header.init(manager, counter);
 
         // We can give the sti we created earlier some context we can use while
         // generating or while handling an event callback
-        try sti.setContext(manager, App{
+        try sti.setContext(manager, .{
             .header = header,
             .button = button,
         });
@@ -106,19 +104,19 @@ const App = struct {
     }
 
     fn generate(
-        sti: SubTree.Index,
+        sti: SubTree.Index(App),
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {
         std.log.info("Generating app", .{});
-        const data: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
+        const ctx = sti.context(m).?;
 
         // Create the resulting HTML
         return m.manage(
             arena,
             .main(&.{}, &.{
-                .dyn(data.header),
-                .dyn(data.button),
+                .dyn(ctx.header),
+                .dyn(ctx.button),
             }),
         );
     }
@@ -130,14 +128,17 @@ const AlternatingButton = struct {
     counter: Reactive(u32),
     prng: Random.DefaultPrng,
 
-    pub fn init(m: *Manager, click_event: Event, reset_event: Event) !SubTree.Index {
-        const sti = try m.register(generate);
+    pub fn init(m: *Manager, click_event: Event, reset_event: Event) !SubTree.Index(AlternatingButton) {
+        const sti = try m.register(AlternatingButton, generate);
 
         // Add a callback to both of these events
-        _ = try click_event.addListener(m, .{ .sti = sti }, click);
-        _ = try reset_event.addListener(m, .{ .sti = sti }, reset);
+        _ = try click_event.addListener(m, .{ .sti = sti.generic() }, click);
+        _ = try reset_event.addListener(m, .{ .sti = sti.generic() }, reset);
 
-        try sti.setContext(m, @This(){
+        _ = try sti.listen(m, click_event);
+        _ = try sti.listen(m, reset_event);
+
+        try sti.setContext(m, .{
             .click_event = click_event,
             .reset_event = reset_event,
             .counter = try .init(m, 0),
@@ -150,7 +151,7 @@ const AlternatingButton = struct {
     fn reset(context: Context, m: *Manager, data: ?*anyopaque) !void {
         _ = data;
         std.log.info("Reset callback called", .{});
-        const ctx: *@This() = @alignCast(@ptrCast(context.sti.contextPtr(m).?));
+        const ctx = context.sti.specific(@This()).context(m).?;
 
         ctx.counter.getMut(m).* = 0;
     }
@@ -159,30 +160,33 @@ const AlternatingButton = struct {
         _ = data;
 
         std.log.info("Click callback called", .{});
-        const ctx: *@This() = @alignCast(@ptrCast(context.sti.contextPtr(m).?));
+        const ctx = context.sti.specific(@This()).context(m).?;
+
+        // const ctx: *@This() = @alignCast(@ptrCast(context.sti.contextPtr(m).?));
 
         ctx.counter.getMut(m).* += 1;
     }
 
     fn generate(
-        sti: SubTree.Index,
+        sti: SubTree.Index(AlternatingButton),
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {
         std.log.info("Generating button", .{});
-        const data: *@This() = @alignCast(@ptrCast(sti.contextPtr(m).?));
+        const ctx = sti.context(m).?;
 
-        // HACK: We want to update on click, so we feign using it
-        _ = try data.counter.get(m, sti);
-
-        const button_a: Tree = .button(&.{.{ .onclick = data.click_event }}, &.{.raw("Click me!")});
-        const button_b: Tree = .button(&.{.{ .onclick = data.reset_event }}, &.{.raw("Don't click me >:(")});
+        const button_a: Tree = .button(&.{.{ .onclick = ctx.click_event }}, &.{
+            .raw("Click me!"),
+        });
+        const button_b: Tree = .button(&.{.{ .onclick = ctx.reset_event }}, &.{
+            .raw("Don't click me >:("),
+        });
 
         return m.manage(
             arena,
             .div(
                 &.{},
-                if (data.prng.random().boolean())
+                if (ctx.prng.random().boolean())
                     &.{ button_a, button_b }
                 else
                     &.{ button_b, button_a },
@@ -194,22 +198,22 @@ const AlternatingButton = struct {
 const Header = struct {
     counter: *Reactive(u32),
 
-    pub fn init(manager: *Manager, counter: *Reactive(u32)) !SubTree.Index {
-        const sti = try manager.register(generate);
-        try sti.setContext(manager, Header{ .counter = counter });
+    pub fn init(manager: *Manager, counter: *Reactive(u32)) !SubTree.Index(Header) {
+        const sti = try manager.register(Header, generate);
+        try sti.setContext(manager, .{ .counter = counter });
 
         return sti;
     }
 
     fn generate(
-        sti: SubTree.Index,
+        sti: SubTree.Index(Header),
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {
         std.log.info("Generating header", .{});
-        const data: *Header = @alignCast(@ptrCast(sti.contextPtr(m).?));
+        const ctx = sti.context(m).?;
 
-        const counter = try data.counter.get(m, sti);
+        const counter = try ctx.counter.get(m, sti.generic());
         const suffix = switch (counter.*) {
             0...5 => "",
             6...10 => "!",
@@ -222,7 +226,7 @@ const Header = struct {
             41...45 => "... You gotta stop",
             46...49 => "... You won't make it to 50",
             else => blk: {
-                data.counter.getMut(m).* = 0;
+                ctx.counter.getMut(m).* = 0;
                 break :blk " Told you";
             },
         };
@@ -231,7 +235,9 @@ const Header = struct {
 
         return m.manage(
             arena,
-            .h1(&.{}, &.{ .raw(score_text), .raw(suffix) }),
+            .h1(&.{.{ .contenteditable = "false" }}, &.{
+                .raw(score_text), .raw(suffix),
+            }),
         );
     }
 };

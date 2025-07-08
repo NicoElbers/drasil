@@ -227,16 +227,16 @@ async function init() {
   // Setup event handling
   for (const ev of events) {
     document.body.addEventListener(ev[0], (event) => {
-      if (event.target.hasAttribute("drasil-event")) {
-        const data = JSON.parse(event.target.getAttribute("drasil-event"));
-        if (ev[1] !== data[0]) return;
+      if (!event.target.hasAttribute("drasil-event")) return;
 
-        const ref = refObject(event);
+      const data = JSON.parse(event.target.getAttribute("drasil-event"));
+      if (ev[1] !== data[0]) return;
 
-        wasm_exports.handleEvent(ref, data[0], data[1]);
+      const ref = refObject(event);
 
-        references[ref] = null;
-      }
+      wasm_exports.handleEvent(ref, data[0], data[1]);
+
+      references[ref] = null;
     });
   }
 
