@@ -4,6 +4,8 @@ pub fn build(b: *Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const no_bin = b.option(bool, "no-bin", "Don't create any binaries (disables some steps)") orelse false;
+
     check = b.step("check", "Checks for all compile errors, without installing binaries");
 
     updateHtmlDataZonStep(b, target, optimize) orelse return;
@@ -15,7 +17,9 @@ pub fn build(b: *Build) void {
         .target = target,
     });
 
-    exampleStep(b, drasil_mod, target, optimize);
+    if (!no_bin) {
+        exampleStep(b, drasil_mod, target, optimize);
+    }
 
     const filters = b.option([]const []const u8, "test-filter", "Skip tests that do not match any filter") orelse &.{};
     const drasil_tests = b.addTest(.{
