@@ -8,8 +8,7 @@ pub fn build(b: *Build) void {
 
     check = b.step("check", "Checks for all compile errors, without installing binaries");
 
-    updateHtmlDataZonStep(b, target, optimize) orelse return;
-    updateHtmlDataStep(b, target, optimize);
+    updateHtmlDataStep(b, target, optimize) orelse return;
 
     const drasil_mod = b.addModule("drasil", .{
         .root_source_file = b.path("src/root.zig"),
@@ -34,7 +33,7 @@ pub fn build(b: *Build) void {
     test_step.dependOn(&run_drasil_tests.step);
 }
 
-fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {
+fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) ?void {
     const step = b.step("html_data", "Update the automatically generated HtmlNode.zig");
 
     const html_mod = b.createModule(.{
@@ -77,32 +76,10 @@ fn updateHtmlDataStep(b: *Build, target: Target, optimize: Optimize) void {
     web_run.addDirectoryArg(b.path("src/web/"));
 
     step.dependOn(&web_run.step);
-}
 
-fn updateHtmlDataZonStep(b: *Build, target: Target, optimize: Optimize) ?void {
-    const step = b.step("html_zon", "Update the zon files containing HTML data");
+    // --------
 
-    const compat_data = b.lazyDependency("browser-compat-data", .{}) orelse return null;
-    const html = b.lazyDependency("html", .{}) orelse return null;
-
-    // Let python create the JSON
-    const elements_json_gen = b.addSystemCommand(&.{"python"});
-    // const json_gen = b.addSystemCommand(&.{"echo"});
-    elements_json_gen.addFileArg(b.path("tools/parse_elements.py"));
-    elements_json_gen.addFileArg(html.path("source"));
-    elements_json_gen.addFileArg(b.path("tools/html_elements.json"));
-
-    const attributes_json_gen = b.addSystemCommand(&.{"python"});
-    // const json_gen = b.addSystemCommand(&.{"echo"});
-    attributes_json_gen.addFileArg(b.path("tools/parse_attributes.py"));
-    attributes_json_gen.addFileArg(html.path("source"));
-    attributes_json_gen.addFileArg(b.path("tools/html_attributes.json"));
-
-    const events_json_gen = b.addSystemCommand(&.{"python"});
-    // const json_gen = b.addSystemCommand(&.{"echo"});
-    events_json_gen.addFileArg(b.path("tools/parse_events.py"));
-    events_json_gen.addFileArg(html.path("source"));
-    events_json_gen.addFileArg(b.path("tools/html_events.json"));
+    const update_data = b.option(bool, "update-data", "Update HTML generated data") orelse false;
 
     const mod = b.createModule(.{
         .root_source_file = b.path("tools/gen_html_data_zon.zig"),
@@ -116,16 +93,37 @@ fn updateHtmlDataZonStep(b: *Build, target: Target, optimize: Optimize) ?void {
     });
     check.dependOn(&exe.step);
 
-    const run = b.addRunArtifact(exe);
-    run.step.dependOn(&events_json_gen.step); // Generate zon after JSON
-    run.step.dependOn(&elements_json_gen.step); // Generate zon after JSON
-    run.step.dependOn(&attributes_json_gen.step); // Generate zon after JSON
+    if (update_data) {
+        const compat_data = b.lazyDependency("browser-compat-data", .{}) orelse return null;
+        const html = b.lazyDependency("html", .{}) orelse return null;
 
-    // assert(args.len == 3); // {self} {html_dir} {tools dir}
-    run.addDirectoryArg(compat_data.path("html"));
-    run.addDirectoryArg(b.path("tools/"));
+        // Let python create the JSON
+        const elements_json_gen = b.addSystemCommand(&.{"python"});
+        elements_json_gen.addFileArg(b.path("tools/parse_elements.py"));
+        elements_json_gen.addFileArg(html.path("source"));
+        elements_json_gen.addFileArg(b.path("tools/html_elements.json"));
 
-    step.dependOn(&run.step);
+        const attributes_json_gen = b.addSystemCommand(&.{"python"});
+        attributes_json_gen.addFileArg(b.path("tools/parse_attributes.py"));
+        attributes_json_gen.addFileArg(html.path("source"));
+        attributes_json_gen.addFileArg(b.path("tools/html_attributes.json"));
+
+        const events_json_gen = b.addSystemCommand(&.{"python"});
+        events_json_gen.addFileArg(b.path("tools/parse_events.py"));
+        events_json_gen.addFileArg(html.path("source"));
+        events_json_gen.addFileArg(b.path("tools/html_events.json"));
+
+        const run = b.addRunArtifact(exe);
+        // assert(args.len == 3); // {self} {html_dir} {tools dir}
+        run.addDirectoryArg(compat_data.path("html"));
+        run.addDirectoryArg(b.path("tools/"));
+        step.dependOn(&run.step);
+
+        // Generate zon after JSON
+        run.step.dependOn(&events_json_gen.step);
+        run.step.dependOn(&elements_json_gen.step);
+        run.step.dependOn(&attributes_json_gen.step);
+    }
 }
 
 fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) void {
