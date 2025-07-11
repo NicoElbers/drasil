@@ -24,9 +24,31 @@
         align-items: center;
         z-index: 1000; 
       }
+
+      table {
+          border-collapse: collapse;
+      }
+
+      .row {
+          background-color: #1e1e1e;
+          color: #e0e0e0;
+          padding: 0.75rem;
+          border-bottom: 1px solid #333;
+          transition: background-color 0.2s;
+      }
+
+      .row:hover {
+          background-color: #2a2a2a;
+      }
+
+      .row.highlight {
+          background-color: #333c1e;
+          color: #ffffcc;
+      }
     </style>
   </head>
   <body>
+    <div id="browser"></div>
     <div id="app"><div id="loading_text"><h1>Loading...</h1></div></div>
     <script src="/js"></script>
     <script>init("wasm")</script>
