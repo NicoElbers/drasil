@@ -13,12 +13,12 @@ pub fn main() !void {
     defer std.process.argsFree(gpa, args);
 
     if (args.len != 4) {
-        log.info("Usage: {s} wasm_path html_path js_path", .{args[0]});
+        log.info("Usage: {s} html_path js_path wasm_path", .{args[0]});
         std.process.exit(1);
     }
-    paths.wasm_path = args[1];
-    paths.html_path = args[2];
-    paths.js_path = args[3];
+    paths.html_path = args[1];
+    paths.js_path = args[2];
+    paths.wasm_path = args[3];
 
     const addr = Address.parseIp("127.0.0.1", 8080) catch unreachable;
     var http_server = try addr.listen(.{ .reuse_address = true });

@@ -3,7 +3,10 @@
 const Manager = @This();
 
 gpa: Allocator,
+
+// TODO: Get this thing removed
 context_arena: ArenaAllocator,
+
 sub_trees: ArrayListUnmanaged(SubTree),
 events: ArrayListUnmanaged(?ArrayListUnmanaged(Event.Listener)),
 
@@ -165,7 +168,7 @@ pub const SubTree = struct {
             return m.subTree(index);
         }
 
-        fn generrate(index: GenericIndex, m: *Manager) !Tree {
+        fn generate(index: GenericIndex, m: *Manager) !Tree {
             const st = m.subTree(index);
             st.update(m);
 
@@ -396,7 +399,7 @@ pub fn manage(self: *Manager, arena: Allocator, tree: Tree) !SubTree.Managed {
             return .{ .tree = .{ .node = .{ .static = managed } } };
         },
         .dynamic => return .{ .tree = tree },
-        .static => unreachable, // static == managed, managed == dynamic
+        .static => return .{ .tree = tree },
     }
 }
 
@@ -405,18 +408,19 @@ pub fn subTree(self: *Manager, sub_tree_index: SubTree.GenericIndex) *SubTree {
 }
 
 fn render(m: *Manager, sti: SubTree.GenericIndex) ![]const u8 {
-    const tree = try sti.generrate(m);
+    const tree = try sti.generate(m);
 
-    var arr: std.ArrayList(u8) = .init(m.gpa);
+    var arr: std.ArrayListUnmanaged(u8) = .empty;
+    errdefer arr.deinit(m.gpa);
 
     try m.innerRender(
         tree,
         false,
         {},
-        arr.writer(),
+        arr.writer(m.gpa),
     );
 
-    return try arr.toOwnedSlice();
+    return try arr.toOwnedSlice(m.gpa);
 }
 
 pub fn renderPretty(self: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
@@ -528,7 +532,7 @@ fn innerRender(
         },
         .static => |ptr| try manager.innerRender(ptr.*, pretty, indent, writer),
         .dynamic => |idx| try manager.innerRender(
-            try idx.generrate(manager),
+            try idx.generate(manager),
             pretty,
             indent,
             writer,
