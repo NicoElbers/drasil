@@ -1,73 +1,5 @@
-//! TODO: Add more explanation to things when we're closer to done
-
-// Initialize logging for wasm
-pub const std_options: std.Options = .{
-    .logFn = web.logFn,
-};
-
-// Initialize the panic handler for wasm
-pub const panic = web.panic;
-
-// Setup an allocator to be accessed globally
-const global = struct {
-    var dbg_inst = std.heap.DebugAllocator(.{}).init;
-    pub const gpa = dbg_inst.allocator();
-};
-
-// Ensure the correct functions are exported
-comptime {
-    web.exports;
-}
-
-// Our own program state
-const State = struct {
-    app: SubTree.Index(App),
-    manager: Manager,
-};
-var state: State = undefined;
-
-// The setup function that is called once when the wasm blob is loaded.
-// This is referenced by `web` and must thus be public
-pub fn setup() !void {
-    std.log.info("Hello world!", .{});
-    std.log.debug("Hello world!", .{});
-    std.log.warn("Hello world!", .{});
-    std.log.err("Hello world!", .{});
-
-    var manager: Manager = .init(global.gpa);
-    errdefer manager.deinit();
-
-    const app = try App.init(&manager);
-
-    state = .{
-        .app = app,
-        .manager = manager,
-    };
-
-    // This tells `web` which allocator we want it to use for communication
-    // with wasm, and tells it where to send events from the browser to
-    web.setup(&state.manager, global.gpa);
-}
-
-// The render function is called every time the browser sends an event.
-// TODO: do we need to call it more often than that?
-pub fn render() !void {
-    std.log.info("Render", .{});
-
-    // Generating the content, this is the string of HTML
-    const content = try state.app.render(&state.manager);
-    defer global.gpa.free(content);
-
-    // A reference to the DOM element with id "app"
-    const app_ref = Element.byId("app").?;
-    defer app_ref.unref();
-
-    // Set the HTML!
-    try app_ref.setInnerHtml(global.gpa, content);
-}
-
 // A simple app component. It's a little contrived for this demo.
-const App = struct {
+pub const App = struct {
     // We have references to other components or `SubTree`s. Since we don't
     // want to accidentally invalidate a pointer, we pass around indices
     // instead.
@@ -85,9 +17,6 @@ const App = struct {
         const sti = try manager.register(App, generate);
 
         const button = try AlternatingButton.init(manager, click_event, reset_event);
-
-        // Get the pointer to the counter in the button
-        // TODO: make this not shit
 
         const counter = &button.context(manager).?.counter;
 
@@ -108,7 +37,7 @@ const App = struct {
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {
-        std.log.info("Generating app", .{});
+        std.log.info("Generating counter app", .{});
         const ctx = sti.context(m).?;
 
         // Create the resulting HTML
@@ -172,7 +101,7 @@ const AlternatingButton = struct {
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {
-        std.log.info("Generating button", .{});
+        std.log.info("Generating counter buttons", .{});
         const ctx = sti.context(m).?;
 
         const button_a: Tree = .button(&.{.{ .onclick = ctx.click_event }}, &.{
@@ -210,10 +139,11 @@ const Header = struct {
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {
-        std.log.info("Generating header", .{});
+        std.log.info("Generating counter header", .{});
         const ctx = sti.context(m).?;
 
         const counter = try ctx.counter.get(m, sti.generic());
+
         const suffix = switch (counter.*) {
             0...5 => "",
             6...10 => "!",

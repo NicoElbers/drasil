@@ -171,7 +171,7 @@ fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) v
 
     run_server.addFileArg(client_exe.getEmittedBin());
 
-    const step = b.step("counter", "Hosts an example counter on localhost:8080");
+    const step = b.step("examples", "Hosts examples on localhost:8080");
     step.dependOn(&run_server.step);
 }
 

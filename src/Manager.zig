@@ -70,6 +70,7 @@ pub const Event = enum(u32) {
         none,
         sti: SubTree.GenericIndex,
         ptr: *anyopaque,
+        int: u32,
     };
 
     pub const Fn = *const fn (
