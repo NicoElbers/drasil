@@ -3,7 +3,6 @@ const LOG_WARN = 1;
 const LOG_ERR = 2;
 const LOG_DEBUG = 3;
 const U32_MAX = 4294967295;
-const WASM_TARGET = "wasm";
 
 // @GENERATED SECTION START
 
@@ -96,13 +95,13 @@ const text_encoder = new TextEncoder();
 
 var wasm_memory = new WebAssembly.Memory({
   initial: 17, // 1M (Can't be 16 annoyingly)
-  maximum: 128, // 8M
+  maximum: 256,
 });
 var wasm_exports = null;
 
-var references = [undefined];
+const references = [undefined];
 
-async function init() {
+async function init(wasm_target) {
   const importObject = {
     env: {
       memory: wasm_memory,
@@ -151,9 +150,7 @@ async function init() {
 
         const ret = obj[name](...args);
 
-        const json_ret = JSON.stringify(ret);
-
-        return storeSting(json_ret);
+        return refObject(ret);
       },
 
       refSet: function (ref, fieldptr, fieldlen, argptr, arglen) {
@@ -211,7 +208,7 @@ async function init() {
   };
 
   const wasm = await WebAssembly.instantiateStreaming(
-    fetch(WASM_TARGET),
+    fetch(wasm_target),
     importObject,
   );
   wasm_exports = wasm.instance.exports;
@@ -224,20 +221,25 @@ async function init() {
     }
   }
 
-  // Setup event handling
-  for (const ev of events) {
-    document.body.addEventListener(ev[0], (event) => {
-      if (!event.target.hasAttribute("drasil-event")) return;
+  // Ensure that no matter how many times we call setup, events are only
+  // registered once
+  if (!window.drasil_event_setup) {
+    window.drasil_event_setup = true;
 
-      const data = JSON.parse(event.target.getAttribute("drasil-event"));
-      if (ev[1] !== data[0]) return;
+    // Setup event handling
+    for (const ev of events) {
+      document.body.addEventListener(ev[0], (event) => {
+        if (!event.target.hasAttribute("drasil-event")) return;
 
-      const ref = refObject(event);
+        const data = JSON.parse(event.target.getAttribute("drasil-event"));
+        if (ev[1] !== data[0]) return;
 
-      wasm_exports.handleEvent(ref, data[0], data[1]);
+        const ref = refObject(event);
 
-      references[ref] = null;
-    });
+        wasm_exports.handleEvent(ref, data[0], data[1]);
+        references[ref] = null;
+      });
+    }
   }
 
   wasm_exports.init();
@@ -282,6 +284,7 @@ function assert(cond) {
 
 function refObject(obj) {
   if (obj === null) return 0;
+  if (obj === undefined) return 0;
 
   var idx = references.indexOf(null, 1);
   if (idx === -1) {
@@ -295,5 +298,3 @@ function refObject(obj) {
 
   return idx;
 }
-
-init();

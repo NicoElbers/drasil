@@ -16,7 +16,7 @@ pub const exports = {
     _ = &js.allocRet;
 };
 
-export fn init() callconv(.c) void {
+export fn init() void {
     root.setup() catch |err|
         std.debug.panic("Init error: {s}", .{@errorName(err)});
 
@@ -79,14 +79,10 @@ pub const js = struct {
 
         pub fn call(
             self: Ref,
-            comptime Ret: type,
             gpa: Allocator,
             func: []const u8,
             args: anytype,
-        ) !switch (Ret) {
-            void => void,
-            else => std.json.Parsed(Ret),
-        } {
+        ) !?Ref {
             assert(self != .invalid);
 
             var arr: std.ArrayListUnmanaged(u8) = .empty;
@@ -96,17 +92,10 @@ pub const js = struct {
 
             const json_args = arr.items;
 
-            const js_ret = api.refCall(self, func.ptr, func.len, json_args.ptr, json_args.len);
+            const ref = api.refCall(self, func.ptr, func.len, json_args.ptr, json_args.len);
 
-            const json_ret = js_ret.to() orelse return error.JsError;
-
-            if (Ret == void) {
-                global.gpa.free(json_args);
-
-                return;
-            }
-
-            return std.json.parseFromSlice(Ret, gpa, json_ret, .{});
+            if (ref == .invalid) return null;
+            return ref;
         }
 
         pub fn set(self: Ref, gpa: Allocator, field: []const u8, arg: anytype) !void {
@@ -186,7 +175,7 @@ pub const js = struct {
             fnlen: usize,
             jsonargsptr: [*]const u8,
             jsonargslen: usize,
-        ) String;
+        ) Ref;
         extern "env" fn refSet(
             ref: Ref,
             field_ptr: [*]const u8,

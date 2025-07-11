@@ -133,27 +133,6 @@ fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) v
         .cpu_features_add = std.Target.wasm.featureSet(&.{ .bulk_memory, .atomics }),
     });
 
-    const counter_mod = b.createModule(.{
-        .root_source_file = b.path("example/counter/client.zig"),
-        .target = wasm_target,
-        .optimize = switch (optimize) {
-            .Debug, .ReleaseSafe => optimize,
-            .ReleaseFast, .ReleaseSmall => .ReleaseSmall,
-        },
-        .strip = true,
-    });
-    counter_mod.addImport("drasil", drasil);
-
-    const counter_exe = b.addExecutable(.{
-        .name = "example_counter",
-        .root_module = counter_mod,
-    });
-    counter_exe.import_memory = true;
-    counter_exe.rdynamic = true;
-    counter_exe.entry = .disabled;
-
-    check.dependOn(&counter_exe.step);
-
     const server_mod = b.createModule(.{
         .root_source_file = b.path("example/example_server.zig"),
         .target = target,
@@ -166,15 +145,34 @@ fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) v
     });
     check.dependOn(&server_exe.step);
 
-    {
-        const run_server = b.addRunArtifact(server_exe);
-        run_server.addFileArg(counter_exe.getEmittedBin()); // wasm path
-        run_server.addFileArg(b.path("example/index.html")); // html path
-        run_server.addFileArg(b.path("src/web/init.js")); // js path
+    const run_server = b.addRunArtifact(server_exe);
+    run_server.addFileArg(b.path("example/index.html")); // html path
+    run_server.addFileArg(b.path("src/web/init.js")); // js path
 
-        const step = b.step("counter", "Hosts an example counter on localhost:8080");
-        step.dependOn(&run_server.step);
-    }
+    const client_mod = b.createModule(.{
+        .root_source_file = b.path("example/root_client.zig"),
+        .target = wasm_target,
+        .optimize = switch (optimize) {
+            .Debug, .ReleaseSafe => optimize,
+            .ReleaseFast, .ReleaseSmall => .ReleaseSmall,
+        },
+        .strip = true,
+    });
+    client_mod.addImport("drasil", drasil);
+
+    const client_exe = b.addExecutable(.{
+        .name = "example_client",
+        .root_module = client_mod,
+    });
+    client_exe.import_memory = true;
+    client_exe.rdynamic = true;
+    client_exe.entry = .disabled;
+    check.dependOn(&client_exe.step);
+
+    run_server.addFileArg(client_exe.getEmittedBin());
+
+    const step = b.step("counter", "Hosts an example counter on localhost:8080");
+    step.dependOn(&run_server.step);
 }
 
 const std = @import("std");
