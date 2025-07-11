@@ -101,6 +101,17 @@ pub const js = struct {
         pub fn set(self: Ref, gpa: Allocator, field: []const u8, arg: anytype) !void {
             assert(self != .invalid);
 
+            if (@TypeOf(arg) == []const u8 or @TypeOf(arg) == []u8) {
+                api.refSetString(
+                    self,
+                    field.ptr,
+                    field.len,
+                    arg.ptr,
+                    arg.len,
+                );
+                return;
+            }
+
             var arr: std.ArrayListUnmanaged(u8) = .empty;
             defer arr.deinit(gpa);
 
@@ -182,6 +193,13 @@ pub const js = struct {
             field_len: usize,
             jsonarg_ptr: [*]const u8,
             jsonarg_len: usize,
+        ) void;
+        extern "env" fn refSetString(
+            ref: Ref,
+            field_ptr: [*]const u8,
+            field_len: usize,
+            str_ptr: [*]const u8,
+            str_len: usize,
         ) void;
         extern "env" fn refGetRef(
             ref: Ref,

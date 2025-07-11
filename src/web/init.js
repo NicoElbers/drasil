@@ -161,6 +161,15 @@ async function init(wasm_target) {
         obj[name] = arg;
       },
 
+      refSetString: function (ref, fieldptr, fieldlen, stringptr, stringlen) {
+        const name = loadString(fieldptr, fieldlen);
+
+        const str = loadString(stringptr, stringlen);
+        const obj = references[ref];
+
+        obj[name] = str;
+      },
+
       refGetRef: function (ref, fieldptr, fieldlen) {
         const name = loadString(fieldptr, fieldlen);
         const obj = references[ref];
