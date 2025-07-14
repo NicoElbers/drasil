@@ -74,14 +74,7 @@ const AlternatingButton = struct {
             .prng = null,
         });
 
-        { // TODO: I hate having to allocate this shit
-            const fetch_ctx = try m.gpa.create(FetchState);
-            fetch_ctx.* = .{
-                .m = m,
-                .sti = sti,
-            };
-            try web.js.fetch.start("rand", fetch_ctx, prngCallback);
-        }
+        try web.js.fetch.start("rand", .{ .sti = sti.generic() }, prngCallback);
 
         return sti;
     }
@@ -91,17 +84,20 @@ const AlternatingButton = struct {
         sti: SubTree.Index(AlternatingButton),
     };
 
-    fn prngCallback(ctx: ?*anyopaque, data: ?[]const u8) !void {
-        const state: *FetchState = @alignCast(@ptrCast(ctx.?));
-        defer state.m.gpa.destroy(state);
-        defer if (data) |d| state.m.gpa.free(d);
+    fn prngCallback(ctx: Context, m: *Manager, data: Data) !void {
+        const bytes = switch (data) {
+            .bytes => |b| b,
+            .none => {
+                // TODO: handle error
+                unreachable;
+            },
+            else => unreachable,
+        };
+        const sti = ctx.sti.specific(@This());
 
-        const m = state.m;
-        const sti = state.sti;
+        std.log.info("Recieved data {x}", .{bytes});
 
-        std.log.info("Recieved data {x}", .{data.?});
-
-        const value: u64 = std.mem.readInt(u64, data.?[0..@sizeOf(u64)], .little);
+        const value: u64 = std.mem.readInt(u64, bytes[0..@sizeOf(u64)], .little);
         std.log.info("Recieved prng seed {x}", .{value});
 
         const context = sti.context(m) orelse @panic("context");
@@ -110,7 +106,7 @@ const AlternatingButton = struct {
         sti.updateGenerator(m, generate);
     }
 
-    fn reset(context: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn reset(context: Context, m: *Manager, data: Data) !void {
         _ = data;
         std.log.info("Reset callback called", .{});
         const ctx = context.sti.specific(@This()).context(m).?;
@@ -118,7 +114,7 @@ const AlternatingButton = struct {
         try ctx.counter.set(m, context.sti, 0);
     }
 
-    fn click(context: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn click(context: Context, m: *Manager, data: Data) !void {
         _ = data;
 
         std.log.info("Click callback called", .{});
@@ -226,6 +222,7 @@ const SubTree = Manager.SubTree;
 const Tree = drasil.Tree;
 const Event = Manager.Event;
 const Context = Event.Context;
+const Data = Event.Data;
 const Allocator = std.mem.Allocator;
 const Element = web.Element;
 const Random = std.Random;

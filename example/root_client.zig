@@ -128,7 +128,7 @@ const App = struct {
         \\cursor: pointer;
     ;
 
-    fn callback(ctx: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn callback(ctx: Context, m: *Manager, data: Data) !void {
         _ = data;
         _ = m;
 
@@ -179,5 +179,6 @@ const SubTree = Manager.SubTree;
 const Tree = drasil.Tree;
 const Event = Manager.Event;
 const Context = Event.Context;
+const Data = Event.Data;
 const Allocator = std.mem.Allocator;
 const Element = web.Element;

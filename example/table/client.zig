@@ -54,41 +54,39 @@ pub const App = struct {
             .prng = null,
         });
 
-        const fetch_ctx = try m.gpa.create(FetchState);
-        fetch_ctx.* = .{
-            .m = m,
-            .sti = sti,
-        };
-        try web.js.fetch.start("rand", fetch_ctx, prngCallback);
+        try web.js.fetch.start("rand", .{ .sti = sti.generic() }, prngCallback);
 
         return sti;
     }
 
-    const FetchState = struct {
-        m: *Manager,
-        sti: SubTree.Index(App),
-    };
+    fn prngCallback(ctx: Context, m: *Manager, data: Data) !void {
+        const bytes = switch (data) {
+            .bytes => |b| b,
+            .none => {
+                // TODO: Error handling
+                unreachable;
+            },
+            else => unreachable,
+        };
+        defer m.gpa.free(bytes);
 
-    fn prngCallback(ctx: ?*anyopaque, data: ?[]const u8) !void {
-        const state: *FetchState = @alignCast(@ptrCast(ctx.?));
-        defer state.m.gpa.destroy(state);
-        defer if (data) |d| state.m.gpa.free(d);
+        const sti = ctx.sti.specific(@This());
 
-        std.log.info("Recieved data {x}", .{data.?});
+        std.log.info("Recieved data {x}", .{bytes});
 
-        const value: u64 = std.mem.readInt(u64, data.?[0..@sizeOf(u64)], .little);
+        const value: u64 = std.mem.readInt(u64, bytes[0..@sizeOf(u64)], .little);
         std.log.info("Recieved prng seed {x}", .{value});
 
-        const context = state.sti.context(state.m) orelse @panic("context");
+        const context = sti.context(m) orelse @panic("context");
         context.prng = .init(value);
 
-        state.sti.updateGenerator(state.m, generate);
+        sti.updateGenerator(m, generate);
     }
 
-    fn clickCallback(context: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn clickCallback(context: Context, m: *Manager, data: Data) !void {
         const ctx = context.sti.specific(@This()).context(m).?;
 
-        const event: *web.PointerEvent = @alignCast(@ptrCast(data.?));
+        const event: *web.PointerEvent = @alignCast(@ptrCast(data.ptr));
 
         const target = event.ref.getRef("target").?;
         defer target.unref();
@@ -109,7 +107,7 @@ pub const App = struct {
             highlight.* = row;
     }
 
-    fn create_1_000Callback(context: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn create_1_000Callback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
@@ -132,7 +130,7 @@ pub const App = struct {
         }
     }
 
-    fn create_10_000Callback(context: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn create_10_000Callback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
@@ -155,7 +153,7 @@ pub const App = struct {
         }
     }
 
-    fn append_1_000Callback(context: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn append_1_000Callback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
@@ -174,7 +172,7 @@ pub const App = struct {
         }
     }
 
-    fn update_10Callback(context: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn update_10Callback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
@@ -189,7 +187,7 @@ pub const App = struct {
         }
     }
 
-    fn swapCallback(context: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn swapCallback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
@@ -200,7 +198,7 @@ pub const App = struct {
         std.mem.swap(Item, &table.*[table.len - 2], &table.*[1]);
     }
 
-    fn clearCallback(context: Context, m: *Manager, data: ?*anyopaque) !void {
+    fn clearCallback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
@@ -279,6 +277,7 @@ const SubTree = Manager.SubTree;
 const Tree = drasil.Tree;
 const Event = Manager.Event;
 const Context = Event.Context;
+const Data = Event.Data;
 const Allocator = std.mem.Allocator;
 const Random = std.Random;
 const Reactive = Manager.Reactive;

@@ -46,7 +46,7 @@ pub fn Reactive(comptime T: type) type {
 
             // We know that the callback won't fail, nor will
             // `Event.fire` ever fail, thus we can catch unreachable
-            self.event.fire(m, null) catch unreachable;
+            self.event.fire(m, .none) catch unreachable;
 
             const stgi = genericSti(sti);
 
@@ -89,14 +89,20 @@ pub const Event = enum(u32) {
         int: u32,
     };
 
+    pub const Data = union(enum) {
+        none,
+        ptr: *anyopaque,
+        bytes: []const u8,
+    };
+
     pub const Fn = *const fn (
         ctx: Context,
         manager: *Manager,
-        data: ?*anyopaque,
+        data: Data,
     ) anyerror!void;
 
     /// Asserts that the event is registered
-    pub fn fire(event: Event, manager: *Manager, data: ?*anyopaque) !void {
+    pub fn fire(event: Event, manager: *Manager, data: Data) !void {
         const list = event.listeners(manager).?;
 
         for (list.items) |listener| {
@@ -143,7 +149,8 @@ pub const Event = enum(u32) {
     pub fn deregister(event: Event, manager: *Manager) void {
         const arr = event.listeners(manager).?;
         arr.deinit(manager.gpa);
-        arr.* = null;
+
+        manager.events.items[@intFromEnum(event)] = null;
     }
 
     fn listeners(event: Event, manager: *Manager) ?*ArrayListUnmanaged(Listener) {
@@ -301,7 +308,7 @@ pub const SubTree = struct {
         if (self.isDirty(manager)) self.dirty();
     }
 
-    fn dirtyCallback(ctx: Event.Context, m: *Manager, _: ?*anyopaque) !void {
+    fn dirtyCallback(ctx: Event.Context, m: *Manager, _: Event.Data) !void {
         ctx.sti.tree(m).dirty();
     }
 };
