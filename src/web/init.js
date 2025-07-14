@@ -196,11 +196,7 @@ async function init(wasm_target) {
 
         fetch(target)
           .then((res) => res.bytes())
-          .then((bytes) => {
-            console.log("JS: Got fetch result");
-
-            wasm_exports.handleFetch(id, storeBytes(bytes));
-          })
+          .then((bytes) => wasm_exports.handleFetch(id, storeBytes(bytes)))
           .catch((reason) => {
             console.error(`Error while fetching ${reason}`);
             wasm_exports.handleFetch(id, 0n);

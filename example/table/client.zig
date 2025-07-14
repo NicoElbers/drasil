@@ -72,8 +72,6 @@ pub const App = struct {
 
         const sti = ctx.sti.specific(@This());
 
-        std.log.info("Recieved data {x}", .{bytes});
-
         const value: u64 = std.mem.readInt(u64, bytes[0..@sizeOf(u64)], .little);
         std.log.info("Recieved prng seed {x}", .{value});
 
