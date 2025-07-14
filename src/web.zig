@@ -20,6 +20,10 @@ export fn init() void {
     root.setup() catch |err|
         std.debug.panic("Init error: {s}", .{@errorName(err)});
 
+    render();
+}
+
+fn render() void {
     root.render() catch |err|
         std.debug.panic("Render error: {s}", .{@errorName(err)});
 }
@@ -43,8 +47,7 @@ export fn handleEvent(
         std.debug.panic("Firing event error: {s}", .{@errorName(err)});
 
     // TODO: see if we can avoid rerenders in callbacks
-    root.render() catch |err|
-        std.debug.panic("Render error: {s}", .{@errorName(err)});
+    render();
 }
 
 pub const js = struct {
@@ -190,6 +193,9 @@ pub const js = struct {
 
                 req.callback(req.ctx, data.to()) catch |err|
                     std.debug.panic("Fetch handle failed: {s}", .{@errorName(err)});
+
+                // The fetch might require some components to rerender
+                render();
 
                 return;
             }

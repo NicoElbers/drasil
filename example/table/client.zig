@@ -11,12 +11,12 @@ pub const App = struct {
 
     table: Reactive([]Item),
 
-    prng: Reactive(?Random.DefaultPrng),
+    prng: ?Random.DefaultPrng,
 
     const Item = struct { text: []u8 };
 
     pub fn init(m: *Manager) !SubTree.Index(App) {
-        const sti = try m.register(App, generate);
+        const sti = try m.register(App, loadingGenerate);
 
         const create_1_000 = try m.registerEvent();
         _ = try create_1_000.addListener(m, .{ .sti = sti.generic() }, create_1_000Callback);
@@ -51,7 +51,7 @@ pub const App = struct {
             .highlighted = try .init(m, null),
 
             .table = try .init(m, &.{}),
-            .prng = try .init(m, null),
+            .prng = null,
         });
 
         const fetch_ctx = try m.gpa.create(FetchState);
@@ -80,7 +80,9 @@ pub const App = struct {
         std.log.info("Recieved prng seed {x}", .{value});
 
         const context = state.sti.context(state.m) orelse @panic("context");
-        (try context.prng.getMut(state.m, state.sti)).* = .init(value);
+        context.prng = .init(value);
+
+        state.sti.updateGenerator(state.m, generate);
     }
 
     fn clickCallback(context: Context, m: *Manager, data: ?*anyopaque) !void {
@@ -112,7 +114,7 @@ pub const App = struct {
         const ctx = context.sti.specific(@This()).context(m).?;
 
         const table = try ctx.table.getMut(m, context.sti);
-        const prng = if ((try ctx.prng.getMut(m, context.sti)).*) |*p| p else unreachable;
+        const prng = if (ctx.prng) |*p| p else unreachable;
 
         for (table.*) |item| {
             m.gpa.free(item.text);
@@ -135,7 +137,7 @@ pub const App = struct {
         const ctx = context.sti.specific(@This()).context(m).?;
 
         const table = try ctx.table.getMut(m, context.sti);
-        const prng = if ((try ctx.prng.getMut(m, context.sti)).*) |*p| p else unreachable;
+        const prng = if (ctx.prng) |*p| p else unreachable;
 
         for (table.*) |item| {
             m.gpa.free(item.text);
@@ -158,7 +160,7 @@ pub const App = struct {
         const ctx = context.sti.specific(@This()).context(m).?;
 
         const table = try ctx.table.getMut(m, context.sti);
-        const prng = if ((try ctx.prng.getMut(m, context.sti)).*) |*p| p else unreachable;
+        const prng = if (ctx.prng) |*p| p else unreachable;
 
         const old_len = table.len;
         table.* = try m.gpa.realloc(table.*, old_len + 1_000);
@@ -212,12 +214,18 @@ pub const App = struct {
         table.* = &.{};
     }
 
-    fn generate(sti: SubTree.Index(App), m: *Manager, arena: Allocator) !SubTree.Managed {
-        const ctx = sti.context(m).?;
+    fn loadingGenerate(sti: SubTree.Index(App), m: *Manager, arena: Allocator) !SubTree.Managed {
+        _ = sti;
 
-        if ((try ctx.prng.get(m, sti)).* == null) {
-            return m.manage(arena, .h1(&.{}, &.{.raw("Loading random number")}));
-        }
+        std.log.info("Generating loading tables", .{});
+
+        return m.manage(arena, .h1(&.{}, &.{.raw("Loading data")}));
+    }
+
+    fn generate(sti: SubTree.Index(App), m: *Manager, arena: Allocator) !SubTree.Managed {
+        std.log.info("Generating tables", .{});
+
+        const ctx = sti.context(m).?;
 
         const table = try ctx.table.get(m, sti);
 
