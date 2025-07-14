@@ -55,10 +55,10 @@ const AlternatingButton = struct {
     click_event: Event,
     reset_event: Event,
     counter: Reactive(u32),
-    prng: Reactive(?Random.DefaultPrng),
+    prng: ?Random.DefaultPrng,
 
     pub fn init(m: *Manager, click_event: Event, reset_event: Event) !SubTree.Index(AlternatingButton) {
-        const sti = try m.register(AlternatingButton, generate);
+        const sti = try m.register(AlternatingButton, loadingGenerate);
 
         // Add a callback to both of these events
         _ = try click_event.addListener(m, .{ .sti = sti.generic() }, click);
@@ -71,15 +71,17 @@ const AlternatingButton = struct {
             .click_event = click_event,
             .reset_event = reset_event,
             .counter = try .init(m, 0),
-            .prng = try .init(m, null),
+            .prng = null,
         });
 
-        const fetch_ctx = try m.gpa.create(FetchState);
-        fetch_ctx.* = .{
-            .m = m,
-            .sti = sti,
-        };
-        try web.js.fetch.start("rand", fetch_ctx, prngCallback);
+        { // TODO: I hate having to allocate this shit
+            const fetch_ctx = try m.gpa.create(FetchState);
+            fetch_ctx.* = .{
+                .m = m,
+                .sti = sti,
+            };
+            try web.js.fetch.start("rand", fetch_ctx, prngCallback);
+        }
 
         return sti;
     }
@@ -94,13 +96,18 @@ const AlternatingButton = struct {
         defer state.m.gpa.destroy(state);
         defer if (data) |d| state.m.gpa.free(d);
 
+        const m = state.m;
+        const sti = state.sti;
+
         std.log.info("Recieved data {x}", .{data.?});
 
         const value: u64 = std.mem.readInt(u64, data.?[0..@sizeOf(u64)], .little);
         std.log.info("Recieved prng seed {x}", .{value});
 
-        const context = state.sti.context(state.m) orelse @panic("context");
-        try context.prng.set(state.m, state.sti, .init(value));
+        const context = sti.context(m) orelse @panic("context");
+        context.prng = .init(value);
+
+        sti.updateGenerator(m, generate);
     }
 
     fn reset(context: Context, m: *Manager, data: ?*anyopaque) !void {
@@ -121,6 +128,17 @@ const AlternatingButton = struct {
         (try ctx.counter.getMut(m, context.sti)).* += 1;
     }
 
+    fn loadingGenerate(
+        sti: SubTree.Index(AlternatingButton),
+        m: *Manager,
+        arena: Allocator,
+    ) !SubTree.Managed {
+        std.log.info("Generating loading buttons", .{});
+
+        _ = sti;
+        return m.manage(arena, .h1(&.{}, &.{.raw("Loading data")}));
+    }
+
     fn generate(
         sti: SubTree.Index(AlternatingButton),
         m: *Manager,
@@ -128,15 +146,6 @@ const AlternatingButton = struct {
     ) !SubTree.Managed {
         std.log.info("Generating counter buttons", .{});
         const ctx = sti.context(m).?;
-
-        // TODO: Find a way to do this that doesn't suck ass
-        const prng = blk: {
-            const prng = try ctx.prng.getMut(m, sti);
-
-            if (prng.*) |*p| break :blk p;
-
-            return m.manage(arena, .h1(&.{}, &.{.raw("Loading random number")}));
-        };
 
         const button_a: Tree = .button(&.{.{ .onclick = ctx.click_event }}, &.{
             .raw("Click me!"),
@@ -149,7 +158,7 @@ const AlternatingButton = struct {
             arena,
             .div(
                 &.{},
-                if (prng.random().boolean())
+                if (ctx.prng.?.random().boolean())
                     &.{ button_a, button_b }
                 else
                     &.{ button_b, button_a },

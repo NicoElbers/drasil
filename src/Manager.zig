@@ -202,6 +202,14 @@ pub const SubTree = struct {
         pub fn listen(index: GenericIndex, m: *Manager, event: Event) !Event.Listener.Id {
             return try event.addListener(m, .{ .sti = index }, dirtyCallback);
         }
+
+        pub fn updateGenerator(self: GenericIndex, m: *Manager, generator: Generator) void {
+            std.log.info("Updating generator", .{});
+
+            const t = self.tree(m);
+            t.generator = generator;
+            t.dirty();
+        }
     };
 
     pub fn Index(comptime T: type) type {
@@ -241,6 +249,10 @@ pub const SubTree = struct {
 
             pub fn listen(self: Self, m: *Manager, event: Event) !Event.Listener.Id {
                 return try self.generic().listen(m, event);
+            }
+
+            pub fn updateGenerator(self: Self, m: *Manager, generator: Self.Generator) void {
+                self.generic().updateGenerator(m, @ptrCast(generator));
             }
         };
     }
