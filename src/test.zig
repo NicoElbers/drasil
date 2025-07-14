@@ -262,7 +262,7 @@ test "callbacks" {
                 return sti;
             }
 
-            fn callback(ctx: Context, m: *Manager, _: ?*anyopaque) !void {
+            fn callback(ctx: Context, m: *Manager, _: Data) !void {
                 const case = ctx.sti.specific(@This()).context(m).?;
                 (try case.fired.getMut(m, ctx.sti)).* = true;
             }
@@ -294,7 +294,7 @@ test "callbacks" {
             defer alloc.free(render);
             try std.testing.expectEqualStrings("false", render);
         }
-        try event.fire(&manager, null);
+        try event.fire(&manager, .none);
         {
             const render = try case.render(&manager);
             defer alloc.free(render);
@@ -316,7 +316,7 @@ test "nested callback" {
                 return sti;
             }
 
-            fn callback(_: Context, _: *Manager, _: ?*anyopaque) !void {}
+            fn callback(_: Context, _: *Manager, _: Data) !void {}
 
             fn generate(
                 sti: SubTree.Index(@This()),
@@ -387,6 +387,7 @@ const Tree = drasil.Tree;
 const Manager = drasil.Manager;
 const Event = Manager.Event;
 const Context = Event.Context;
+const Data = Event.Data;
 const SubTree = Manager.SubTree;
 const Allocator = std.mem.Allocator;
 const Reactive = Manager.Reactive;

@@ -38,12 +38,12 @@ export fn handleEvent(
         std.debug.panic("{d} is not valid data type", .{data_type});
 
     // TODO: Autogen this based on tools/html_events.zon the interface field
-    var data: Data = switch (event_tag) {
+    var data: WebData = switch (event_tag) {
         .onclick => .{ .pointer_event = .{ .ref = ref } },
         else => std.debug.panic("{d} is not an event", .{event}),
     };
 
-    event.fire(global.manager, &data) catch |err|
+    event.fire(global.manager, .{ .ptr = &data }) catch |err|
         std.debug.panic("Firing event error: {s}", .{@errorName(err)});
 
     // TODO: see if we can avoid rerenders in callbacks
@@ -161,46 +161,25 @@ pub const js = struct {
     }
 
     pub const fetch = struct {
-        var counter: u32 = 0;
-        var requests: std.ArrayListUnmanaged(Request) = .empty;
+        pub fn start(target: []const u8, ctx: Event.Context, callback: Event.Fn) !void {
+            const event = try global.manager.registerEvent();
+            _ = try event.addListener(global.manager, ctx, callback);
 
-        const Id = enum(u32) { _ };
-
-        pub const Request = struct {
-            pub const Callback = *const fn (ctx: ?*anyopaque, data: ?[]const u8) anyerror!void;
-
-            id: Id,
-            ctx: ?*anyopaque,
-            callback: Callback,
-        };
-
-        pub fn start(target: []const u8, ctx: ?*anyopaque, callback: Request.Callback) !void {
-            const id: Id = @enumFromInt(counter);
-            counter += 1;
-
-            try requests.append(global.gpa, .{
-                .id = id,
-                .ctx = ctx,
-                .callback = callback,
-            });
-
-            api.startFetch(id, target.ptr, target.len);
+            api.startFetch(event, target.ptr, target.len);
         }
 
-        export fn handleFetch(id: Id, data: api.String) void {
-            for (requests.items) |req| {
-                if (req.id != id) continue;
+        export fn handleFetch(event: Event, bytes: api.String) void {
+            const data: Data = if (bytes.to()) |d|
+                .{ .bytes = d }
+            else
+                .none;
 
-                req.callback(req.ctx, data.to()) catch |err|
-                    std.debug.panic("Fetch handle failed: {s}", .{@errorName(err)});
+            event.fire(global.manager, data) catch |err|
+                std.debug.panic("Failed to fire event: {s}", .{@errorName(err)});
 
-                // The fetch might require some components to rerender
-                render();
+            event.deregister(global.manager);
 
-                return;
-            }
-
-            std.debug.panic("Tried to handle fetch with id {d} which does not exist", .{@intFromEnum(id)});
+            render();
         }
     };
 
@@ -265,7 +244,7 @@ pub const js = struct {
         // This string is allocated with `options.manager.gpa` and must be
         // freed by the *caller*
         extern "env" fn startFetch(
-            id: fetch.Id,
+            event: Event,
             target_ptr: [*]const u8,
             target_len: usize,
         ) void;
@@ -282,7 +261,7 @@ pub const PointerEvent = struct {
     }
 };
 
-pub const Data = union(enum) {
+pub const WebData = union(enum) {
     empty,
     pointer_event: PointerEvent,
     time_ns: u64,
@@ -351,6 +330,8 @@ else
     .{};
 
 const Manager = @import("Manager.zig");
+const Event = Manager.Event;
+const Data = Event.Data;
 const SubTree = Manager.SubTree;
 const Attribute = html_data.Attribute;
 const Allocator = std.mem.Allocator;
