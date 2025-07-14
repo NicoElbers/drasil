@@ -11,7 +11,7 @@ pub const App = struct {
 
     table: Reactive([]Item),
 
-    prng: Random.DefaultPrng,
+    prng: Reactive(?Random.DefaultPrng),
 
     const Item = struct { text: []u8 };
 
@@ -51,10 +51,36 @@ pub const App = struct {
             .highlighted = try .init(m, null),
 
             .table = try .init(m, &.{}),
-            .prng = .init(0xdeadbeef),
+            .prng = try .init(m, null),
         });
 
+        const fetch_ctx = try m.gpa.create(FetchState);
+        fetch_ctx.* = .{
+            .m = m,
+            .sti = sti,
+        };
+        try web.js.fetch.start("rand", fetch_ctx, prngCallback);
+
         return sti;
+    }
+
+    const FetchState = struct {
+        m: *Manager,
+        sti: SubTree.Index(App),
+    };
+
+    fn prngCallback(ctx: ?*anyopaque, data: ?[]const u8) !void {
+        const state: *FetchState = @alignCast(@ptrCast(ctx.?));
+        defer state.m.gpa.destroy(state);
+        defer if (data) |d| state.m.gpa.free(d);
+
+        std.log.info("Recieved data {x}", .{data.?});
+
+        const value: u64 = std.mem.readInt(u64, data.?[0..@sizeOf(u64)], .little);
+        std.log.info("Recieved prng seed {x}", .{value});
+
+        const context = state.sti.context(state.m) orelse @panic("context");
+        (try context.prng.getMut(state.m, state.sti)).* = .init(value);
     }
 
     fn clickCallback(context: Context, m: *Manager, data: ?*anyopaque) !void {
@@ -73,7 +99,7 @@ pub const App = struct {
 
         const row = try std.fmt.parseInt(usize, row_str, 10);
 
-        const highlight = ctx.highlighted.getMut(m);
+        const highlight = try ctx.highlighted.getMut(m, context.sti);
 
         if (highlight.* != null and highlight.*.? == row)
             highlight.* = null
@@ -85,7 +111,8 @@ pub const App = struct {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
-        const table = ctx.table.getMut(m);
+        const table = try ctx.table.getMut(m, context.sti);
+        const prng = if ((try ctx.prng.getMut(m, context.sti)).*) |*p| p else unreachable;
 
         for (table.*) |item| {
             m.gpa.free(item.text);
@@ -97,7 +124,7 @@ pub const App = struct {
         const encoder = std.base64.standard.Encoder;
         var buf: [30]u8 = undefined;
         for (table.*) |*item| {
-            const random = ctx.prng.next();
+            const random = prng.next();
             const out = encoder.encode(&buf, @ptrCast(&random));
             item.text = try std.fmt.allocPrint(m.gpa, "{s}", .{out});
         }
@@ -107,7 +134,8 @@ pub const App = struct {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
-        const table = ctx.table.getMut(m);
+        const table = try ctx.table.getMut(m, context.sti);
+        const prng = if ((try ctx.prng.getMut(m, context.sti)).*) |*p| p else unreachable;
 
         for (table.*) |item| {
             m.gpa.free(item.text);
@@ -119,7 +147,7 @@ pub const App = struct {
         const encoder = std.base64.standard.Encoder;
         var buf: [30]u8 = undefined;
         for (table.*) |*item| {
-            const random = ctx.prng.next();
+            const random = prng.next();
             const out = encoder.encode(&buf, @ptrCast(&random));
             item.text = try std.fmt.allocPrint(m.gpa, "{s}", .{out});
         }
@@ -129,7 +157,8 @@ pub const App = struct {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
-        const table = ctx.table.getMut(m);
+        const table = try ctx.table.getMut(m, context.sti);
+        const prng = if ((try ctx.prng.getMut(m, context.sti)).*) |*p| p else unreachable;
 
         const old_len = table.len;
         table.* = try m.gpa.realloc(table.*, old_len + 1_000);
@@ -137,7 +166,7 @@ pub const App = struct {
         const encoder = std.base64.standard.Encoder;
         var buf: [30]u8 = undefined;
         for (table.*[old_len..][0..1_000]) |*item| {
-            const random = ctx.prng.next();
+            const random = prng.next();
             const out = encoder.encode(&buf, @ptrCast(&random));
             item.text = try std.fmt.allocPrint(m.gpa, "{s}", .{out});
         }
@@ -147,11 +176,11 @@ pub const App = struct {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
-        const table = ctx.table.getMut(m).*;
+        const table = try ctx.table.getMut(m, context.sti);
 
         var i: usize = 0;
         while (i < table.len) : (i += 10) {
-            const item = &table[i];
+            const item = &table.*[i];
 
             item.text = try m.gpa.realloc(item.text, item.text.len + 2);
             item.text[item.text.len - 2 ..][0..2].* = "!!".*;
@@ -162,7 +191,7 @@ pub const App = struct {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
-        const table = ctx.table.getMut(m);
+        const table = try ctx.table.getMut(m, context.sti);
 
         if (table.len < 2) return;
 
@@ -173,7 +202,7 @@ pub const App = struct {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
-        const table = ctx.table.getMut(m);
+        const table = try ctx.table.getMut(m, context.sti);
 
         for (table.*) |item| {
             m.gpa.free(item.text);
@@ -185,6 +214,10 @@ pub const App = struct {
 
     fn generate(sti: SubTree.Index(App), m: *Manager, arena: Allocator) !SubTree.Managed {
         const ctx = sti.context(m).?;
+
+        if ((try ctx.prng.get(m, sti)).* == null) {
+            return m.manage(arena, .h1(&.{}, &.{.raw("Loading random number")}));
+        }
 
         const table = try ctx.table.get(m, sti);
 

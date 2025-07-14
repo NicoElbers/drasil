@@ -264,7 +264,7 @@ test "callbacks" {
 
             fn callback(ctx: Context, m: *Manager, _: ?*anyopaque) !void {
                 const case = ctx.sti.specific(@This()).context(m).?;
-                case.fired.getMut(m).* = true;
+                (try case.fired.getMut(m, ctx.sti)).* = true;
             }
 
             fn generate(

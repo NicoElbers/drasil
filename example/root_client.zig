@@ -33,6 +33,7 @@ var state: State = undefined;
 pub fn setup() !void {
     // FIXME: I really dislike this style of initialization. Perhaps let the manager live in web.
     state.manager = .init(global.gpa);
+    web.setup(&state.manager, global.gpa);
 
     state.browser_app = try App.init(&state.manager);
     state.counter_app = try counter.App.init(&state.manager);
@@ -40,7 +41,6 @@ pub fn setup() !void {
 
     state.screen = .none;
 
-    web.setup(&state.manager, global.gpa);
     std.log.info("After web setup", .{});
 
     try setupStatic();
