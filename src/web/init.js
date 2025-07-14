@@ -139,7 +139,7 @@ async function init(wasm_target) {
       },
 
       unref: function (ref) {
-        assert(ref < references.length);
+        assert(ref < references.length, "reference out of bounds");
         references[ref] = null;
       },
 
@@ -191,28 +191,21 @@ async function init(wasm_target) {
       },
 
       // Fetch API TODO: integrate with web.zig
-      //
-      // startFetch: function (id, target_ptr, target_len) {
-      //   const target = loadString(target_ptr, target_len);
-      //
-      //   fetch(target)
-      //     .then((res) => res.bytes())
-      //     .then((bytes) => {
-      //       const ret_ptr = wasm_exports.allocRet(bytes.length);
-      //       const slice = new Uint8Array(
-      //         wasm_memory.buffer,
-      //         ret_ptr,
-      //         bytes.length,
-      //       );
-      //       slice.set(bytes);
-      //
-      //       wasm_exports.handleFetch(id, packSlice(ret_ptr, slice.length));
-      //     })
-      //     .catch((reason) => {
-      //       console.error(`Error while fetching ${reason}`);
-      //       wasm_exports.handleFetch(id, 0n);
-      //     });
-      // },
+      startFetch: function (id, target_ptr, target_len) {
+        const target = loadString(target_ptr, target_len);
+
+        fetch(target)
+          .then((res) => res.bytes())
+          .then((bytes) => {
+            console.log("JS: Got fetch result");
+
+            wasm_exports.handleFetch(id, storeBytes(bytes));
+          })
+          .catch((reason) => {
+            console.error(`Error while fetching ${reason}`);
+            wasm_exports.handleFetch(id, 0n);
+          });
+      },
     },
   };
 
@@ -223,7 +216,7 @@ async function init(wasm_target) {
   wasm_exports = wasm.instance.exports;
   window.drasil_wasm = wasm;
 
-  const expected_exports = ["init", "handleEvent", "allocRet"];
+  const expected_exports = ["init", "handleEvent", "allocRet", "handleFetch"];
   for (const ee of expected_exports) {
     if (!wasm_exports[ee]) {
       throw new Error(`WASM module missing required export: ${ee}`);
@@ -264,18 +257,27 @@ function storeSting(str) {
   return packSlice(ptr, byte_size);
 }
 
+function storeBytes(bytes) {
+  const ptr = wasm_exports.allocRet(bytes.length);
+  if (ptr == 0) return BigInt(0);
+  const slice = new Uint8Array(wasm_memory.buffer, ptr, bytes.length);
+  slice.set(bytes);
+
+  return packSlice(ptr, bytes.length);
+}
+
 function packSlice(ptr, len) {
-  assert(len < U32_MAX);
-  assert(ptr < U32_MAX);
-  assert(ptr > 0);
+  assert(len < U32_MAX, "pack slice, len out of bounds");
+  assert(ptr < U32_MAX, "pack slice, ptr out of bounds");
+  assert(ptr > 0, "pack slice, ptr is zero");
 
   return BigInt(ptr) | (BigInt(len) << 32n);
 }
 
 function loadByteSlice(ptr, len) {
-  assert(len < U32_MAX);
-  assert(ptr < U32_MAX);
-  assert(ptr > 0);
+  assert(len < U32_MAX, "load byte slice, len out of bounds");
+  assert(ptr < U32_MAX, "load byte slice, ptr out of bounds");
+  assert(ptr > 0, "load byte slice, ptr is zero");
 
   return new Uint8Array(wasm_memory.buffer, ptr, len);
 }
@@ -287,8 +289,8 @@ function loadString(ptr, len) {
   return str;
 }
 
-function assert(cond) {
-  if (!cond) throw Error("Assertion tripped");
+function assert(cond, reason) {
+  if (!cond) throw Error(`Assertion tripped: ${reason}`);
 }
 
 function refObject(obj) {
@@ -303,7 +305,8 @@ function refObject(obj) {
     references[idx] = obj;
   }
 
-  assert(idx < references.length);
+  assert(idx < references.length, "Invalid ref index, out of bounds");
+  assert(idx < U32_MAX, "Invalid ref index, too large");
 
   return idx;
 }

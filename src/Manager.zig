@@ -28,27 +28,43 @@ pub fn Reactive(comptime T: type) type {
             return self.value;
         }
 
-        pub fn get(self: *const @This(), m: *Manager, sti: anytype) !*const T {
-            const stgi: SubTree.GenericIndex = if (@TypeOf(sti) == SubTree.GenericIndex)
+        fn genericSti(sti: anytype) SubTree.GenericIndex {
+            return if (@TypeOf(sti) == SubTree.GenericIndex)
                 sti
             else
                 sti.generic();
+        }
 
+        pub fn get(self: *const @This(), m: *Manager, sti: anytype) !*const T {
+            const stgi = genericSti(sti);
             _ = try self.event.addListener(m, .{ .sti = stgi }, SubTree.dirtyCallback);
 
             return &self.value;
         }
 
-        pub fn getMut(self: *@This(), m: *Manager) *T {
+        pub fn getMut(self: *@This(), m: *Manager, sti: anytype) !*T {
+
             // We know that the callback won't fail, nor will
             // `Event.fire` ever fail, thus we can catch unreachable
             self.event.fire(m, null) catch unreachable;
 
-            // Clear all listeners
+            const stgi = genericSti(sti);
+
+            // Clear all listeners, and add self
+            // We need to add self as otherwise we can't tell the next time this
+            // value is modified. This is potentially a pointless rerender
             // TODO: Event should have a better primive to do this
-            self.event.listeners(m).?.shrinkRetainingCapacity(0);
+            const listeners = self.event.listeners(m).?;
+
+            listeners.clearRetainingCapacity();
+            _ = try self.event.addListener(m, .{ .sti = stgi }, SubTree.dirtyCallback);
 
             return &self.value;
+        }
+
+        pub fn set(self: *@This(), m: *Manager, sti: anytype, value: T) !void {
+            const val = try self.getMut(m, sti);
+            val.* = value;
         }
     };
 }

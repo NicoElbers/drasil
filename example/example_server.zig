@@ -40,6 +40,9 @@ fn handler(conn: Connection) !void {
 
     log.info("Opening connection with {}", .{conn.address});
 
+    var prng = std.Random.DefaultPrng.init(@bitCast(std.time.microTimestamp()));
+    const rand = prng.random();
+
     var read_buf: [4096]u8 = undefined;
     var server: Server = .init(conn, &read_buf);
     while (server.state == .ready) {
@@ -63,6 +66,18 @@ fn handler(conn: Connection) !void {
             continue;
         } else if (eql("/wasm", req.head.target)) {
             try respondFile(&req, "application/wasm", paths.wasm_path);
+            continue;
+        } else if (eql("/rand", req.head.target)) {
+            const value = rand.int(u64);
+            log.info("Serving random value: {x}", .{value});
+            try req.respond(@ptrCast(&value), .{
+                .extra_headers = &.{
+                    .{ .name = "content-type", .value = "application/octet-stream" },
+                    .{ .name = "cache-control", .value = "no-store, no-cache, must-revalidate" },
+                    .{ .name = "pragma", .value = "no-cache" },
+                    .{ .name = "expires", .value = "0" },
+                },
+            });
             continue;
         } else {
             log.err("Target not found: '{s}'", .{req.head.target});

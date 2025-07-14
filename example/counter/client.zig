@@ -55,7 +55,7 @@ const AlternatingButton = struct {
     click_event: Event,
     reset_event: Event,
     counter: Reactive(u32),
-    prng: Random.DefaultPrng,
+    prng: Reactive(?Random.DefaultPrng),
 
     pub fn init(m: *Manager, click_event: Event, reset_event: Event) !SubTree.Index(AlternatingButton) {
         const sti = try m.register(AlternatingButton, generate);
@@ -71,10 +71,36 @@ const AlternatingButton = struct {
             .click_event = click_event,
             .reset_event = reset_event,
             .counter = try .init(m, 0),
-            .prng = Random.DefaultPrng.init(0xdeadbeef),
+            .prng = try .init(m, null),
         });
 
+        const fetch_ctx = try m.gpa.create(FetchState);
+        fetch_ctx.* = .{
+            .m = m,
+            .sti = sti,
+        };
+        try web.js.fetch.start("rand", fetch_ctx, prngCallback);
+
         return sti;
+    }
+
+    const FetchState = struct {
+        m: *Manager,
+        sti: SubTree.Index(AlternatingButton),
+    };
+
+    fn prngCallback(ctx: ?*anyopaque, data: ?[]const u8) !void {
+        const state: *FetchState = @alignCast(@ptrCast(ctx.?));
+        defer state.m.gpa.destroy(state);
+        defer if (data) |d| state.m.gpa.free(d);
+
+        std.log.info("Recieved data {x}", .{data.?});
+
+        const value: u64 = std.mem.readInt(u64, data.?[0..@sizeOf(u64)], .little);
+        std.log.info("Recieved prng seed {x}", .{value});
+
+        const context = state.sti.context(state.m) orelse @panic("context");
+        try context.prng.set(state.m, state.sti, .init(value));
     }
 
     fn reset(context: Context, m: *Manager, data: ?*anyopaque) !void {
@@ -82,7 +108,7 @@ const AlternatingButton = struct {
         std.log.info("Reset callback called", .{});
         const ctx = context.sti.specific(@This()).context(m).?;
 
-        ctx.counter.getMut(m).* = 0;
+        try ctx.counter.set(m, context.sti, 0);
     }
 
     fn click(context: Context, m: *Manager, data: ?*anyopaque) !void {
@@ -91,9 +117,8 @@ const AlternatingButton = struct {
         std.log.info("Click callback called", .{});
         const ctx = context.sti.specific(@This()).context(m).?;
 
-        // const ctx: *@This() = @alignCast(@ptrCast(context.sti.contextPtr(m).?));
-
-        ctx.counter.getMut(m).* += 1;
+        // TODO: Find a way to make this better
+        (try ctx.counter.getMut(m, context.sti)).* += 1;
     }
 
     fn generate(
@@ -103,6 +128,15 @@ const AlternatingButton = struct {
     ) !SubTree.Managed {
         std.log.info("Generating counter buttons", .{});
         const ctx = sti.context(m).?;
+
+        // TODO: Find a way to do this that doesn't suck ass
+        const prng = blk: {
+            const prng = try ctx.prng.getMut(m, sti);
+
+            if (prng.*) |*p| break :blk p;
+
+            return m.manage(arena, .h1(&.{}, &.{.raw("Loading random number")}));
+        };
 
         const button_a: Tree = .button(&.{.{ .onclick = ctx.click_event }}, &.{
             .raw("Click me!"),
@@ -115,7 +149,7 @@ const AlternatingButton = struct {
             arena,
             .div(
                 &.{},
-                if (ctx.prng.random().boolean())
+                if (prng.random().boolean())
                     &.{ button_a, button_b }
                 else
                     &.{ button_b, button_a },
@@ -156,7 +190,7 @@ const Header = struct {
             41...45 => "... You gotta stop",
             46...49 => "... You won't make it to 50",
             else => blk: {
-                ctx.counter.getMut(m).* = 0;
+                (try ctx.counter.getMut(m, sti)).* = 0;
                 break :blk " Told you";
             },
         };

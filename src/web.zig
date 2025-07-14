@@ -157,6 +157,47 @@ pub const js = struct {
         return slice.ptr;
     }
 
+    pub const fetch = struct {
+        var counter: u32 = 0;
+        var requests: std.ArrayListUnmanaged(Request) = .empty;
+
+        const Id = enum(u32) { _ };
+
+        pub const Request = struct {
+            pub const Callback = *const fn (ctx: ?*anyopaque, data: ?[]const u8) anyerror!void;
+
+            id: Id,
+            ctx: ?*anyopaque,
+            callback: Callback,
+        };
+
+        pub fn start(target: []const u8, ctx: ?*anyopaque, callback: Request.Callback) !void {
+            const id: Id = @enumFromInt(counter);
+            counter += 1;
+
+            try requests.append(global.gpa, .{
+                .id = id,
+                .ctx = ctx,
+                .callback = callback,
+            });
+
+            api.startFetch(id, target.ptr, target.len);
+        }
+
+        export fn handleFetch(id: Id, data: api.String) void {
+            for (requests.items) |req| {
+                if (req.id != id) continue;
+
+                req.callback(req.ctx, data.to()) catch |err|
+                    std.debug.panic("Fetch handle failed: {s}", .{@errorName(err)});
+
+                return;
+            }
+
+            std.debug.panic("Tried to handle fetch with id {d} which does not exist", .{@intFromEnum(id)});
+        }
+    };
+
     const api = struct {
         const String = packed struct(u64) {
             ptr: ?[*]const u8,
@@ -214,6 +255,14 @@ pub const js = struct {
             field_ptr: [*]const u8,
             field_len: usize,
         ) String;
+
+        // This string is allocated with `options.manager.gpa` and must be
+        // freed by the *caller*
+        extern "env" fn startFetch(
+            id: fetch.Id,
+            target_ptr: [*]const u8,
+            target_len: usize,
+        ) void;
     };
 };
 
