@@ -2259,5 +2259,4 @@ const Attribute = html_data.Attribute;
 const ElementTag = html_data.ElementTag;
 const Allocator = std.mem.Allocator;
 const Manager = @import("Manager.zig");
-const SubTree = Manager.SubTree;
-const Callback = Manager.Callback;
+const SubTree = @import("SubTree.zig");

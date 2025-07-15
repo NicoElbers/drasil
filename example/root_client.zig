@@ -175,9 +175,9 @@ const table = @import("table/client.zig");
 const assert = std.debug.assert;
 
 const Manager = drasil.Manager;
-const SubTree = Manager.SubTree;
+const SubTree = drasil.SubTree;
 const Tree = drasil.Tree;
-const Event = Manager.Event;
+const Event = drasil.Event;
 const Context = Event.Context;
 const Data = Event.Data;
 const Allocator = std.mem.Allocator;

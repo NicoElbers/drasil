@@ -385,9 +385,9 @@ const assert = std.debug.assert;
 
 const Tree = drasil.Tree;
 const Manager = drasil.Manager;
-const Event = Manager.Event;
+const SubTree = drasil.SubTree;
+const Reactive = drasil.Reactive;
+const Event = drasil.Event;
 const Context = Event.Context;
 const Data = Event.Data;
-const SubTree = Manager.SubTree;
 const Allocator = std.mem.Allocator;
-const Reactive = Manager.Reactive;

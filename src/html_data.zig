@@ -1,5 +1,5 @@
 const Manager = @import("Manager.zig");
-const Event = Manager.Event;
+const Event = @import("event.zig").Event;
 
 // @GENERATED SECTION START
 

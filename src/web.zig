@@ -32,7 +32,7 @@ const AttributeTag = std.meta.Tag(Attribute);
 export fn handleEvent(
     ref: js.Ref,
     data_type: u32,
-    event: Manager.Event,
+    event: Event,
 ) void {
     const event_tag = std.enums.fromInt(AttributeTag, data_type) orelse
         std.debug.panic("{d} is not valid data type", .{data_type});
@@ -330,7 +330,7 @@ else
     .{};
 
 const Manager = @import("Manager.zig");
-const Event = Manager.Event;
+const Event = @import("event.zig").Event;
 const Data = Event.Data;
 const SubTree = Manager.SubTree;
 const Attribute = html_data.Attribute;
