@@ -56,8 +56,98 @@ pub fn Reactive(comptime T: type) type {
     };
 }
 
+test "Correct rerenders" {
+    const CaseGet = struct {
+        value: Reactive(void),
+
+        pub var render: u32 = 0;
+
+        pub fn init(m: *Manager, value: Reactive(void)) !SubTree.Index(@This()) {
+            const sti = try m.register(@This(), generate);
+
+            try sti.setContext(m, .{ .value = value });
+
+            return sti;
+        }
+
+        fn generate(sti: SubTree.Index(@This()), m: *Manager, arena: Allocator) !SubTree.Managed {
+            const ctx = sti.context(m).?;
+
+            _ = try ctx.value.get(m, sti);
+
+            @This().render += 1;
+
+            return m.manage(arena, .raw(""));
+        }
+    };
+
+    const CaseGetMut = struct {
+        value: Reactive(void),
+
+        pub var render: u32 = 0;
+
+        pub fn init(m: *Manager, value: Reactive(void)) !SubTree.Index(@This()) {
+            const sti = try m.register(@This(), generate);
+
+            try sti.setContext(m, .{ .value = value });
+
+            return sti;
+        }
+
+        fn generate(sti: SubTree.Index(@This()), m: *Manager, arena: Allocator) !SubTree.Managed {
+            const ctx = sti.context(m).?;
+
+            _ = try ctx.value.getMut(m, sti);
+
+            @This().render += 1;
+
+            return m.manage(arena, .raw(""));
+        }
+    };
+
+    const alloc = std.testing.allocator;
+
+    var m: Manager = .init(alloc);
+    defer m.deinit();
+
+    inline for (.{ CaseGet, CaseGetMut }) |Case| {
+        var value: Reactive(void) = try .init(&m, {});
+
+        const case = try Case.init(&m, value);
+
+        const dummy = try Case.init(&m, value);
+
+        // Initial condition
+        try std.testing.expectEqual(0, Case.render);
+
+        { // First render
+            const content = try m.render(case.generic());
+            defer alloc.free(content);
+
+            try std.testing.expectEqual(1, Case.render);
+        }
+        { // No render after get
+            _ = try value.get(&m, dummy);
+
+            const content = try m.render(case.generic());
+            defer alloc.free(content);
+
+            try std.testing.expectEqual(1, Case.render);
+        }
+        { // Render after getMut
+            _ = try value.getMut(&m, dummy);
+
+            const content = try m.render(case.generic());
+            defer alloc.free(content);
+
+            try std.testing.expectEqual(2, Case.render);
+        }
+    }
+}
+
 const std = @import("std");
 
 const Manager = @import("Manager.zig");
 const SubTree = @import("SubTree.zig");
 const Event = @import("event.zig").Event;
+const Allocator = std.mem.Allocator;
