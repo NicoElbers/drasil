@@ -334,7 +334,7 @@ pub const Attribute = union(enum) {
     ///
     /// Spec: https://html.spec.whatwg.org/multipage/scripting.html#attr-script-async
     /// status: standard
-    @"async": []const u8,
+    async: []const u8,
 
     /// Recommended autocapitalization behavior (for supported input methods)
     ///
@@ -2945,7 +2945,7 @@ pub const ElementTag = enum {
     ///   .src
     ///   .type
     ///   .nomodule
-    ///   .@"async"
+    ///   .async
     ///   .@"defer"
     ///   .crossorigin
     ///   .integrity

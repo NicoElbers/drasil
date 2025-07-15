@@ -181,4 +181,4 @@ const Build = std.Build;
 const Module = Build.Module;
 const Step = Build.Step;
 const Target = Build.ResolvedTarget;
-const Optimize = std.builtin.Mode;
+const Optimize = std.builtin.OptimizeMode;

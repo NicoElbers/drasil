@@ -33,7 +33,7 @@ pub fn main() !void {
         const elements_file = try tools_dir.openFile("html_elements.zon", .{ .mode = .write_only });
         defer elements_file.close();
 
-        try std.zon.stringify.serialize(final_elems, .{}, elements_file.writer());
+        try std.zon.stringify.serialize(final_elems, .{}, elements_file.deprecatedWriter());
 
         try elements_file.setEndPos(try elements_file.getPos());
     }
@@ -42,7 +42,7 @@ pub fn main() !void {
         const attributes_file = try tools_dir.openFile("html_attributes.zon", .{ .mode = .write_only });
         defer attributes_file.close();
 
-        try std.zon.stringify.serialize(final_attrs, .{}, attributes_file.writer());
+        try std.zon.stringify.serialize(final_attrs, .{}, attributes_file.deprecatedWriter());
 
         try attributes_file.setEndPos(try attributes_file.getPos());
     }
@@ -51,7 +51,7 @@ pub fn main() !void {
         const events_file = try tools_dir.openFile("html_events.zon", .{ .mode = .write_only });
         defer events_file.close();
 
-        try std.zon.stringify.serialize(final_events, .{}, events_file.writer());
+        try std.zon.stringify.serialize(final_events, .{}, events_file.deprecatedWriter());
 
         try events_file.setEndPos(try events_file.getPos());
     }
