@@ -67,7 +67,7 @@ pub const Event = enum(u32) {
 
         for (list.items, 0..) |listener, idx| {
             if (listener.id == id) {
-                list.swapRemove(idx);
+                _ = list.swapRemove(idx);
                 return;
             }
         }
@@ -89,6 +89,72 @@ pub const Event = enum(u32) {
         return null;
     }
 };
+
+test "basic usage" {
+    const case = struct {
+        pub var called1: u32 = 0;
+
+        pub fn callback1(_: Event.Context, _: *Manager, _: Event.Data) !void {
+            called1 += 1;
+        }
+
+        pub var called2: u32 = 0;
+
+        pub fn callback2(_: Event.Context, _: *Manager, _: Event.Data) !void {
+            called2 += 1;
+        }
+    };
+    const alloc = std.testing.allocator;
+
+    var m: Manager = .init(alloc);
+    defer m.deinit();
+
+    const event = try m.registerEvent();
+
+    // Initial conditions
+    try std.testing.expectEqual(0, case.called1);
+    try std.testing.expectEqual(0, case.called2);
+
+    // Fire with no listeners
+    try event.fire(&m, .none);
+    try std.testing.expectEqual(0, case.called1);
+    try std.testing.expectEqual(0, case.called2);
+
+    // Add listener 1
+    const listener1 = try event.addListener(&m, .none, case.callback1);
+    try std.testing.expectEqual(0, case.called1);
+    try std.testing.expectEqual(0, case.called2);
+
+    // Fire with listener 1
+    try event.fire(&m, .none);
+    try std.testing.expectEqual(1, case.called1);
+    try std.testing.expectEqual(0, case.called2);
+
+    // Add listener 2
+    const listener2 = try event.addListener(&m, .none, case.callback2);
+    try std.testing.expectEqual(1, case.called1);
+    try std.testing.expectEqual(0, case.called2);
+
+    // Fire with listener 1 and 2
+    try event.fire(&m, .none);
+    try std.testing.expectEqual(2, case.called1);
+    try std.testing.expectEqual(1, case.called2);
+
+    // Remove listener 1
+    event.removeListener(&m, listener1);
+    try std.testing.expectEqual(2, case.called1);
+    try std.testing.expectEqual(1, case.called2);
+
+    // Fire listener 2
+    try event.fire(&m, .none);
+    try std.testing.expectEqual(2, case.called1);
+    try std.testing.expectEqual(2, case.called2);
+
+    // Remove listener 2
+    event.removeListener(&m, listener2);
+    try std.testing.expectEqual(2, case.called1);
+    try std.testing.expectEqual(2, case.called2);
+}
 
 const std = @import("std");
 
