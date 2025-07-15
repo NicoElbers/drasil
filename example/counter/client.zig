@@ -216,12 +216,12 @@ const web = drasil.web;
 const assert = std.debug.assert;
 
 const Manager = drasil.Manager;
-const SubTree = Manager.SubTree;
+const SubTree = drasil.SubTree;
 const Tree = drasil.Tree;
-const Event = Manager.Event;
+const Reactive = drasil.Reactive;
+const Event = drasil.Event;
 const Context = Event.Context;
 const Data = Event.Data;
 const Allocator = std.mem.Allocator;
 const Element = web.Element;
 const Random = std.Random;
-const Reactive = Manager.Reactive;
