@@ -28,8 +28,11 @@ fn writeInitJs(arena: Allocator, events: []const Event, web_dir: fs.Dir) !void {
     const init_js = try web_dir.openFile("init.js", .{ .mode = .read_write });
     defer init_js.close();
 
+    var freader = init_js.reader(&.{});
+    const reader = &freader.interface;
+
     const pre, const post = blk: {
-        const bytes = try init_js.readToEndAlloc(arena, 1 << 25);
+        const bytes = try reader.allocRemaining(arena, .unlimited);
 
         const start = std.mem.indexOf(u8, bytes, start_marker) orelse return error.NoMarker;
         const end = std.mem.indexOf(u8, bytes, end_marker) orelse return error.NoMarker;
@@ -40,23 +43,25 @@ fn writeInitJs(arena: Allocator, events: []const Event, web_dir: fs.Dir) !void {
         break :blk .{ pre, post };
     };
 
-    try init_js.seekTo(0);
-    const writer = init_js.writer();
+    var write_buf: [2048]u8 = undefined;
+    var fwriter = init_js.writer(&write_buf);
+
+    const writer = &fwriter.interface;
+    defer writer.flush() catch {};
 
     try writer.writeAll(pre);
     try writer.writeAll(start_marker ++ "\n\n// generated - *DO NOT EDIT MANUALLY*\n\n");
 
-    try writeEvents(init_js, events);
+    try writeEvents(writer, events);
 
     try writer.writeAll(end_marker);
     try writer.writeAll(post);
 
-    try init_js.setEndPos(try init_js.getPos());
+    try writer.flush();
+    try init_js.setEndPos(fwriter.pos);
 }
 
-fn writeEvents(out: fs.File, events: []const Event) !void {
-    const writer = out.writer();
-
+fn writeEvents(writer: *Writer, events: []const Event) !void {
     try writer.writeAll(
         \\const events = [
         \\
@@ -79,7 +84,15 @@ fn parseZon(arena: Allocator, tools_dir: fs.Dir) ![]Event {
     const event_zon = try tools_dir.openFile("html_events.zon", .{});
     defer event_zon.close();
 
-    const bytes = try event_zon.readToEndAllocOptions(arena, 1 << 25, null, .of(u8), 0);
+    var freader = event_zon.reader(&.{});
+    const reader = &freader.interface;
+
+    var aw: Writer.Allocating = .init(arena);
+    const writer = &aw.writer;
+
+    _ = try reader.streamRemaining(writer);
+
+    const bytes: [:0]u8 = try aw.toOwnedSliceSentinel(0);
 
     return std.zon.parse.fromSlice([]Event, arena, bytes, null, .{});
 }
@@ -92,3 +105,4 @@ const assert = std.debug.assert;
 
 const Allocator = std.mem.Allocator;
 const Event = schemas.Event;
+const Writer = std.Io.Writer;

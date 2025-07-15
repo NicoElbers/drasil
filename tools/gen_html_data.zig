@@ -38,26 +38,27 @@ fn writeNodeFunctions(arena: Allocator, html_node_path: []const u8, elements: []
         break :blk .{ pre, post };
     };
 
-    try html_node.seekTo(0); // reset position
-    const writer = html_node.writer();
+    var write_buf: [2048]u8 = undefined;
+    var fwriter = html_node.writer(&write_buf);
+    const writer = &fwriter.interface;
 
     try writer.writeAll(pre);
     try writer.writeAll(start_marker ++ "\n\n// generated - *DO NOT EDIT MANUALLY*\n\n");
 
     for (elements) |elem| {
-        try documentElement(html_node, elem, 0);
+        try documentElement(writer, elem, 0);
 
         if (elem.void_element) {
-            try writer.print("pub fn {}(attributes: []const Attribute) Tree {{\n", .{std.zig.fmtId(elem.tag)});
+            try writer.print("pub fn {f}(attributes: []const Attribute) Tree {{\n", .{std.zig.fmtId(elem.tag)});
             try writer.writeAll(
                 \\    return .{ .node = .{ .void = .{
                 \\
             );
 
             try writer.print(
-                \\        .tag = .{p},
+                \\        .tag = .{f},
                 \\
-            , .{std.zig.fmtId(elem.tag)});
+            , .{std.zig.fmtIdP(elem.tag)});
 
             try writer.writeAll(
                 \\        .attributes = attributes,
@@ -67,7 +68,7 @@ fn writeNodeFunctions(arena: Allocator, html_node_path: []const u8, elements: []
             );
         } else {
             try writer.print(
-                "pub fn {}(attributes: []const Attribute, sub_trees: []const Tree) Tree {{\n",
+                "pub fn {f}(attributes: []const Attribute, sub_trees: []const Tree) Tree {{\n",
                 .{std.zig.fmtId(elem.tag)},
             );
             try writer.writeAll(
@@ -76,9 +77,9 @@ fn writeNodeFunctions(arena: Allocator, html_node_path: []const u8, elements: []
             );
 
             try writer.print(
-                \\        .tag = .{p},
+                \\        .tag = .{f},
                 \\
-            , .{std.zig.fmtId(elem.tag)});
+            , .{std.zig.fmtIdP(elem.tag)});
 
             try writer.writeAll(
                 \\        .attributes = attributes,
@@ -93,7 +94,9 @@ fn writeNodeFunctions(arena: Allocator, html_node_path: []const u8, elements: []
     try writer.writeAll(end_marker);
     try writer.writeAll(post);
 
-    try html_node.setEndPos(try html_node.getPos());
+    try writer.flush();
+
+    try html_node.setEndPos(fwriter.pos);
 }
 
 fn writeData(
@@ -118,29 +121,30 @@ fn writeData(
         break :blk .{ pre, post };
     };
 
-    try html_data.seekTo(0); // reset position
-    const writer = html_data.writer();
+    var write_buf: [2048]u8 = undefined;
+    var fwriter = html_data.writer(&write_buf);
+    const writer = &fwriter.interface;
 
     try writer.writeAll(pre);
     try writer.writeAll(start_marker ++ "\n\n// generated - *DO NOT EDIT MANUALLY*\n\n");
 
-    try writeAttributes(arena, html_data, attrs, events);
-    try writeElements(html_data, elems);
+    try writeAttributes(arena, writer, attrs, events);
+    try writeElements(writer, elems);
 
     try writer.writeAll("\n" ++ end_marker);
     try writer.writeAll(post);
 
-    try html_data.setEndPos(try html_data.getPos());
+    try writer.flush();
+
+    try html_data.setEndPos(fwriter.pos);
 }
 
 fn writeAttributes(
     arena: Allocator,
-    html_data: File,
+    writer: *Writer,
     attrs: []const Attribute,
     events: []const Event,
 ) !void {
-    const writer = html_data.writer();
-
     try writer.writeAll(
         \\pub const Attribute = union(enum) {
         \\
@@ -156,22 +160,22 @@ fn writeAttributes(
             \\
         , .{event.interface});
 
-        try writer.print("    {p}: Event,\n\n", .{std.zig.fmtId(full_name)});
+        try writer.print("    {f}: Event,\n\n", .{std.zig.fmtIdP(full_name)});
     }
 
     try writer.writeAll("    // Attributes\n\n");
-    for (attrs) |attr| {
+    for (attrs, 1..) |attr, i| {
         if (attr.global) {
             const details = attr.details[0];
 
-            try documentDescription(details.description, html_data, 4);
+            try documentDescription(details.description, writer, 4);
             try writer.writeAll(
                 \\    ///
                 \\    /// Is a global attribute
                 \\    ///
                 \\
             );
-            try documentMeta(details.meta, html_data, 4);
+            try documentMeta(details.meta, writer, 4);
         } else {
             for (attr.details) |d| {
                 switch (d.elements.len) {
@@ -180,9 +184,9 @@ fn writeAttributes(
                         \\
                     ),
                     1 => try writer.print(
-                        \\    /// For .{p}:
+                        \\    /// For .{f}:
                         \\
-                    , .{std.zig.fmtId(d.elements[0])}),
+                    , .{std.zig.fmtIdP(d.elements[0])}),
                     else => {
                         try writer.writeAll(
                             \\    /// For:
@@ -190,127 +194,125 @@ fn writeAttributes(
                         );
                         for (d.elements) |e| {
                             try writer.print(
-                                \\    ///   .{p}
+                                \\    ///   .{f}
                                 \\
-                            , .{std.zig.fmtId(e)});
+                            , .{std.zig.fmtIdP(e)});
                         }
                     },
                 }
 
                 try writer.writeAll("    ///\n");
-                try documentDescription(d.description, html_data, 4);
+                try documentDescription(d.description, writer, 4);
                 try writer.writeAll("    ///\n");
 
-                try documentMeta(d.meta, html_data, 4);
+                try documentMeta(d.meta, writer, 4);
             }
         }
 
-        try writer.print("    {p}", .{std.zig.fmtId(attr.tag)});
+        try writer.print("    {f}", .{std.zig.fmtIdP(attr.tag)});
         try writer.writeAll(switch (attr.value) {
-            .string => ": []const u8,\n\n",
+            .string => ": []const u8,\n",
             .items => |vals| blk: {
                 assert(vals.len > 0);
 
-                var str: std.ArrayListUnmanaged(u8) = .empty;
-                const str_writer = str.writer(arena);
+                var aw: Writer.Allocating = .init(arena);
+                const str_w = &aw.writer;
 
-                try str.appendSlice(arena, ": enum {");
+                try str_w.writeAll(": enum {");
 
                 for (vals) |val| {
-                    try str_writer.print(" {p},", .{std.zig.fmtId(val)});
+                    try str_w.print(" {f},", .{std.zig.fmtIdP(val)});
                 }
-                _ = str.pop(); // pop final comma
+                str_w.undo(1); // pop final comma
 
-                try str.appendSlice(arena, " },\n\n");
-                break :blk try str.toOwnedSlice(arena);
+                try str_w.writeAll(" },\n");
+                break :blk try aw.toOwnedSlice();
             },
-            .boolean => ": bool,\n\n",
-            .void => ",\n\n",
+            .boolean => ": bool,\n",
+            .void => ",\n",
         });
+
+        if (attrs.len != i)
+            try writer.writeByte('\n');
     }
 
-    try html_data.seekBy(-1); // remove last newline
     try writer.writeAll(
         \\};
         \\
     );
 }
 
-fn documentElement(out: File, elem: Element, indent: u16) !void {
-    const writer = out.writer();
-
+fn documentElement(writer: *Writer, elem: Element, indent: u16) !void {
     { // Description
-        try documentDescription(elem.description, out, indent);
+        try documentDescription(elem.description, writer, indent);
 
-        try writer.writeByteNTimes(' ', indent);
+        try writer.splatByteAll(' ', indent);
         try writer.writeAll("///\n");
     }
 
     if (elem.void_element) {
-        try writer.writeByteNTimes(' ', indent);
+        try writer.splatByteAll(' ', indent);
         try writer.writeAll("/// Is a void element\n");
 
-        try writer.writeByteNTimes(' ', indent);
+        try writer.splatByteAll(' ', indent);
         try writer.writeAll("///\n");
     }
 
     { // Interface
-        try writer.writeByteNTimes(' ', indent);
+        try writer.splatByteAll(' ', indent);
         try writer.print(
             "/// Element with interface {s}\n",
             .{elem.interface},
         );
 
-        try writer.writeByteNTimes(' ', indent);
+        try writer.splatByteAll(' ', indent);
         try writer.writeAll("///\n");
     }
 
     { // Attributes
-        try writer.writeByteNTimes(' ', indent);
+        try writer.splatByteAll(' ', indent);
         try writer.writeAll("/// Allowed attributes:\n");
 
         for (elem.attributes) |attr| {
-            try writer.writeByteNTimes(' ', indent);
+            try writer.splatByteAll(' ', indent);
             try writer.writeAll("///   ");
 
             if (std.mem.eql(u8, "globals", attr)) {
                 try writer.writeAll("globals\n");
             } else {
-                try writer.print(".{p}\n", .{std.zig.fmtId(attr)});
+                try writer.print(".{f}\n", .{std.zig.fmtIdP(attr)});
             }
         }
 
-        try writer.writeByteNTimes(' ', indent);
+        try writer.splatByteAll(' ', indent);
         try writer.writeAll("///\n");
     }
 
-    try documentMeta(elem.meta, out, indent);
+    try documentMeta(elem.meta, writer, indent);
 }
 
-fn writeElements(html_data: File, elements: []const Element) !void {
-    const writer = html_data.writer();
-
+fn writeElements(writer: *Writer, elements: []const Element) !void {
     try writer.writeAll(
         \\pub const ElementTag = enum {
         \\
     );
 
-    for (elements) |elem| {
-        try documentElement(html_data, elem, 4);
-        try writer.print("    {p},\n\n", .{std.zig.fmtId(elem.tag)});
+    for (elements, 1..) |elem, i| {
+        try documentElement(writer, elem, 4);
+        try writer.print("    {f},\n", .{std.zig.fmtIdP(elem.tag)});
+
+        if (i != elements.len)
+            try writer.writeByte('\n');
     }
 
-    try html_data.seekBy(-1); // remove last newline
     try writer.writeAll(
         \\};
         \\
     );
 }
 
-fn documentDescription(desc: []const u8, out: File, indent: u16) !void {
-    const writer = out.writer();
-
-    try writer.writeByteNTimes(' ', indent);
+fn documentDescription(desc: []const u8, writer: *Writer, indent: u16) !void {
+    try writer.splatByteAll(' ', indent);
     try writer.writeAll("/// ");
 
     var i: usize = 0;
@@ -319,7 +321,7 @@ fn documentDescription(desc: []const u8, out: File, indent: u16) !void {
         try writer.writeByte(byte);
         switch (byte) {
             '\n' => {
-                try writer.writeByteNTimes(' ', indent);
+                try writer.splatByteAll(' ', indent);
                 try writer.writeAll("/// ");
 
                 i += 1;
@@ -331,20 +333,18 @@ fn documentDescription(desc: []const u8, out: File, indent: u16) !void {
     try writer.writeByte('\n');
 }
 
-fn documentMeta(meta: Meta, out: File, indent: u16) !void {
-    const writer = out.writer();
-
+fn documentMeta(meta: Meta, writer: *Writer, indent: u16) !void {
     switch (meta.spec_url.len) {
         0 => {},
         1 => {
-            try writer.writeByteNTimes(' ', indent);
+            try writer.splatByteAll(' ', indent);
             try writer.print("/// Spec: {s}\n", .{meta.spec_url[0]});
         },
         else => {
-            try writer.writeByteNTimes(' ', indent);
+            try writer.splatByteAll(' ', indent);
             try writer.writeAll("/// Spec:\n");
             for (meta.spec_url) |s| {
-                try writer.writeByteNTimes(' ', indent);
+                try writer.splatByteAll(' ', indent);
                 try writer.print("///   {s}\n", .{s});
             }
         },
@@ -353,20 +353,20 @@ fn documentMeta(meta: Meta, out: File, indent: u16) !void {
     switch (meta.mdn_url.len) {
         0 => {},
         1 => {
-            try writer.writeByteNTimes(' ', indent);
+            try writer.splatByteAll(' ', indent);
             try writer.print("/// MDN: {s}\n", .{meta.mdn_url[0]});
         },
         else => {
-            try writer.writeByteNTimes(' ', indent);
+            try writer.splatByteAll(' ', indent);
             try writer.writeAll("/// MDN:\n");
             for (meta.mdn_url) |s| {
-                try writer.writeByteNTimes(' ', indent);
+                try writer.splatByteAll(' ', indent);
                 try writer.print("///   {s}\n", .{s});
             }
         },
     }
 
-    try writer.writeByteNTimes(' ', indent);
+    try writer.splatByteAll(' ', indent);
     try writer.print("/// status: {s}\n", .{@tagName(meta.state)});
 }
 
@@ -401,3 +401,4 @@ const Event = schemas.Event;
 const Meta = schemas.Meta;
 const Allocator = std.mem.Allocator;
 const File = std.fs.File;
+const Writer = std.Io.Writer;

@@ -1662,7 +1662,7 @@ pub fn samp(attributes: []const Attribute, sub_trees: []const Tree) Tree {
 ///   .src
 ///   .type
 ///   .nomodule
-///   .@"async"
+///   .async
 ///   .@"defer"
 ///   .crossorigin
 ///   .integrity

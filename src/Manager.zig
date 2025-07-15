@@ -144,36 +144,39 @@ pub fn subTree(self: *Manager, sub_tree_index: SubTree.GenericIndex) *SubTree {
 pub fn render(m: *Manager, sti: SubTree.GenericIndex) ![]const u8 {
     const tree = try sti.generate(m);
 
-    var arr: std.ArrayListUnmanaged(u8) = .empty;
-    errdefer arr.deinit(m.gpa);
+    var aw: Writer.Allocating = .init(m.gpa);
+    errdefer aw.deinit();
+
+    const writer = &aw.writer;
 
     try m.innerRender(
         tree,
         false,
         {},
-        arr.writer(m.gpa),
+        writer,
     );
 
-    return try arr.toOwnedSlice(m.gpa);
+    return try aw.toOwnedSlice();
 }
 
-pub fn renderPretty(self: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
-    const sub_tree = self.subTree(sub_tree_index);
-    const tree = try sub_tree.generate(self);
+pub fn renderPretty(m: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
+    const sub_tree = m.subTree(sub_tree_index);
+    const tree = try sub_tree.generate(m);
 
-    var arr: std.ArrayList(u8) = .init(self.gpa);
+    var aw: Writer.Allocating = .init(m.gpa);
+    errdefer aw.deinit();
 
-    try self.innerRender(
+    const writer = &aw.writer;
+
+    try m.innerRender(
         tree,
         sub_tree_index,
         true,
         0,
-        arr.writer(),
+        writer,
     );
 
-    try tree.render(self, arr.writer());
-
-    return try arr.toOwnedSlice();
+    return try aw.toOwnedSlice();
 }
 
 fn innerRender(
@@ -181,16 +184,14 @@ fn innerRender(
     tree: Tree,
     comptime pretty: bool,
     indent: if (pretty) u16 else void,
-    writer: anytype,
+    writer: *Writer,
 ) !void {
     const renderAttributes = struct {
         fn renderAttributes(
             attributes: []const Attribute,
-            w: @TypeOf(writer),
+            w: *Writer,
         ) !void {
             for (attributes) |attr| {
-                // try w.print(" {s}", .{@tagName(attr)});
-
                 switch (attr) {
                     inline else => |v| {
                         switch (@TypeOf(v)) {
@@ -289,3 +290,4 @@ const MultiArrayList = std.MultiArrayList;
 const ArrayListUnmanaged = std.ArrayListUnmanaged;
 const Attribute = html_data.Attribute;
 const ElementTag = html_data.ElementTag;
+const Writer = std.io.Writer;

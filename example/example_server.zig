@@ -24,7 +24,7 @@ pub fn main() !void {
     var http_server = try addr.listen(.{ .reuse_address = true });
     defer http_server.deinit();
 
-    log.info("Started server on http://{}", .{addr});
+    log.info("Started server on http://{f}", .{addr});
 
     while (true) {
         const conn = try http_server.accept();
@@ -38,7 +38,7 @@ pub fn main() !void {
 fn handler(conn: Connection) !void {
     defer conn.stream.close();
 
-    log.info("Opening connection with {}", .{conn.address});
+    log.info("Opening connection with {f}", .{conn.address});
 
     var prng = std.Random.DefaultPrng.init(@bitCast(std.time.microTimestamp()));
     const rand = prng.random();
@@ -48,11 +48,11 @@ fn handler(conn: Connection) !void {
     while (server.state == .ready) {
         var req = server.receiveHead() catch |err| switch (err) {
             error.HttpConnectionClosing => {
-                log.info("Closing connection with {}", .{conn.address});
+                log.info("Closing connection with {f}", .{conn.address});
                 return;
             },
             else => {
-                log.err("Closing connection to {}: {}", .{ conn.address, err });
+                log.err("Closing connection to {f}: {t}", .{ conn.address, err });
                 return;
             },
         };
