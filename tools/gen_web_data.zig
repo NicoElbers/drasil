@@ -90,7 +90,14 @@ fn parseZon(arena: Allocator, tools_dir: fs.Dir) ![]Event {
     var aw: Writer.Allocating = .init(arena);
     const writer = &aw.writer;
 
-    _ = try reader.streamRemaining(writer);
+    // https://github.com/ziglang/zig/pull/24420
+    while (true) {
+        const read = reader.stream(writer, .unlimited) catch |err| switch (err) {
+            error.EndOfStream => break,
+            else => |e| return e,
+        };
+        if (read == 0) break;
+    }
 
     const bytes: [:0]u8 = try aw.toOwnedSliceSentinel(0);
 
