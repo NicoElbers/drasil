@@ -41,6 +41,10 @@ fn writeNodeFunctions(arena: Allocator, html_node_path: []const u8, elements: []
     var write_buf: [2048]u8 = undefined;
     var fwriter = html_node.writer(&write_buf);
     const writer = &fwriter.interface;
+    defer {
+        writer.flush() catch @panic("Flush failed");
+        html_node.setEndPos(fwriter.pos) catch @panic("Setting end pos failed");
+    }
 
     try writer.writeAll(pre);
     try writer.writeAll(start_marker ++ "\n\n// generated - *DO NOT EDIT MANUALLY*\n\n");
@@ -93,10 +97,6 @@ fn writeNodeFunctions(arena: Allocator, html_node_path: []const u8, elements: []
 
     try writer.writeAll(end_marker);
     try writer.writeAll(post);
-
-    try writer.flush();
-
-    try html_node.setEndPos(fwriter.pos);
 }
 
 fn writeData(
@@ -124,6 +124,10 @@ fn writeData(
     var write_buf: [2048]u8 = undefined;
     var fwriter = html_data.writer(&write_buf);
     const writer = &fwriter.interface;
+    defer {
+        writer.flush() catch @panic("Failed to flush");
+        html_data.setEndPos(fwriter.pos) catch @panic("Failed to set end pos");
+    }
 
     try writer.writeAll(pre);
     try writer.writeAll(start_marker ++ "\n\n// generated - *DO NOT EDIT MANUALLY*\n\n");
@@ -133,10 +137,6 @@ fn writeData(
 
     try writer.writeAll("\n" ++ end_marker);
     try writer.writeAll(post);
-
-    try writer.flush();
-
-    try html_data.setEndPos(fwriter.pos);
 }
 
 fn writeAttributes(

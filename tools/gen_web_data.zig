@@ -47,7 +47,10 @@ fn writeInitJs(arena: Allocator, events: []const Event, web_dir: fs.Dir) !void {
     var fwriter = init_js.writer(&write_buf);
 
     const writer = &fwriter.interface;
-    defer writer.flush() catch {};
+    defer {
+        writer.flush() catch @panic("Flush failed");
+        init_js.setEndPos(fwriter.pos) catch @panic("Setting end pos failed");
+    }
 
     try writer.writeAll(pre);
     try writer.writeAll(start_marker ++ "\n\n// generated - *DO NOT EDIT MANUALLY*\n\n");
@@ -56,9 +59,6 @@ fn writeInitJs(arena: Allocator, events: []const Event, web_dir: fs.Dir) !void {
 
     try writer.writeAll(end_marker);
     try writer.writeAll(post);
-
-    try writer.flush();
-    try init_js.setEndPos(fwriter.pos);
 }
 
 fn writeEvents(writer: *Writer, events: []const Event) !void {
