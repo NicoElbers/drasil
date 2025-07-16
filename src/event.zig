@@ -16,6 +16,7 @@ pub const Event = enum(u32) {
         sti: SubTree.GenericId,
         ptr: *anyopaque,
         int: u32,
+        sti_and_int: struct { SubTree.GenericId, u32 },
     };
 
     pub const Data = union(enum) {

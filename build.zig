@@ -156,7 +156,7 @@ fn exampleStep(b: *Build, drasil: *Module, target: Target, optimize: Optimize) v
             .Debug, .ReleaseSafe => optimize,
             .ReleaseFast, .ReleaseSmall => .ReleaseSmall,
         },
-        .strip = true,
+        // .strip = true,
     });
     client_mod.addImport("drasil", drasil);
 

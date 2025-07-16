@@ -22,9 +22,7 @@ pub fn deinit(m: *Manager) void {
 
     var it = m.sub_trees.valueIterator();
     while (it.next()) |st| {
-        st.arena.deinit();
-
-        if (st.ctx) |a| a.free(m.gpa);
+        st.deinit(m);
     }
     m.sub_trees.deinit(m.gpa);
 
@@ -68,19 +66,15 @@ pub fn register(
     return id.specific(T);
 }
 
-// pub fn deregister(m: *Manager, sti: SubTree.GenericId) void {
-//     const st = sti.tree(m);
-//
-//     if (st.ctx) |ctx| {
-//         _ = ctx;
-//         @panic("TODO: free context");
-//     }
-//
-//     assert(m.new_sub_trees.remove(sti));
-// }
+pub fn deregister(m: *Manager, sti: SubTree.GenericId) void {
+    const st = sti.tree(m);
+    st.deinit(m);
 
 pub fn registerEvent(self: *Manager) !Event {
     for (self.events.items, 0..) |event, idx| {
+    assert(m.sub_trees.remove(sti));
+}
+
         if (event != null) continue;
 
         self.events.items[idx] = .empty;
