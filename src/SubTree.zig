@@ -1,9 +1,44 @@
 arena: ArenaAllocator,
 generator: Generator,
-ctx: ?*anyopaque,
+ctx: ?Allocation,
 cache: ?Managed,
 
 const SubTree = @This();
+
+const Allocation = struct {
+    alignment: std.mem.Alignment,
+    bytes: []u8,
+
+    pub fn alloc(gpa: Allocator, comptime T: type, value: T) !Allocation {
+        const alignment: std.mem.Alignment = .of(T);
+        const sizeof = @sizeOf(T);
+
+        const raw_bytes = gpa.rawAlloc(sizeof, alignment, @returnAddress()) orelse
+            return error.OutOfMemory;
+
+        assert(alignment.check(@intFromPtr(raw_bytes)));
+        const bytes = raw_bytes[0..sizeof];
+
+        const allocation: Allocation = .{
+            .alignment = alignment,
+            .bytes = bytes,
+        };
+
+        allocation.get(T).* = value;
+
+        return allocation;
+    }
+
+    pub fn free(allocation: Allocation, gpa: Allocator) void {
+        gpa.rawFree(allocation.bytes, allocation.alignment, @returnAddress());
+    }
+
+    pub fn get(allocation: Allocation, comptime T: type) *T {
+        assert(@sizeOf(T) == allocation.bytes.len);
+        assert(@alignOf(T) == allocation.alignment.toByteUnits());
+        return @alignCast(@ptrCast(allocation.bytes));
+    }
+};
 
 pub const Generator = *const fn (
     /// `SubTree.GenericIndex` used to access context and read reactive variables
@@ -78,8 +113,8 @@ pub fn Index(comptime T: type) type {
         }
 
         pub fn context(self: Self, m: *Manager) ?*T {
-            return if (self.tree(m).ctx) |ptr|
-                @alignCast(@ptrCast(ptr))
+            return if (self.tree(m).ctx) |alloc|
+                alloc.get(T)
             else
                 null;
         }
@@ -106,13 +141,10 @@ pub fn Index(comptime T: type) type {
     };
 }
 
-pub fn setContext(self: *SubTree, manager: *Manager, context: anytype) !void {
+pub fn setContext(self: *SubTree, m: *Manager, context: anytype) !void {
     assert(self.ctx == null);
 
-    const ctx = try manager.context_arena.allocator().create(@TypeOf(context));
-    ctx.* = context;
-
-    self.ctx = ctx;
+    self.ctx = try .alloc(m.gpa, @TypeOf(context), context);
 }
 
 pub fn dirty(self: *SubTree) void {
