@@ -186,6 +186,12 @@ pub fn dirtyCallback(ctx: Event.Context, m: *Manager, _: Event.Data) !void {
     ctx.sti.tree(m).dirty();
 }
 
+pub fn deinit(self: *SubTree, m: *Manager) void {
+    if (self.ctx) |c| c.free(m.gpa);
+
+    self.arena.deinit();
+}
+
 const std = @import("std");
 
 const assert = std.debug.assert;

@@ -6,14 +6,13 @@ pub const App = struct {
     swap: Event,
     clear: Event,
 
-    click: Event,
-    highlighted: Reactive(?usize),
+    id_counter: u32,
 
-    table: Reactive([]Item),
+    highlighted: Reactive(?SubTree.Id(Row)),
+
+    table: Reactive(ArrayListUnmanaged(SubTree.Id(Row))),
 
     prng: ?Random.DefaultPrng,
-
-    const Item = struct { text: []u8 };
 
     pub fn init(m: *Manager) !SubTree.Id(App) {
         const sti = try m.register(App, loadingGenerate);
@@ -36,9 +35,6 @@ pub const App = struct {
         const swap = try m.registerEvent();
         _ = try swap.addListener(m, .{ .sti = sti.generic() }, swapCallback);
 
-        const click = try m.registerEvent();
-        _ = try click.addListener(m, .{ .sti = sti.generic() }, clickCallback);
-
         try sti.setContext(m, .{
             .create_1_000 = create_1_000,
             .create_10_000 = create_10_000,
@@ -46,17 +42,82 @@ pub const App = struct {
             .update_10 = update_10,
             .clear = clear,
             .swap = swap,
-
-            .click = click,
             .highlighted = try .init(m, null),
 
-            .table = try .init(m, &.{}),
+            .id_counter = 1,
+
+            .table = try .init(m, .empty),
             .prng = null,
         });
 
         try web.js.fetch.start("rand", .{ .sti = sti.generic() }, prngCallback);
 
         return sti;
+    }
+
+    fn initRow(m: *Manager, sti: SubTree.Id(App), text: []u8) !SubTree.Id(Row) {
+        const ctx = sti.context(m).?;
+
+        defer ctx.id_counter += 1;
+        const id = ctx.id_counter;
+
+        const row = try Row.init(m, id, text);
+
+        const row_ctx = row.context(m).?;
+        _ = try row_ctx.highlight.addListener(m, .{ .sti_and_int = .{ sti.generic(), id } }, highlightCallback);
+        _ = try row_ctx.remove.addListener(m, .{ .sti_and_int = .{ sti.generic(), id } }, removeRowCallback);
+
+        return row;
+    }
+
+    fn removeRowCallback(context: Context, m: *Manager, data: Data) !void {
+        _ = data;
+        const sti, const id = context.sti_and_int;
+        const ctx = sti.specific(@This()).context(m).?;
+
+        std.log.info("Pre table", .{});
+        const table = try ctx.table.getMut(m, sti);
+        std.log.info("Post table", .{});
+
+        for (table.items, 0..) |row, i| {
+            std.log.info("Pre row {d}", .{i});
+            const row_ctx = row.context(m).?;
+
+            std.log.info("Looking for {d}; found {d}", .{ id, row_ctx.id });
+
+            if (row_ctx.id != id) continue;
+
+            std.log.info("Pre remove", .{});
+            _ = table.orderedRemove(i);
+            std.log.info("Post remove", .{});
+
+            return;
+        }
+        unreachable; // Couldn't find row by this Id
+    }
+
+    fn highlightCallback(context: Context, m: *Manager, data: Data) !void {
+        _ = data;
+        const sti, const int = context.sti_and_int;
+        const ctx = sti.specific(@This()).context(m).?;
+
+        const table = try ctx.table.get(m, sti);
+        const highlighted = try ctx.highlighted.getMut(m, sti);
+        for (table.items) |row| {
+            const row_ctx = row.context(m).?;
+
+            if (row_ctx.id != int) continue;
+
+            if (highlighted.*) |h| {
+                try h.context(m).?.highlighted.set(m, sti, false);
+            }
+
+            try row_ctx.highlighted.set(m, sti, true);
+            highlighted.* = row;
+
+            return;
+        }
+        unreachable; // We didn't find the row by this Id
     }
 
     fn prngCallback(ctx: Context, m: *Manager, data: Data) !void {
@@ -81,107 +142,108 @@ pub const App = struct {
         sti.updateGenerator(m, generate);
     }
 
-    fn clickCallback(context: Context, m: *Manager, data: Data) !void {
-        const ctx = context.sti.specific(@This()).context(m).?;
-
-        const event: *web.PointerEvent = @alignCast(@ptrCast(data.ptr));
-
-        const target = event.ref.getRef("target").?;
-        defer target.unref();
-
-        const tr = (try target.call(m.gpa, "closest", .{"tr"})).?;
-        defer tr.unref();
-
-        const row_str = try tr.get("rowIndex");
-        defer m.gpa.free(row_str);
-
-        const row = try std.fmt.parseInt(usize, row_str, 10);
-
-        const highlight = try ctx.highlighted.getMut(m, context.sti);
-
-        if (highlight.* != null and highlight.*.? == row)
-            highlight.* = null
-        else
-            highlight.* = row;
-    }
-
     fn create_1_000Callback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
-        const ctx = context.sti.specific(@This()).context(m).?;
+        const sti = context.sti.specific(@This());
+        const ctx = sti.context(m).?;
 
         const table = try ctx.table.getMut(m, context.sti);
         const prng = if (ctx.prng) |*p| p else unreachable;
 
-        for (table.*) |item| {
-            m.gpa.free(item.text);
+        for (table.items) |row| {
+            Row.deinit(row, m);
         }
 
-        m.gpa.free(table.*);
-        table.* = try m.gpa.alloc(Item, 1_000);
+        table.clearRetainingCapacity();
+        try table.ensureTotalCapacity(m.gpa, 1_000);
+        ctx.id_counter = 0;
 
         const encoder = std.base64.standard.Encoder;
         var buf: [30]u8 = undefined;
-        for (table.*) |*item| {
+
+        table.items.len = 1_000;
+        for (table.items) |*item| {
             const random = prng.next();
             const out = encoder.encode(&buf, @ptrCast(&random));
-            item.text = try std.fmt.allocPrint(m.gpa, "{s}", .{out});
+
+            const text = try std.fmt.allocPrint(m.gpa, "{s}", .{out});
+
+            item.* = try initRow(m, sti, text);
         }
     }
 
     fn create_10_000Callback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
-        const ctx = context.sti.specific(@This()).context(m).?;
+        const sti = context.sti.specific(@This());
+        const ctx = sti.context(m).?;
 
         const table = try ctx.table.getMut(m, context.sti);
         const prng = if (ctx.prng) |*p| p else unreachable;
 
-        for (table.*) |item| {
-            m.gpa.free(item.text);
+        for (table.items) |row| {
+            Row.deinit(row, m);
         }
 
-        m.gpa.free(table.*);
-        table.* = try m.gpa.alloc(Item, 10_000);
+        table.clearRetainingCapacity();
+        try table.ensureTotalCapacity(m.gpa, 10_000);
+        ctx.id_counter = 0;
 
         const encoder = std.base64.standard.Encoder;
         var buf: [30]u8 = undefined;
-        for (table.*) |*item| {
+
+        table.items.len = 10_000;
+        for (table.items) |*item| {
             const random = prng.next();
             const out = encoder.encode(&buf, @ptrCast(&random));
-            item.text = try std.fmt.allocPrint(m.gpa, "{s}", .{out});
+
+            const text = try std.fmt.allocPrint(m.gpa, "{s}", .{out});
+
+            item.* = try initRow(m, sti, text);
         }
     }
 
     fn append_1_000Callback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
-        const ctx = context.sti.specific(@This()).context(m).?;
+        const sti = context.sti.specific(@This());
+        const ctx = sti.context(m).?;
 
         const table = try ctx.table.getMut(m, context.sti);
         const prng = if (ctx.prng) |*p| p else unreachable;
 
-        const old_len = table.len;
-        table.* = try m.gpa.realloc(table.*, old_len + 1_000);
+        const old_len = table.items.len;
+        try table.ensureUnusedCapacity(m.gpa, 1_000);
 
         const encoder = std.base64.standard.Encoder;
         var buf: [30]u8 = undefined;
-        for (table.*[old_len..][0..1_000]) |*item| {
+
+        table.items.len += 1_000;
+        for (table.items[old_len..][0..1_000]) |*item| {
             const random = prng.next();
             const out = encoder.encode(&buf, @ptrCast(&random));
-            item.text = try std.fmt.allocPrint(m.gpa, "{s}", .{out});
+
+            const text = try std.fmt.allocPrint(m.gpa, "{s}", .{out});
+
+            item.* = try initRow(m, sti, text);
         }
     }
 
     fn update_10Callback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
-        const ctx = context.sti.specific(@This()).context(m).?;
+        const sti = context.sti.specific(@This());
+        const ctx = sti.context(m).?;
 
         const table = try ctx.table.getMut(m, context.sti);
 
         var i: usize = 0;
-        while (i < table.len) : (i += 10) {
-            const item = &table.*[i];
+        while (i < table.items.len) : (i += 10) {
+            const item = table.items[i].context(m).?;
 
-            item.text = try m.gpa.realloc(item.text, item.text.len + 2);
-            item.text[item.text.len - 2 ..][0..2].* = "!!".*;
+            const text = try item.text.getMut(m, sti);
+
+            const new_text = try m.gpa.realloc(text.*, text.len + 2);
+            new_text[text.len..][0..2].* = "!!".*;
+
+            try item.text.set(m, sti, new_text);
         }
     }
 
@@ -191,23 +253,24 @@ pub const App = struct {
 
         const table = try ctx.table.getMut(m, context.sti);
 
-        if (table.len < 2) return;
+        if (table.items.len < 2) return;
 
-        std.mem.swap(Item, &table.*[table.len - 2], &table.*[1]);
+        std.mem.swap(SubTree.Id(Row), &table.items[table.items.len - 2], &table.items[1]);
     }
 
     fn clearCallback(context: Context, m: *Manager, data: Data) !void {
         _ = data;
         const ctx = context.sti.specific(@This()).context(m).?;
 
+        ctx.id_counter = 1;
+
         const table = try ctx.table.getMut(m, context.sti);
 
-        for (table.*) |item| {
-            m.gpa.free(item.text);
+        for (table.items) |row| {
+            Row.deinit(row, m);
         }
 
-        m.gpa.free(table.*);
-        table.* = &.{};
+        table.clearAndFree(m.gpa);
     }
 
     fn loadingGenerate(sti: SubTree.Id(App), m: *Manager, arena: Allocator) !SubTree.Managed {
@@ -225,26 +288,8 @@ pub const App = struct {
 
         const table = try ctx.table.get(m, sti);
 
-        const rows = try arena.alloc(Tree, table.len);
-
-        // TODO: Not a fan of how this is done
-        const highlight_ptr = try ctx.highlighted.get(m, sti);
-        const highlight = highlight_ptr.* orelse std.math.maxInt(usize);
-
-        for (rows, table.*, 1..) |*row, item, i| {
-            const class = if (i - 1 == highlight)
-                "row highlight"
-            else
-                "row";
-
-            // TODO: Make this usecase less shit
-            const managed = try m.manage(arena, .tr(&.{.{ .class = class }}, &.{
-                .td(&.{.{ .onclick = ctx.click }}, &.{.raw(try std.fmt.allocPrint(arena, "{d}", .{i}))}),
-                .td(&.{.{ .onclick = ctx.click }}, &.{.raw(item.text)}),
-            }));
-
-            row.* = managed.tree;
-        }
+        const rows = try arena.alloc(Tree, table.items.len);
+        for (rows, table.items) |*row, id| row.* = .dyn(id);
 
         return m.manage(
             arena,
@@ -269,15 +314,13 @@ pub const Row = struct {
     remove: Event,
     highlighted: Reactive(bool),
     id: u32,
-    text: []const u8,
+    text: Reactive([]u8),
 
     // Assumes text is allocated using `m.gpa` and takes ownership of this information
-    pub fn init(m: *Manager, id: u32, text: []const u8) !SubTree.Id(Row) {
+    pub fn init(m: *Manager, id: u32, text: []u8) !SubTree.Id(Row) {
         const sti = try m.register(@This(), generate);
 
         const highlight = try m.registerEvent();
-        _ = try highlight.addListener(m, .{ .sti = sti.generic }, highlightCallback);
-
         const remove = try m.registerEvent();
 
         try sti.setContext(m, .{
@@ -285,21 +328,23 @@ pub const Row = struct {
             .remove = remove,
             .highlighted = try .init(m, false),
             .id = id,
-            .text = text,
+            .text = try .init(m, text),
         });
-    }
 
-    fn highlightCallback(context: Context, m: *Manager, _: Data) !void {
-        const sti = context.sti.specific(@This());
-        const ctx = sti.context(m).?;
-
-        try ctx.highlighted.set(m, sti, true);
+        return sti;
     }
 
     pub fn deinit(sti: SubTree.Id(@This()), m: *Manager) void {
         const ctx = sti.context(m).?;
 
-        m.gpa.free(ctx.text);
+        ctx.highlight.deregister(m);
+        ctx.remove.deregister(m);
+        _ = ctx.highlighted.deinit(m);
+
+        const text = ctx.text.deinit(m);
+        m.gpa.free(text);
+
+        m.deregister(sti.generic());
     }
 
     fn generate(sti: SubTree.Id(@This()), m: *Manager, arena: Allocator) !SubTree.Managed {
@@ -314,7 +359,7 @@ pub const Row = struct {
                 .raw(try std.fmt.allocPrint(arena, "{d}", .{ctx.id})),
             }),
             .td(&.{}, &.{
-                .raw(ctx.text),
+                .raw((try ctx.text.get(m, sti)).*),
             }),
             .td(&.{}, &.{
                 .button(&.{.{ .onclick = ctx.remove }}, &.{
@@ -340,3 +385,4 @@ const Context = Event.Context;
 const Data = Event.Data;
 const Allocator = std.mem.Allocator;
 const Random = std.Random;
+const ArrayListUnmanaged = std.ArrayListUnmanaged;
