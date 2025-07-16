@@ -5,33 +5,41 @@ const Manager = @This();
 gpa: Allocator,
 
 sub_trees: AutoHashMapUnmanaged(SubTree.GenericId, SubTree),
-events: ArrayListUnmanaged(?ArrayListUnmanaged(Event.Listener)),
 id_counter: u32,
+
+events: AutoHashMapUnmanaged(Event, ArrayListUnmanaged(Event.Listener)),
+event_counter: u32,
 
 pub fn init(gpa: Allocator) Manager {
     return .{
         .gpa = gpa,
         .sub_trees = .empty,
-        .events = .empty,
         .id_counter = 0,
+
+        .events = .empty,
+        .event_counter = 0,
     };
 }
 
 pub fn deinit(m: *Manager) void {
     defer m.* = undefined;
 
-    var it = m.sub_trees.valueIterator();
-    while (it.next()) |st| {
-        st.deinit(m);
+    {
+        var it = m.sub_trees.valueIterator();
+        while (it.next()) |st| {
+            st.deinit(m);
+        }
+        m.sub_trees.deinit(m.gpa);
     }
-    m.sub_trees.deinit(m.gpa);
 
     // Can't figure out a better way for rn
-    for (0..m.events.items.len) |idx| {
-        if (m.events.items[idx] == null) continue;
-        m.events.items[idx].?.deinit(m.gpa);
+    {
+        var it = m.events.iterator();
+        while (it.next()) |entry| {
+            entry.value_ptr.deinit(m.gpa);
+        }
+        m.events.deinit(m.gpa);
     }
-    m.events.deinit(m.gpa);
 }
 
 pub fn register(
@@ -70,20 +78,18 @@ pub fn deregister(m: *Manager, sti: SubTree.GenericId) void {
     const st = sti.tree(m);
     st.deinit(m);
 
-pub fn registerEvent(self: *Manager) !Event {
-    for (self.events.items, 0..) |event, idx| {
     assert(m.sub_trees.remove(sti));
 }
 
-        if (event != null) continue;
+pub fn registerEvent(m: *Manager) !Event {
+    const event: Event = @enumFromInt(m.event_counter);
+    m.event_counter += 1;
 
-        self.events.items[idx] = .empty;
-        return @enumFromInt(idx);
-    } else {
-        const idx = self.events.items.len;
-        try self.events.append(self.gpa, .empty);
-        return @enumFromInt(idx);
-    }
+    const gop = try m.events.getOrPut(m.gpa, event);
+    assert(!gop.found_existing);
+    gop.value_ptr.* = .empty;
+
+    return event;
 }
 
 pub fn manage(self: *Manager, arena: Allocator, tree: Tree) !SubTree.Managed {

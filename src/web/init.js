@@ -95,7 +95,7 @@ const text_encoder = new TextEncoder();
 
 var wasm_memory = new WebAssembly.Memory({
   initial: 17, // 1.1M
-  maximum: 514, // 33.7M
+  maximum: 600, // 39.3M
 });
 var wasm_exports = null;
 
