@@ -76,18 +76,14 @@ pub const Event = enum(u32) {
     }
 
     /// Asserts that the event was registered
-    pub fn deregister(event: Event, manager: *Manager) void {
-        const arr = event.listeners(manager).?;
-        arr.deinit(manager.gpa);
+    pub fn deregister(event: Event, m: *Manager) void {
+        const arr = event.listeners(m).?;
 
-        manager.events.items[@intFromEnum(event)] = null;
+        arr.deinit(m.gpa);
     }
 
-    pub fn listeners(event: Event, manager: *Manager) ?*ArrayListUnmanaged(Listener) {
-        const idx = @intFromEnum(event);
-        if (manager.events.items.len <= idx) return null;
-        if (manager.events.items[idx]) |*l| return l;
-        return null;
+    pub fn listeners(event: Event, m: *Manager) ?*ArrayListUnmanaged(Listener) {
+        return m.events.getPtr(event);
     }
 };
 
