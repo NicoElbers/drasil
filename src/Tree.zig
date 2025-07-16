@@ -14,7 +14,7 @@ pub const Node = union(enum) {
         attributes: []const Attribute,
     },
     text: []const u8,
-    dynamic: SubTree.GenericIndex,
+    dynamic: SubTree.GenericId,
     static: *const Tree,
 };
 
@@ -30,7 +30,7 @@ pub fn raw(text: []const u8) Tree {
 }
 
 pub fn dyn(sub_tree_index: anytype) Tree {
-    return if (@TypeOf(sub_tree_index) == SubTree.GenericIndex)
+    return if (@TypeOf(sub_tree_index) == SubTree.GenericId)
         .{ .node = .{ .dynamic = sub_tree_index } }
     else
         .{ .node = .{ .dynamic = sub_tree_index.generic() } };

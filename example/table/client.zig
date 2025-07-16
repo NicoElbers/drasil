@@ -15,7 +15,7 @@ pub const App = struct {
 
     const Item = struct { text: []u8 };
 
-    pub fn init(m: *Manager) !SubTree.Index(App) {
+    pub fn init(m: *Manager) !SubTree.Id(App) {
         const sti = try m.register(App, loadingGenerate);
 
         const create_1_000 = try m.registerEvent();
@@ -210,7 +210,7 @@ pub const App = struct {
         table.* = &.{};
     }
 
-    fn loadingGenerate(sti: SubTree.Index(App), m: *Manager, arena: Allocator) !SubTree.Managed {
+    fn loadingGenerate(sti: SubTree.Id(App), m: *Manager, arena: Allocator) !SubTree.Managed {
         _ = sti;
 
         std.log.info("Generating loading tables", .{});
@@ -218,7 +218,7 @@ pub const App = struct {
         return m.manage(arena, .h1(&.{}, &.{.raw("Loading data")}));
     }
 
-    fn generate(sti: SubTree.Index(App), m: *Manager, arena: Allocator) !SubTree.Managed {
+    fn generate(sti: SubTree.Id(App), m: *Manager, arena: Allocator) !SubTree.Managed {
         std.log.info("Generating tables", .{});
 
         const ctx = sti.context(m).?;
@@ -261,6 +261,67 @@ pub const App = struct {
                 .table(&.{}, rows),
             }),
         );
+    }
+};
+
+pub const Row = struct {
+    highlight: Event,
+    remove: Event,
+    highlighted: Reactive(bool),
+    id: u32,
+    text: []const u8,
+
+    // Assumes text is allocated using `m.gpa` and takes ownership of this information
+    pub fn init(m: *Manager, id: u32, text: []const u8) !SubTree.Id(Row) {
+        const sti = try m.register(@This(), generate);
+
+        const highlight = try m.registerEvent();
+        _ = try highlight.addListener(m, .{ .sti = sti.generic }, highlightCallback);
+
+        const remove = try m.registerEvent();
+
+        try sti.setContext(m, .{
+            .highlight = highlight,
+            .remove = remove,
+            .highlighted = try .init(m, false),
+            .id = id,
+            .text = text,
+        });
+    }
+
+    fn highlightCallback(context: Context, m: *Manager, _: Data) !void {
+        const sti = context.sti.specific(@This());
+        const ctx = sti.context(m).?;
+
+        try ctx.highlighted.set(m, sti, true);
+    }
+
+    pub fn deinit(sti: SubTree.Id(@This()), m: *Manager) void {
+        const ctx = sti.context(m).?;
+
+        m.gpa.free(ctx.text);
+    }
+
+    fn generate(sti: SubTree.Id(@This()), m: *Manager, arena: Allocator) !SubTree.Managed {
+        const ctx = sti.context(m).?;
+
+        const highlighted = (try ctx.highlighted.get(m, sti)).*;
+
+        const class = if (highlighted) "row highlight" else "row";
+
+        return m.manage(arena, .tr(&.{ .{ .class = class }, .{ .onclick = ctx.highlight } }, &.{
+            .td(&.{}, &.{
+                .raw(try std.fmt.allocPrint(arena, "{d}", .{ctx.id})),
+            }),
+            .td(&.{}, &.{
+                .raw(ctx.text),
+            }),
+            .td(&.{}, &.{
+                .button(&.{.{ .onclick = ctx.remove }}, &.{
+                    .raw("X"),
+                }),
+            }),
+        }));
     }
 };
 

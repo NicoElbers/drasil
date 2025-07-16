@@ -15,8 +15,8 @@ pub fn Reactive(comptime T: type) type {
             return self.value;
         }
 
-        fn genericSti(sti: anytype) SubTree.GenericIndex {
-            return if (@TypeOf(sti) == SubTree.GenericIndex)
+        fn genericSti(sti: anytype) SubTree.GenericId {
+            return if (@TypeOf(sti) == SubTree.GenericId)
                 sti
             else
                 sti.generic();
@@ -62,7 +62,7 @@ test "Correct rerenders" {
 
         pub var render: u32 = 0;
 
-        pub fn init(m: *Manager, value: Reactive(void)) !SubTree.Index(@This()) {
+        pub fn init(m: *Manager, value: Reactive(void)) !SubTree.Id(@This()) {
             const sti = try m.register(@This(), generate);
 
             try sti.setContext(m, .{ .value = value });
@@ -70,7 +70,7 @@ test "Correct rerenders" {
             return sti;
         }
 
-        fn generate(sti: SubTree.Index(@This()), m: *Manager, arena: Allocator) !SubTree.Managed {
+        fn generate(sti: SubTree.Id(@This()), m: *Manager, arena: Allocator) !SubTree.Managed {
             const ctx = sti.context(m).?;
 
             _ = try ctx.value.get(m, sti);
@@ -86,7 +86,7 @@ test "Correct rerenders" {
 
         pub var render: u32 = 0;
 
-        pub fn init(m: *Manager, value: Reactive(void)) !SubTree.Index(@This()) {
+        pub fn init(m: *Manager, value: Reactive(void)) !SubTree.Id(@This()) {
             const sti = try m.register(@This(), generate);
 
             try sti.setContext(m, .{ .value = value });
@@ -94,7 +94,7 @@ test "Correct rerenders" {
             return sti;
         }
 
-        fn generate(sti: SubTree.Index(@This()), m: *Manager, arena: Allocator) !SubTree.Managed {
+        fn generate(sti: SubTree.Id(@This()), m: *Manager, arena: Allocator) !SubTree.Managed {
             const ctx = sti.context(m).?;
 
             _ = try ctx.value.getMut(m, sti);

@@ -24,9 +24,9 @@ const State = struct {
 
     screen: Screen,
 
-    browser_app: SubTree.Index(App),
-    counter_app: SubTree.Index(counter.App),
-    table_app: SubTree.Index(table.App),
+    browser_app: SubTree.Id(App),
+    counter_app: SubTree.Id(counter.App),
+    table_app: SubTree.Id(table.App),
 };
 var state: State = undefined;
 
@@ -88,7 +88,7 @@ const App = struct {
     const Example = struct { click_event: Event, name: []const u8 };
 
     // A function we use to setup all state
-    pub fn init(m: *Manager) !SubTree.Index(App) {
+    pub fn init(m: *Manager) !SubTree.Id(App) {
         const values = std.enums.values(Screen);
 
         const examples = try m.gpa.alloc(Example, values.len);
@@ -102,7 +102,7 @@ const App = struct {
             example.click_event = event;
         }
 
-        // `sti`, stands for `SubTree Index`
+        // `sti`, stands for `SubTree Id`
         const sti = try m.register(App, generate);
 
         try sti.setContext(m, .{ .examples = examples });
@@ -136,7 +136,7 @@ const App = struct {
     }
 
     fn generate(
-        sti: SubTree.Index(App),
+        sti: SubTree.Id(App),
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {

@@ -42,7 +42,7 @@ const Allocation = struct {
 
 pub const Generator = *const fn (
     /// `SubTree.GenericIndex` used to access context and read reactive variables
-    sti: GenericIndex,
+    sti: GenericId,
     /// Reference to the parent `Manager` for rendering subtrees.
     manager: *Manager,
     /// Arena for temporary data, particularly useful for formatted strings.
@@ -54,18 +54,18 @@ pub const Generator = *const fn (
 pub const Managed = struct { tree: Tree };
 
 /// A type erased version of a `SubTree.Index`
-pub const GenericIndex = enum(u32) {
+pub const GenericId = enum(u32) {
     _,
 
-    pub fn specific(index: GenericIndex, comptime T: type) Index(T) {
+    pub fn specific(index: GenericId, comptime T: type) Id(T) {
         return @enumFromInt(@intFromEnum(index));
     }
 
-    pub fn tree(index: GenericIndex, m: *Manager) *SubTree {
+    pub fn tree(index: GenericId, m: *Manager) *SubTree {
         return m.subTree(index);
     }
 
-    pub fn generate(index: GenericIndex, m: *Manager) !Tree {
+    pub fn generate(index: GenericId, m: *Manager) !Tree {
         const st = m.subTree(index);
         st.update(m);
 
@@ -75,15 +75,15 @@ pub const GenericIndex = enum(u32) {
         return st.cache.?.tree;
     }
 
-    pub fn render(index: GenericIndex, m: *Manager) ![]const u8 {
+    pub fn render(index: GenericId, m: *Manager) ![]const u8 {
         return try m.render(index);
     }
 
-    pub fn listen(index: GenericIndex, m: *Manager, event: Event) !Event.Listener.Id {
+    pub fn listen(index: GenericId, m: *Manager, event: Event) !Event.Listener.Id {
         return try event.addListener(m, .{ .sti = index }, dirtyCallback);
     }
 
-    pub fn updateGenerator(self: GenericIndex, m: *Manager, generator: Generator) void {
+    pub fn updateGenerator(self: GenericId, m: *Manager, generator: Generator) void {
         std.log.info("Updating generator", .{});
 
         const t = self.tree(m);
@@ -92,7 +92,7 @@ pub const GenericIndex = enum(u32) {
     }
 };
 
-pub fn Index(comptime T: type) type {
+pub fn Id(comptime T: type) type {
     return enum(u32) {
         _,
 
@@ -104,7 +104,7 @@ pub fn Index(comptime T: type) type {
             arena: Allocator,
         ) anyerror!SubTree.Managed;
 
-        pub fn generic(self: Self) GenericIndex {
+        pub fn generic(self: Self) GenericId {
             return @enumFromInt(@intFromEnum(self));
         }
 
