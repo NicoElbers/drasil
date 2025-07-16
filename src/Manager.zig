@@ -4,37 +4,32 @@ const Manager = @This();
 
 gpa: Allocator,
 
-// TODO: Get this thing removed
-context_arena: ArenaAllocator,
-
 sub_trees: ArrayListUnmanaged(SubTree),
 events: ArrayListUnmanaged(?ArrayListUnmanaged(Event.Listener)),
 
 pub fn init(gpa: Allocator) Manager {
     return .{
         .gpa = gpa,
-        .context_arena = .init(gpa),
         .sub_trees = .empty,
         .events = .empty,
     };
 }
 
-pub fn deinit(self: *Manager) void {
-    defer self.* = undefined;
+pub fn deinit(m: *Manager) void {
+    defer m.* = undefined;
 
     for (self.sub_trees.items) |st| {
         st.arena.deinit();
+        if (st.ctx) |a| a.free(m.gpa);
     }
-    self.sub_trees.deinit(self.gpa);
+    m.sub_trees.deinit(m.gpa);
 
     // Can't figure out a better way for rn
-    for (0..self.events.items.len) |idx| {
-        if (self.events.items[idx] == null) continue;
-        self.events.items[idx].?.deinit(self.gpa);
+    for (0..m.events.items.len) |idx| {
+        if (m.events.items[idx] == null) continue;
+        m.events.items[idx].?.deinit(m.gpa);
     }
-    self.events.deinit(self.gpa);
-
-    self.context_arena.deinit();
+    m.events.deinit(m.gpa);
 }
 
 pub fn register(
