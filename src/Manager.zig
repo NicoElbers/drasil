@@ -4,22 +4,26 @@ const Manager = @This();
 
 gpa: Allocator,
 
-sub_trees: ArrayListUnmanaged(SubTree),
+sub_trees: AutoHashMapUnmanaged(SubTree.GenericId, SubTree),
 events: ArrayListUnmanaged(?ArrayListUnmanaged(Event.Listener)),
+id_counter: u32,
 
 pub fn init(gpa: Allocator) Manager {
     return .{
         .gpa = gpa,
         .sub_trees = .empty,
         .events = .empty,
+        .id_counter = 0,
     };
 }
 
 pub fn deinit(m: *Manager) void {
     defer m.* = undefined;
 
-    for (self.sub_trees.items) |st| {
+    var it = m.sub_trees.valueIterator();
+    while (it.next()) |st| {
         st.arena.deinit();
+
         if (st.ctx) |a| a.free(m.gpa);
     }
     m.sub_trees.deinit(m.gpa);
@@ -33,19 +37,25 @@ pub fn deinit(m: *Manager) void {
 }
 
 pub fn register(
-    self: *Manager,
+    m: *Manager,
     comptime T: type,
-    generator: SubTree.Index(T).Generator,
-) !SubTree.Index(T) {
+    generator: SubTree.Id(T).Generator,
+) !SubTree.Id(T) {
     comptime {
-        const si = @typeInfo(SubTree.GenericIndex);
-        const ti = @typeInfo(SubTree.Index(T));
+        const si = @typeInfo(SubTree.GenericId);
+        const ti = @typeInfo(SubTree.Id(T));
         assert(si.@"enum".tag_type == ti.@"enum".tag_type);
     }
 
-    const index: SubTree.Index(T) = @enumFromInt(self.sub_trees.items.len);
-    try self.sub_trees.append(self.gpa, .{
-        .arena = .init(self.gpa),
+    const id: SubTree.GenericId = blk: {
+        defer m.id_counter += 1;
+        break :blk @enumFromInt(m.id_counter);
+    };
+
+    const gop = try m.sub_trees.getOrPut(m.gpa, id);
+    assert(!gop.found_existing);
+    gop.value_ptr.* = .{
+        .arena = .init(m.gpa),
 
         // This is safe because `SubTree.GenericIndex` and `SubTree.Index(T)`
         // have the same layout being u32's
@@ -53,10 +63,21 @@ pub fn register(
 
         .ctx = null,
         .cache = null,
-    });
+    };
 
-    return index;
+    return id.specific(T);
 }
+
+// pub fn deregister(m: *Manager, sti: SubTree.GenericId) void {
+//     const st = sti.tree(m);
+//
+//     if (st.ctx) |ctx| {
+//         _ = ctx;
+//         @panic("TODO: free context");
+//     }
+//
+//     assert(m.new_sub_trees.remove(sti));
+// }
 
 pub fn registerEvent(self: *Manager) !Event {
     for (self.events.items, 0..) |event, idx| {
@@ -131,12 +152,12 @@ pub fn manage(self: *Manager, arena: Allocator, tree: Tree) !SubTree.Managed {
     }
 }
 
-pub fn subTree(self: *Manager, sub_tree_index: SubTree.GenericIndex) *SubTree {
-    return &self.sub_trees.items[@intFromEnum(sub_tree_index)];
+pub fn subTree(self: *Manager, id: SubTree.GenericId) *SubTree {
+    return self.sub_trees.getPtr(id).?;
 }
 
 // TODO: move all this rendering stuff out to the backend
-pub fn render(m: *Manager, sti: SubTree.GenericIndex) ![]const u8 {
+pub fn render(m: *Manager, sti: SubTree.GenericId) ![]const u8 {
     const tree = try sti.generate(m);
 
     var aw: Writer.Allocating = .init(m.gpa);
@@ -154,7 +175,7 @@ pub fn render(m: *Manager, sti: SubTree.GenericIndex) ![]const u8 {
     return try aw.toOwnedSlice();
 }
 
-pub fn renderPretty(m: *Manager, sub_tree_index: SubTree.Index) ![]const u8 {
+pub fn renderPretty(m: *Manager, sub_tree_index: SubTree.Id) ![]const u8 {
     const sub_tree = m.subTree(sub_tree_index);
     const tree = try sub_tree.generate(m);
 
@@ -283,6 +304,7 @@ const ArenaAllocator = std.heap.ArenaAllocator;
 const Allocator = std.mem.Allocator;
 const MultiArrayList = std.MultiArrayList;
 const ArrayListUnmanaged = std.ArrayListUnmanaged;
+const AutoHashMapUnmanaged = std.AutoHashMapUnmanaged;
 const Attribute = html_data.Attribute;
 const ElementTag = html_data.ElementTag;
 const Writer = std.io.Writer;

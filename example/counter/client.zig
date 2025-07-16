@@ -3,17 +3,17 @@ pub const App = struct {
     // We have references to other components or `SubTree`s. Since we don't
     // want to accidentally invalidate a pointer, we pass around indices
     // instead.
-    header: SubTree.Index(Header),
-    button: SubTree.Index(AlternatingButton),
+    header: SubTree.Id(Header),
+    button: SubTree.Id(AlternatingButton),
 
     // A function we use to setup all state
-    pub fn init(manager: *Manager) !SubTree.Index(App) {
+    pub fn init(manager: *Manager) !SubTree.Id(App) {
         // Registering an event which can be called either internally or via
         // browser events
         const click_event = try manager.registerEvent();
         const reset_event = try manager.registerEvent();
 
-        // `sti`, stands for `SubTree Index`
+        // `sti`, stands for `SubTree Id`
         const sti = try manager.register(App, generate);
 
         const button = try AlternatingButton.init(manager, click_event, reset_event);
@@ -33,7 +33,7 @@ pub const App = struct {
     }
 
     fn generate(
-        sti: SubTree.Index(App),
+        sti: SubTree.Id(App),
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {
@@ -57,7 +57,7 @@ const AlternatingButton = struct {
     counter: Reactive(u32),
     prng: ?Random.DefaultPrng,
 
-    pub fn init(m: *Manager, click_event: Event, reset_event: Event) !SubTree.Index(AlternatingButton) {
+    pub fn init(m: *Manager, click_event: Event, reset_event: Event) !SubTree.Id(AlternatingButton) {
         const sti = try m.register(AlternatingButton, loadingGenerate);
 
         // Add a callback to both of these events
@@ -81,7 +81,7 @@ const AlternatingButton = struct {
 
     const FetchState = struct {
         m: *Manager,
-        sti: SubTree.Index(AlternatingButton),
+        sti: SubTree.Id(AlternatingButton),
     };
 
     fn prngCallback(ctx: Context, m: *Manager, data: Data) !void {
@@ -123,7 +123,7 @@ const AlternatingButton = struct {
     }
 
     fn loadingGenerate(
-        sti: SubTree.Index(AlternatingButton),
+        sti: SubTree.Id(AlternatingButton),
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {
@@ -134,7 +134,7 @@ const AlternatingButton = struct {
     }
 
     fn generate(
-        sti: SubTree.Index(AlternatingButton),
+        sti: SubTree.Id(AlternatingButton),
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {
@@ -164,7 +164,7 @@ const AlternatingButton = struct {
 const Header = struct {
     counter: *Reactive(u32),
 
-    pub fn init(manager: *Manager, counter: *Reactive(u32)) !SubTree.Index(Header) {
+    pub fn init(manager: *Manager, counter: *Reactive(u32)) !SubTree.Id(Header) {
         const sti = try manager.register(Header, generate);
         try sti.setContext(manager, .{ .counter = counter });
 
@@ -172,7 +172,7 @@ const Header = struct {
     }
 
     fn generate(
-        sti: SubTree.Index(Header),
+        sti: SubTree.Id(Header),
         m: *Manager,
         arena: Allocator,
     ) !SubTree.Managed {

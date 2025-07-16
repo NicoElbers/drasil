@@ -13,7 +13,7 @@ pub const Event = enum(u32) {
 
     pub const Context = union(enum) {
         none,
-        sti: SubTree.GenericIndex,
+        sti: SubTree.GenericId,
         ptr: *anyopaque,
         int: u32,
     };

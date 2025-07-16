@@ -1,6 +1,6 @@
 const alloc = std.testing.allocator;
 
-fn casePure(m: *Manager, stgi: SubTree.GenericIndex, expected: []const u8) !void {
+fn casePure(m: *Manager, stgi: SubTree.GenericId, expected: []const u8) !void {
     const out = try stgi.render(m);
     defer alloc.free(out);
     try std.testing.expectEqualStrings(expected, out);
@@ -18,7 +18,7 @@ fn casePure(m: *Manager, stgi: SubTree.GenericIndex, expected: []const u8) !void
     try std.testing.expectEqualStrings(expected, pure_rerender);
 }
 
-fn caseImpure(m: *Manager, stgi: SubTree.GenericIndex, expected1: []const u8, expected2: []const u8) !void {
+fn caseImpure(m: *Manager, stgi: SubTree.GenericId, expected1: []const u8, expected2: []const u8) !void {
     const out = try stgi.render(m);
     defer alloc.free(out);
     try std.testing.expectEqualStrings(expected1, out);
@@ -44,7 +44,7 @@ test "sanity" {
     {
         const Case = struct {
             fn generate(
-                sti: SubTree.Index(@This()),
+                sti: SubTree.Id(@This()),
                 m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
@@ -66,7 +66,7 @@ test "sanity" {
     {
         const Case = struct {
             fn generate(
-                sti: SubTree.Index(@This()),
+                sti: SubTree.Id(@This()),
                 manager: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
@@ -102,7 +102,7 @@ test "state" {
             num: u8,
 
             fn generate(
-                sti: SubTree.Index(@This()),
+                sti: SubTree.Id(@This()),
                 m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
@@ -135,7 +135,7 @@ test "state" {
         const Case = struct {
             count: u8,
 
-            pub fn init(manager: *Manager, count: u8) !SubTree.Index(@This()) {
+            pub fn init(manager: *Manager, count: u8) !SubTree.Id(@This()) {
                 const sti = try manager.register(@This(), generate);
 
                 try sti.setContext(manager, .{ .count = count });
@@ -144,7 +144,7 @@ test "state" {
             }
 
             fn generate(
-                sti: SubTree.Index(@This()),
+                sti: SubTree.Id(@This()),
                 m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
@@ -180,7 +180,7 @@ test "nested" {
         const Nested = struct {
             num: u8,
 
-            pub fn init(manager: *Manager, num: u8) !SubTree.Index(@This()) {
+            pub fn init(manager: *Manager, num: u8) !SubTree.Id(@This()) {
                 const sti = try manager.register(@This(), generate);
 
                 try sti.setContext(manager, @This(){ .num = num });
@@ -189,7 +189,7 @@ test "nested" {
             }
 
             fn generate(
-                sti: SubTree.Index(@This()),
+                sti: SubTree.Id(@This()),
                 m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
@@ -203,9 +203,9 @@ test "nested" {
         };
 
         const Case = struct {
-            index: SubTree.Index(Nested),
+            index: SubTree.Id(Nested),
 
-            pub fn init(manager: *Manager, index: SubTree.Index(Nested)) !SubTree.Index(@This()) {
+            pub fn init(manager: *Manager, index: SubTree.Id(Nested)) !SubTree.Id(@This()) {
                 const sti = try manager.register(@This(), generate);
 
                 try sti.setContext(manager, .{ .index = index });
@@ -214,7 +214,7 @@ test "nested" {
             }
 
             fn generate(
-                sti: SubTree.Index(@This()),
+                sti: SubTree.Id(@This()),
                 m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
@@ -249,7 +249,7 @@ test "callbacks" {
             fired: Reactive(bool),
             event: Event,
 
-            pub fn init(m: *Manager, event: Event) !SubTree.Index(@This()) {
+            pub fn init(m: *Manager, event: Event) !SubTree.Id(@This()) {
                 const sti = try m.register(@This(), generate);
 
                 try sti.setContext(m, @This(){
@@ -268,7 +268,7 @@ test "callbacks" {
             }
 
             fn generate(
-                sti: SubTree.Index(@This()),
+                sti: SubTree.Id(@This()),
                 m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
@@ -308,7 +308,7 @@ test "nested callback" {
         const NestedCallback = struct {
             event: Event,
 
-            pub fn init(manager: *Manager, event: Event) !SubTree.Index(@This()) {
+            pub fn init(manager: *Manager, event: Event) !SubTree.Id(@This()) {
                 const sti = try manager.register(@This(), generate);
 
                 sti.setContext(manager, @This(){ .event = event });
@@ -319,7 +319,7 @@ test "nested callback" {
             fn callback(_: Context, _: *Manager, _: Data) !void {}
 
             fn generate(
-                sti: SubTree.Index(@This()),
+                sti: SubTree.Id(@This()),
                 m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
@@ -333,10 +333,10 @@ test "nested callback" {
         };
 
         const Case = struct {
-            index: SubTree.Index(NestedCallback),
+            index: SubTree.Id(NestedCallback),
 
             fn generate(
-                sti: SubTree.Index(@This()),
+                sti: SubTree.Id(@This()),
                 m: *Manager,
                 arena: Allocator,
             ) !SubTree.Managed {
