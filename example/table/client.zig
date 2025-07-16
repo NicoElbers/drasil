@@ -75,22 +75,14 @@ pub const App = struct {
         const sti, const id = context.sti_and_int;
         const ctx = sti.specific(@This()).context(m).?;
 
-        std.log.info("Pre table", .{});
         const table = try ctx.table.getMut(m, sti);
-        std.log.info("Post table", .{});
 
         for (table.items, 0..) |row, i| {
-            std.log.info("Pre row {d}", .{i});
             const row_ctx = row.context(m).?;
-
-            std.log.info("Looking for {d}; found {d}", .{ id, row_ctx.id });
 
             if (row_ctx.id != id) continue;
 
-            std.log.info("Pre remove", .{});
             _ = table.orderedRemove(i);
-            std.log.info("Post remove", .{});
-
             return;
         }
         unreachable; // Couldn't find row by this Id
